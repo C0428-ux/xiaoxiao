@@ -20,7 +20,7 @@
 
 ```bash
 # 克隆到全局 skills 目录
-git clone https://github.com/YOUR_USERNAME/xiaoxiao.git ~/.claude/skills/xiaoxiao
+git clone https://github.com/C0428-ux/xiaoxiao.git ~/.claude/skills/xiaoxiao
 
 # 追加配置到 ~/.claude/CLAUDE.md
 cat ~/.claude/skills/xiaoxiao/CLAUDE.md >> ~/.claude/CLAUDE.md

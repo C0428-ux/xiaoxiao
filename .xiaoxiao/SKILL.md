@@ -15,7 +15,7 @@ version: 0.6
 ### 1. 克隆仓库到全局 skills 目录
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/xiaoxiao.git ~/.claude/skills/xiaoxiao
+git clone https://github.com/C0428-ux/xiaoxiao.git ~/.claude/skills/xiaoxiao
 ```
 
 ### 2. 追加 CLAUDE.md 配置
