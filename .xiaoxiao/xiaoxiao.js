@@ -1,0 +1,237 @@
+#!/usr/bin/env node
+
+const path = require('path');
+const fs = require('fs');
+const os = require('os');
+
+// ========== 路径解析 ==========
+
+// 全局框架目录（脚本所在目录）
+const FRAMEWORK_DIR = __dirname;
+
+// 项目根目录：从当前目录向上查找 state.json
+function findProjectRoot(startDir) {
+  let dir = startDir;
+  const home = os.homedir();
+
+  while (dir !== home && dir !== path.parse(dir).root) {
+    const statePath = path.join(dir, '.xiaoxiao', 'state.json');
+    if (fs.existsSync(statePath)) {
+      return dir;
+    }
+    dir = path.dirname(dir);
+  }
+
+  // 没找到，返回启动目录
+  return startDir;
+}
+
+// 当前工作目录
+const CWD = process.cwd();
+
+// 全局框架路径
+const FRAMEWORK_ROOT = FRAMEWORK_DIR;
+
+// 项目根目录（只在 state.json 存在时才算项目）
+const PROJECT_ROOT = findProjectRoot(CWD);
+
+// 加载模块
+const { StateManager } = require(path.join(FRAMEWORK_ROOT, 'state-manager'));
+const { SkillLoader } = require(path.join(FRAMEWORK_ROOT, 'skill-loader'));
+const { Handover } = require(path.join(FRAMEWORK_ROOT, 'handover'));
+
+// 实例化（注意：skillLoader 从全局加载 skills，stateManager 操作项目本地 state）
+const stateManager = new StateManager(PROJECT_ROOT, FRAMEWORK_ROOT);
+const skillLoader = new SkillLoader(PROJECT_ROOT, FRAMEWORK_ROOT);
+const handover = new Handover(PROJECT_ROOT, FRAMEWORK_ROOT);
+
+const COMMANDS = {
+  'start': (args) => {
+    const projectName = args[0] || path.basename(PROJECT_ROOT);
+    const state = stateManager.init(projectName);
+    console.log(`✅ 项目初始化完成: ${projectName}`);
+    console.log(`   状态文件: ${path.join(PROJECT_ROOT, '.xiaoxiao', 'state.json')}`);
+    console.log(`\n使用 /product-consult 开始产品咨询`);
+  },
+
+  'status': () => {
+    const status = stateManager.getStatus();
+    if (!status.exists) {
+      console.log('❌ 未找到状态文件。先运行 "xiaoxiao start" 初始化项目。');
+      return;
+    }
+
+    console.log(`📊 XiaoXiao 状态\n`);
+    console.log(`项目: ${status.project.name}`);
+    console.log(`当前阶段: ${status.currentSkill || 'idle'}`);
+    console.log(`阶段状态: ${status.currentPhase}\n`);
+
+    console.log('Skills:');
+    for (const [name, skill] of Object.entries(status.skills)) {
+      const icon = skill.status === 'completed' ? '✅' :
+                   skill.status === 'active' ? '🔄' :
+                   skill.status === 'blocked' ? '🚫' :
+                   skill.status === 'ready' ? '📌' : '⏳';
+      const loops = skill.loopCount ? ` (×${skill.loopCount})` : '';
+      console.log(`  ${icon} ${name}${loops} - ${skill.status}`);
+      if (skill.blockedReason) {
+        console.log(`      └─ ${skill.blockedReason}`);
+      }
+    }
+
+    if (status.interrupt && status.interrupt.enabled) {
+      console.log(`\n⚠️  有未完成的中断: ${status.interrupt.at}`);
+      console.log(`   恢复点: ${JSON.stringify(status.interrupt.resumePoint)}`);
+      console.log(`   使用 "xiaoxiao resume" 继续`);
+    }
+
+    if (status.blocked && status.blocked.length > 0) {
+      console.log(`\n🚫 阻塞的 Skills:`);
+      status.blocked.forEach(b => {
+        console.log(`   - ${b.name}: ${b.reason}`);
+      });
+    }
+  },
+
+  'resume': () => {
+    const result = stateManager.resume();
+    const skill = result.currentSkill;
+    console.log(`✅ 已恢复中断`);
+    console.log(`当前 Skill: ${skill}`);
+    if (result.interrupt.resumePoint) {
+      console.log(`恢复点: ${JSON.stringify(result.interrupt.resumePoint)}`);
+    }
+  },
+
+  'goto': (args) => {
+    const targetSkill = args[0];
+    if (!targetSkill) {
+      console.log('❌ 请指定目标 Skill');
+      console.log('可用 Skills: product-consult, strategy-review, architect, ui-design, task-planning, tdd-development, ship');
+      return;
+    }
+
+    // 检查前置条件
+    const prereq = stateManager.checkPrerequisites(targetSkill);
+    if (!prereq.pass) {
+      console.log(`❌ 无法跳转到 ${targetSkill}`);
+      console.log(`   原因: ${prereq.reason}`);
+      return;
+    }
+
+    const result = handover.transitionTo(targetSkill);
+    if (result.success) {
+      console.log(`✅ 已切换到 ${targetSkill}`);
+      if (result.previousSkill) {
+        console.log(`   从 ${result.previousSkill} 交接`);
+      }
+    } else {
+      console.log(`❌ 切换失败: ${result.reason}`);
+    }
+  },
+
+  'interrupt': (args) => {
+    const state = stateManager.read();
+    if (!state) {
+      console.log('❌ 未找到状态文件');
+      return;
+    }
+
+    const resumePoint = args.length > 0 ? args.join(' ') : null;
+    stateManager.interrupt(state.currentSkill, resumePoint);
+    console.log(`✅ 已中断当前 Skill: ${state.currentSkill}`);
+    console.log(`   恢复点: ${resumePoint || '未指定'}`);
+    console.log(`   使用 "xiaoxiao resume" 继续`);
+  },
+
+  'skills': () => {
+    const skills = skillLoader.listSkills();
+    console.log('📦 可用 Skills:\n');
+    skills.forEach(s => {
+      const icon = s.exists ? '✅' : '❌';
+      console.log(`  ${icon} ${s.name}`);
+    });
+  },
+
+  'load': (args) => {
+    const skillName = args[0];
+    if (!skillName) {
+      console.log('❌ 请指定 Skill 名称');
+      return;
+    }
+
+    try {
+      const skill = skillLoader.load(skillName);
+      console.log(`📄 Skill: ${skill.name}\n`);
+      console.log(`触发词: ${skill.triggers.join(', ')}`);
+      console.log(`前置条件: ${skill.prerequisites.join(', ')}`);
+      console.log(`\n核心动作:`);
+      skill.coreSteps.forEach((step, i) => {
+        console.log(`  ${i + 1}. ${step}`);
+      });
+      console.log(`\n--- Layer 2 内容 ---`);
+      console.log(skill.fullContent);
+    } catch (e) {
+      console.log(`❌ 加载失败: ${e.message}`);
+    }
+  },
+
+  'list': () => {
+    const executable = handover.listExecutableSkills();
+    console.log('▶ 可执行的 Skills:\n');
+    executable.forEach(s => console.log(`  - ${s}`));
+  },
+
+  'help': () => {
+    console.log(`
+🔧 XiaoXiao CLI
+
+用法: xiaoxiao <command> [args]
+
+命令:
+  start [name]     初始化项目（name 默认为当前目录名）
+  status           显示当前状态
+  resume           恢复中断
+  goto <skill>     跳转到指定 Skill
+  interrupt [note] 中断当前 Skill
+  skills           列出所有可用 Skill
+  load <skill>     加载 Skill 信息（显示完整内容）
+  list             列出可执行的 Skills
+  help             显示帮助
+
+示例:
+  xiaoxiao start my-project
+  xiaoxiao status
+  xiaoxiao goto product-consult
+
+Skills:
+  product-consult → strategy-review → architect → ui-design → task-planning → tdd-development → ship
+`);
+  }
+};
+
+function main() {
+  const command = process.argv[2];
+  const args = process.argv.slice(3);
+
+  if (!command || command === 'help') {
+    COMMANDS['help']();
+    return;
+  }
+
+  const handler = COMMANDS[command];
+  if (!handler) {
+    console.log(`❌ 未知命令: ${command}`);
+    console.log(`   运行 "xiaoxiao help" 查看帮助`);
+    process.exit(1);
+  }
+
+  try {
+    handler(args);
+  } catch (e) {
+    console.log(`❌ 执行失败: ${e.message}`);
+    process.exit(1);
+  }
+}
+
+main();

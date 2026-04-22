@@ -1,0 +1,17 @@
+# XiaoXiao framework - do not upload
+.xiaoxiao/state.json
+.xiaoxiao/backups/
+*.backup
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+
+# Node
+node_modules/
+*.tmp
