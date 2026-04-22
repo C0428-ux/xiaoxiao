@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p ~/.claude/skills)",
+      "Bash(git clone *)",
+      "Bash(cat ~/.claude/skills/xiaoxiao/CLAUDE.md)",
+      "Bash(node ~/.claude/skills/xiaoxiao/xiaoxiao.js help)"
+    ]
+  }
+}

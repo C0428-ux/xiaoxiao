@@ -36,7 +36,7 @@ const FRAMEWORK_ROOT = FRAMEWORK_DIR;
 const PROJECT_ROOT = findProjectRoot(CWD);
 
 // 加载模块
-const { StateManager } = require(path.join(FRAMEWORK_ROOT, 'state-manager'));
+const { StateManager, SKILLS } = require(path.join(FRAMEWORK_ROOT, 'state-manager'));
 const { SkillLoader } = require(path.join(FRAMEWORK_ROOT, 'skill-loader'));
 const { Handover } = require(path.join(FRAMEWORK_ROOT, 'handover'));
 
@@ -46,12 +46,83 @@ const skillLoader = new SkillLoader(PROJECT_ROOT, FRAMEWORK_ROOT);
 const handover = new Handover(PROJECT_ROOT, FRAMEWORK_ROOT);
 
 const COMMANDS = {
-  'start': (args) => {
+  'complete': (args) => {
+    const skillName = args[0];
+    const outputPath = args[1]; // 可选，显式指定输出路径
+
+    if (!skillName) {
+      console.log('❌ 请指定 Skill 名称');
+      console.log('用法: xiaoxiao complete <skill> [output-path]');
+      return;
+    }
+
+    const state = stateManager.read();
+    if (!state) {
+      console.log('❌ 未找到状态文件');
+      return;
+    }
+
+    // 确定输出路径
+    const plansDir = path.join(PROJECT_ROOT, 'docs', 'xiaoxiao', 'plans');
+    const defaultOutput = path.join(plansDir, `${skillName}-output.md`);
+    const finalOutputPath = outputPath || defaultOutput;
+
+    // 确保输出目录存在
+    if (!fs.existsSync(plansDir)) {
+      fs.mkdirSync(plansDir, { recursive: true });
+    }
+
+    // 检查输出文件是否存在
+    if (!fs.existsSync(finalOutputPath)) {
+      console.log(`❌ 输出文件不存在: ${finalOutputPath}`);
+      console.log('请先创建输出文件后再完成 Skill');
+      return;
+    }
+
+    // 更新状态，记录输出路径
+    stateManager.updateSkill(skillName, {
+      status: 'completed',
+      completedAt: new Date().toISOString(),
+      outputs: {
+        main: path.relative(PROJECT_ROOT, finalOutputPath)
+      }
+    });
+
+    // 如果有当前 Skill 且是要完成的，执行交接
+    if (state.currentSkill === skillName) {
+      const nextSkill = SKILLS[SKILLS.indexOf(skillName) + 1];
+      stateManager.completeCurrentSkill({
+        outputPath: finalOutputPath
+      });
+      if (nextSkill) {
+        console.log(`✅ ${skillName} 完成`);
+        console.log(`📄 输出: ${path.relative(PROJECT_ROOT, finalOutputPath)}`);
+        console.log(`\n▶ 进入下一阶段: ${nextSkill}`);
+      } else {
+        console.log(`✅ ${skillName} 完成`);
+        console.log(`📄 输出: ${path.relative(PROJECT_ROOT, finalOutputPath)}`);
+        console.log(`\n🎉 所有阶段完成！`);
+      }
+    } else {
+      console.log(`✅ ${skillName} 标记为完成`);
+      console.log(`📄 输出: ${path.relative(PROJECT_ROOT, finalOutputPath)}`);
+    }
+  },
+
+  'init-project': (args) => {
     const projectName = args[0] || path.basename(PROJECT_ROOT);
-    const state = stateManager.init(projectName);
+    const plansDir = path.join(PROJECT_ROOT, 'docs', 'xiaoxiao', 'plans');
+
+    // 创建项目结构
+    if (!fs.existsSync(plansDir)) {
+      fs.mkdirSync(plansDir, { recursive: true });
+    }
+
+    stateManager.init(projectName);
     console.log(`✅ 项目初始化完成: ${projectName}`);
     console.log(`   状态文件: ${path.join(PROJECT_ROOT, '.xiaoxiao', 'state.json')}`);
-    console.log(`\n使用 /product-consult 开始产品咨询`);
+    console.log(`   输出目录: ${plansDir}`);
+    console.log(`\n使用 /xiaoxiao 开始开发流程`);
   },
 
   'status': () => {
@@ -189,23 +260,29 @@ const COMMANDS = {
 用法: xiaoxiao <command> [args]
 
 命令:
-  start [name]     初始化项目（name 默认为当前目录名）
-  status           显示当前状态
-  resume           恢复中断
-  goto <skill>     跳转到指定 Skill
-  interrupt [note] 中断当前 Skill
-  skills           列出所有可用 Skill
-  load <skill>     加载 Skill 信息（显示完整内容）
-  list             列出可执行的 Skills
-  help             显示帮助
+  init-project [name]  初始化项目（创建目录结构和状态）
+  status               显示当前状态
+  resume               恢复中断
+  goto <skill>         跳转到指定 Skill
+  interrupt [note]      中断当前 Skill
+  complete <skill>     标记 Skill 完成（需先创建输出文件）
+  skills               列出所有可用 Skill
+  load <skill>         加载 Skill 信息（显示完整内容）
+  list                 列出可执行的 Skills
+  help                 显示帮助
 
 示例:
-  xiaoxiao start my-project
+  xiaoxiao init-project my-project
   xiaoxiao status
-  xiaoxiao goto product-consult
+  xiaoxiao complete product-consult docs/xiaoxiao/plans/product-consult-output.md
+  xiaoxiao goto strategy-review
 
 Skills:
   product-consult → strategy-review → architect → ui-design → task-planning → tdd-development → ship
+
+输出规范:
+  各阶段输出文件放在 docs/xiaoxiao/plans/ 目录
+  文件命名: {skill-name}-output.md
 `);
   }
 };

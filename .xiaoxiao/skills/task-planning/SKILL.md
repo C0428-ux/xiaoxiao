@@ -44,6 +44,10 @@
 
 - 任务列表完成后：**"共 {N} 个任务，预计 {X} 天，确认任务排序吗？"**
 - 确认后：**"任务规划完成，确认后进入 TDD 开发"**
+- 完成后运行：
+  ```bash
+  xiaoxiao complete task-planning docs/xiaoxiao/plans/task-planning-output.md
+  ```
 
 ---
 

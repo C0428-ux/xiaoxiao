@@ -45,6 +45,10 @@
 - 问题定义后：**"你遇到的核心问题是 XXX，对吗？"**
 - 成功标准定义后：**"我们用这三个指标衡量成功：①②③，可以吗？"**
 - 输出 `.SPEC.md` 后：**"这是产品咨询的输出，确认后进入战略评审"**
+- 完成后运行：
+  ```bash
+  xiaoxiao complete product-consult docs/xiaoxiao/plans/product-consult-output.md
+  ```
 
 ---
 

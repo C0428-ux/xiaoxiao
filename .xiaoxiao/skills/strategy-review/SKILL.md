@@ -46,6 +46,10 @@
 
 - 市场分析后：**"市场规模 X，继续还是调整方向？"**
 - Go/No-Go 决策后：**"战略评审结论：{结论}，原因是{理由}，确认后进入架构师"**
+- 完成后运行：
+  ```bash
+  xiaoxiao complete strategy-review docs/xiaoxiao/plans/strategy-review-output.md
+  ```
 
 ---
 

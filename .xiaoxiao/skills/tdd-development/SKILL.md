@@ -56,6 +56,10 @@
 - 每完成一个任务：**"Task {N} 完成，测试通过，继续下一个？"**
 - 遇到阻塞：**"遇到问题：{描述}，如何处理？"**
 - 所有任务完成：**"开发完成，确认后进入代码审查"**
+- 完成后运行：
+  ```bash
+  xiaoxiao complete tdd-development docs/xiaoxiao/plans/tdd-development-output.md
+  ```
 
 ### 内部循环
 

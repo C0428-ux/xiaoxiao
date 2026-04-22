@@ -45,6 +45,10 @@
 - 信息架构后：**"页面结构：{列表}，确认吗？"**
 - 交互流程后：**"用户路径：{流程}，确认吗？"**
 - UI稿图完成后：**"界面设计完成，确认后进入任务规划"**
+- 完成后运行：
+  ```bash
+  xiaoxiao complete ui-design docs/xiaoxiao/plans/ui-design-output.md
+  ```
 
 ---
 
