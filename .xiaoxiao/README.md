@@ -22,18 +22,16 @@
 # 克隆到全局 skills 目录
 git clone https://github.com/C0428-ux/xiaoxiao.git ~/.claude/skills/xiaoxiao
 
-# 追加配置到 ~/.claude/CLAUDE.md
-cat ~/.claude/skills/xiaoxiao/CLAUDE.md >> ~/.claude/CLAUDE.md
+# 运行安装脚本
+cd ~/.claude/skills/xiaoxiao && bash setup
 ```
 
 ## 使用
 
 ```bash
-# 初始化项目
+# 对 Claude 说 /xiaoxiao 开始流程
+# 或手动初始化
 node ~/.claude/skills/xiaoxiao/xiaoxiao.js start
-
-# 开始产品咨询
-/product-consult
 ```
 
 ## Skills
@@ -63,7 +61,8 @@ node ~/.claude/skills/xiaoxiao/xiaoxiao.js start
 
 ```
 xiaoxiao/
-├── SKILL.md          ← 安装脚本
+├── SKILL.md          ← 执行入口 (/xiaoxiao)
+├── setup             ← 安装脚本
 ├── CLAUDE.md         ← 配置内容
 ├── FRAMEWORK.md      ← 框架规格
 ├── README.md         ← 本文件
@@ -71,7 +70,7 @@ xiaoxiao/
 ├── state-manager.js   ← 状态管理
 ├── skill-loader.js   ← Skill 加载
 ├── handover.js       ← 交接协议
-└── skills/          ← 7 个 Skill
+└── skills/          ← 7 个阶段
     ├── product-consult/
     ├── strategy-review/
     ├── architect/
