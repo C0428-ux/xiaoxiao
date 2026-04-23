@@ -1,38 +1,37 @@
 #!/usr/bin/env node
 
 const https = require('https');
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
+const { execSync } = require('child_process');
 
 const GITHUB_REPO = 'C0428-ux/xiaoxiao';
-const FRAMEWORK_VERSION_FILE = '.xiaoxiao/version.json';
 
 class UpdateChecker {
   constructor(skillPath) {
     this.skillPath = skillPath;
-    // Try both possible locations for version.json
-    this.versionFile = path.join(skillPath, FRAMEWORK_VERSION_FILE);
-    if (!fs.existsSync(this.versionFile)) {
-      // Fallback: version.json might be at skillPath directly (local dev structure)
-      const fallback = path.join(skillPath, 'version.json');
-      if (fs.existsSync(fallback)) {
-        this.versionFile = fallback;
-      }
-    }
   }
 
+  // 直接从本地 git 读取 SHA
   getLocalVersion() {
-    if (!fs.existsSync(this.versionFile)) {
-      return { version: '0.0.0', sha: null, updatedAt: null };
-    }
     try {
-      return JSON.parse(fs.readFileSync(this.versionFile, 'utf-8'));
+      const sha = execSync('git rev-parse HEAD', {
+        cwd: this.skillPath,
+        encoding: 'utf8',
+        stdio: ['pipe', 'pipe', 'pipe']
+      }).trim();
+
+      return {
+        version: sha.substring(0, 7),
+        sha: sha
+      };
     } catch (e) {
-      return { version: '0.0.0', sha: null, updatedAt: null };
+      return {
+        version: 'unknown',
+        sha: null
+      };
     }
   }
 
+  // 通过 GitHub API 获取远程最新版本
   getRemoteVersion() {
     return new Promise((resolve, reject) => {
       const options = {
@@ -51,7 +50,7 @@ class UpdateChecker {
         res.on('end', () => {
           try {
             if (res.statusCode === 404) {
-              reject(new Error('Repository not found or is private'));
+              reject(new Error('Repository not found'));
               return;
             }
             if (res.statusCode !== 200) {
@@ -90,7 +89,7 @@ class UpdateChecker {
       const remote = await this.getRemoteVersion();
 
       return {
-        hasUpdate: !local.sha || local.sha !== remote.sha.substring(0, 7),
+        hasUpdate: !local.sha || local.sha !== remote.sha,
         local,
         remote
       };
@@ -102,82 +101,31 @@ class UpdateChecker {
     }
   }
 
+  // 使用 git pull 更新
   async update() {
-    const { execSync } = require('child_process');
-
-    const backupDir = path.join(this.skillPath, '.backup');
-    if (!fs.existsSync(backupDir)) {
-      fs.mkdirSync(backupDir, { recursive: true });
-    }
-
-    const timestamp = Date.now();
-    const tempDir = path.join(backupDir, `update-${timestamp}`);
-
     try {
-      console.log('📥 正在下载最新版本...');
-      execSync(`git clone --depth=1 https://github.com/${GITHUB_REPO}.git "${tempDir}"`, {
-        stdio: 'inherit',
-        cwd: backupDir
+      console.log('📥 正在更新...');
+      execSync('git pull origin main', {
+        cwd: this.skillPath,
+        stdio: 'inherit'
       });
-
-      this._copyRecursive(path.join(tempDir, 'xiaoxiao'), this.skillPath);
-
-      const remote = await this.getRemoteVersion();
-      const versionData = {
-        version: remote.version,
-        sha: remote.sha,
-        updatedAt: new Date().toISOString()
-      };
-      fs.writeFileSync(this.versionFile, JSON.stringify(versionData, null, 2), 'utf-8');
-
-      fs.rmSync(tempDir, { recursive: true, force: true });
-
       console.log('\n✅ 更新完成！');
-      console.log(`版本: ${remote.version}`);
-      console.log(`更新时间: ${versionData.updatedAt}`);
     } catch (err) {
-      if (fs.existsSync(tempDir)) {
-        fs.rmSync(tempDir, { recursive: true, force: true });
-      }
       throw new Error(`更新失败: ${err.message}`);
-    }
-  }
-
-  _copyRecursive(src, dest) {
-    if (!fs.existsSync(src)) {
-      throw new Error(`Source directory does not exist: ${src}`);
-    }
-
-    fs.mkdirSync(dest, { recursive: true });
-
-    const entries = fs.readdirSync(src, { withFileTypes: true });
-
-    for (const entry of entries) {
-      if (entry.name === '.git') continue;
-
-      const srcPath = path.join(src, entry.name);
-      const destPath = path.join(dest, entry.name);
-
-      if (entry.isDirectory()) {
-        this._copyRecursive(srcPath, destPath);
-      } else {
-        fs.copyFileSync(srcPath, destPath);
-      }
     }
   }
 
   showVersion() {
     const local = this.getLocalVersion();
     console.log('📦 XiaoXiao 版本信息\n');
-    console.log(`版本: ${local.version || 'unknown'}`);
     console.log(`SHA: ${local.sha || 'unknown'}`);
-    console.log(`更新时间: ${local.updatedAt || 'unknown'}`);
-    console.log(`\n框架目录: ${this.skillPath}`);
+    console.log(`框架目录: ${this.skillPath}`);
   }
 }
 
 module.exports = UpdateChecker;
 
+// CLI 入口
 if (require.main === module) {
   const FRAMEWORK_DIR = __dirname;
   const checker = new UpdateChecker(FRAMEWORK_DIR);
@@ -187,39 +135,39 @@ if (require.main === module) {
   if (command === 'check') {
     checker.check().then(result => {
       if (result.error) {
-        console.log(`⚠️  检查更新失败: ${result.error}`);
+        console.log(`ERROR: ${result.error}`);
         process.exit(1);
       }
 
       if (!result.hasUpdate) {
-        console.log('✅ 已是最新版本');
+        console.log('STATUS: UP_TO_DATE');
+        console.log(`VERSION: ${result.local.version}`);
         return;
       }
 
-      console.log('🔔 发现新版本！\n');
-      console.log(`当前版本: ${result.local.version || 'unknown'} (${result.local.sha || 'unknown'})`);
-      console.log(`最新版本: ${result.remote.version} (${result.remote.sha})`);
-      console.log(`更新时间: ${result.remote.date}`);
-      console.log(`更新说明: ${result.remote.message}`);
-      console.log('\n使用 "node update-checker.js update" 下载更新');
+      console.log('STATUS: UPDATE_AVAILABLE');
+      console.log(`CURRENT: ${result.local.version}`);
+      console.log(`LATEST: ${result.remote.version}`);
+      console.log(`DATE: ${result.remote.date}`);
+      console.log(`COMMIT: ${result.remote.message}`);
     });
   } else if (command === 'update') {
     checker.update().catch(err => {
-      console.log(`❌ 更新失败: ${err.message}`);
+      console.log(`ERROR: ${err.message}`);
       process.exit(1);
     });
   } else if (command === 'version') {
     checker.showVersion();
   } else {
     console.log(`
-📦 XiaoXiao Update Checker
+XiaoXiao Update Checker
 
 用法: update-checker.js <command>
 
 命令:
-  check    检查更新
-  update   下载更新
-  version  显示版本信息
+  check    检查更新（输出 STATUS: UP_TO_DATE 或 STATUS: UPDATE_AVAILABLE）
+  update   执行 git pull 更新
+  version  显示当前版本
     `);
   }
 }
