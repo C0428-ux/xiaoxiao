@@ -13,8 +13,20 @@
 ## 开发流程
 
 ```
-产品咨询 → 战略评审 → 架构师 → 界面设计 → 任务规划 → TDD开发 → 代码审查 → 发布上线
+产品咨询 → 战略评审 → 架构师 → 界面设计 → 任务规划 → TDD开发 → 发布上线
 ```
+
+## Skills
+
+| Skill | 触发词 | 说明 |
+|-------|--------|------|
+| product-consult | `/product-consult`, `产品咨询` | 明确需求，输出 .SPEC.md |
+| strategy-review | `/strategy-review`, `战略评审` | 评估方向，判断是否值得做 |
+| architect | `/architect`, `架构设计` | 设计系统架构 |
+| ui-design | `/ui-design`, `界面设计` | 设计界面和交互 |
+| task-planning | `/task-planning`, `任务规划` | 拆解任务列表 |
+| tdd-development | `/tdd-development`, `TDD开发` | 测试驱动开发 |
+| ship | `/ship`, `发布上线` | 部署和上线 |
 
 ## 安装
 
@@ -34,51 +46,32 @@ cd ~/.claude/skills/xiaoxiao && bash setup
 node ~/.claude/skills/xiaoxiao/xiaoxiao.js start
 ```
 
-## Skills
-
-| Skill | 说明 |
-|-------|------|
-| product-consult | 产品咨询 - 明确需求，输出 .SPEC.md |
-| strategy-review | 战略评审 - 评估方向，判断是否值得做 |
-| architect | 架构师 - 设计系统架构 |
-| ui-design | 界面设计 - 设计界面和交互 |
-| task-planning | 任务规划 - 拆解任务列表 |
-| tdd-development | TDD开发 - 测试驱动开发 |
-| ship | 发布上线 - 部署和上线 |
-
-## 架构
-
-```
-~/.claude/skills/xiaoxiao/    ← 全局框架（一次安装）
-~/.claude/CLAUDE.md           ← 全局配置
-~/your-project/                ← 项目目录
-├── .SPEC.md                  ← 项目规格
-├── .xiaoxiao/state.json       ← 项目状态
-└── docs/xiaoxiao/plans/      ← 阶段输出
-```
-
 ## 目录结构
 
 ```
 xiaoxiao/
-├── SKILL.md          ← 执行入口 (/xiaoxiao)
-├── setup             ← 安装脚本
-├── CLAUDE.md         ← 配置内容
-├── FRAMEWORK.md      ← 框架规格
-├── README.md         ← 本文件
-├── xiaoxiao.js       ← CLI 入口
-├── state-manager.js   ← 状态管理
-├── skill-loader.js   ← Skill 加载
-├── handover.js       ← 交接协议
-└── skills/          ← 7 个阶段
-    ├── product-consult/
-    ├── strategy-review/
-    ├── architect/
-    ├── ui-design/
-    ├── task-planning/
-    ├── tdd-development/
-    └── ship/
+├── SKILL.md              ← 执行入口 (/xiaoxiao)
+├── FRAMEWORK.md          ← 框架规格
+├── README.md             ← 本文件
+├── setup                 ← 安装脚本
+├── xiaoxiao.js           ← CLI 入口
+├── state-manager.js      ← 状态管理
+├── skill-loader.js       ← Skill 加载
+├── handover.js           ← 交接协议
+└── skills/              ← 7 个阶段
+    └── {skill}/
+        ├── SKILL.md      ← 入口（渐进式三层）
+        ├── GUIDES/       ← 细节文档
+        └── OUTPUTS/     ← 输出模板
 ```
+
+## 渐进式披露
+
+每个 Skill 分三层：
+
+1. **Layer 1（入口）**：触发词 + 前置 + 核心步骤，< 20 行
+2. **Layer 2（上下文）**：完整流程 + 判断标准 + 失败处理
+3. **Layer 3（细节）**：GUIDES/ 目录下的详细文档
 
 ## License
 

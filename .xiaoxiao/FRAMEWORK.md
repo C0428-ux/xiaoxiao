@@ -48,6 +48,18 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 | tdd-development | TDD开发 | task-planning |
 | ship | 发布上线 | tdd-development |
 
+## Skill 质量标准
+
+每个 Skill 遵循 Premium 模式：
+
+| 维度 | 要求 |
+|------|------|
+| Frontmatter | name, version, domain, triggers, output-format, related-skills |
+| 流程 | 编号阶段 + 明确的准入/准出标准 |
+| 约束 | MUST DO / MUST NOT DO |
+| 引用 | Reference Guide lookup 表格 |
+| 输出 | 具体模板 + 完整示例 |
+
 ## 文件结构
 
 ### 全局（安装一次）
@@ -59,11 +71,13 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ├── skill-loader.js         # Skill 加载模块
 ├── handover.js            # 交接协议模块
 ├── FRAMEWORK.md           # 本文件
+├── README.md              # 总览
+├── SKILL.md               # 入口技能
 └── skills/                # 7 个 Skill 定义
     └── {skill}/
         ├── SKILL.md       # 入口（渐进式三层）
-        ├── GUIDES/        # 细节文档
-        └── OUTPUTS/      # 输出模板
+        ├── GUIDES/        # 细节文档（4-5个）
+        └── OUTPUTS/       # 输出模板（1-2个）
 ```
 
 ### 项目本地（每个项目）
