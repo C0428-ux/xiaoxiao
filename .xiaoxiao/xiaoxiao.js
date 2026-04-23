@@ -48,6 +48,12 @@ const handover = new Handover(PROJECT_ROOT, FRAMEWORK_ROOT);
 
 const COMMANDS = {
   'update-check': async () => {
+    // 检查是否跳过更新
+    if (process.env.XIAOXIAO_SKIP_UPDATE === '1') {
+      console.log('⏭️  更新检查已跳过 (XIAOXIAO_SKIP_UPDATE=1)');
+      return;
+    }
+
     const checker = new UpdateChecker(FRAMEWORK_ROOT);
     const result = await checker.check();
 
@@ -67,7 +73,12 @@ const COMMANDS = {
     console.log(`最新版本: ${result.remote.version} (${result.remote.sha})`);
     console.log(`更新时间: ${result.remote.date}`);
     console.log(`更新说明: ${result.remote.message}`);
-    console.log('\n使用 "xiaoxiao update" 下载更新');
+    console.log('\n━━━━━━━━━━━━━━━');
+    console.log('选项:');
+    console.log('  是   - 运行 "xiaoxiao update" 下载更新');
+    console.log('  否   - 跳过，继续使用当前版本');
+    console.log('  永远 - 设置 XIAOXIAO_SKIP_UPDATE=1 永久跳过');
+    console.log('━━━━━━━━━━━━━━━\n');
   },
 
   'update': async () => {
