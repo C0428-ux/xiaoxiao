@@ -13,7 +13,7 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ## 开发流程
 
 ```
-产品咨询 → 战略评审 → 架构师 → 界面设计 → 任务规划 → TDD开发 → 代码审查 → 发布上线
+产品咨询 → 战略评审 → 架构师 → 界面设计 → 任务规划 → TDD开发 → 发布上线
 ```
 
 ## Skill 清单
@@ -57,8 +57,9 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ├── handover.js       # 交接协议
 └── skills/           # 7 个 Skill 定义
     └── {skill}/
-        ├── SKILL.md  # Skill 入口
-        └── GUIDES/   # 细节文档
+        ├── SKILL.md  # Skill 入口（渐进式）
+        ├── GUIDES/   # 细节文档
+        └── OUTPUTS/  # 输出模板
 ```
 
 ## 使用方式
