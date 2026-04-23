@@ -1,72 +1,274 @@
+---
+name: tdd-development
+description: >-
+  Implements features using test-driven development: RED (write failing test) →
+  GREEN (minimal code pass) → REFACTOR (improve without breaking). Follows strict
+  anti-patterns to ensure tests serve their purpose. Use after task-planning to
+  implement the planned tasks.
+  NOT for: architecture design, UI design, or quick prototyping.
+version: 1.0
+domain: development
+role: developer
+triggers:
+  - /tdd-development
+  - TDD开发
+  - 开始开发
+  - 写代码
+  - 开发
+prerequisites:
+  - task-planning
+output-format: code + tests
+related-skills:
+  - task-planning
+  - ship
+---
+
 # TDD Development | TDD 开发
 
-## Layer 1 - 入口
+## When to Use
 
-**触发词**: `/tdd-development`, `TDD开发`, `开始开发`, `dev`, `develop`
+- After task-planning when implementing features
+- When code quality and testability are priorities
+- When refactoring legacy code safely
+- When working with multiple developers
+- When building for long-term maintainability
 
-**前置条件**: task-planning 已完成
+## When NOT to Use
 
-**核心动作**:
-1. 按任务顺序开发
-2. 先写测试（RED）
-3. 实现功能（GREEN）
-4. 重构优化（REFACTOR）
-5. 循环直到任务完成
-
----
-
-## Layer 2 - 上下文
-
-### 目标
-
-以测试驱动的方式完成功能开发，确保代码质量。
-
-### 完整流程
-
-1. **任务取出** - 从任务列表取出一个任务
-2. **写测试** - 明确预期行为，写出失败测试（RED）
-3. **实现功能** - 通过最小代码让测试通过（GREEN）
-4. **重构** - 优化代码结构，保持测试通过（REFACTOR）
-5. **循环** - 取下一个任务，重复
-6. **任务完成** - 所有任务完成
-
-### 判断标准
-
-- 每个功能都有对应测试
-- 测试全部通过
-- 代码符合规范
-- 遵循测试反模式规则
-
-### 测试反模式（铁律）
-
-```
-1. 永远不要测试 mock 的行为
-2. 不要在生产代码中添加仅用于测试的方法
-3. 不理解依赖关系就不使用 mock
-```
-
-### 失败处理
-
-- 测试写错 → 修正测试或实现
-- 实现卡住 → 简化任务或寻求帮助
-- 任务蔓延 → 回到任务规划重新评估
-
-### CONFIRM 节点
-
-- 每完成一个任务：**"Task {N} 完成，测试通过，继续下一个？"**
-- 遇到阻塞：**"遇到问题：{描述}，如何处理？"**
-- 所有任务完成：**"开发完成，确认后进入代码审查"**
-- 完成后运行：
-  ```bash
-  xiaoxiao complete tdd-development docs/xiaoxiao/plans/tdd-development-output.md
-  ```
-
-### 内部循环
-
-TDD 内部循环（RED → GREEN → REFACTOR）不触发状态切换，只更新 `skill.loopCount`。每个任务最多 10 次循环，超时强制移交给用户。
+- Architecture decisions (use architect skill)
+- UI design (use ui-design skill)
+- Quick prototypes with no test requirements
+- One-off scripts or automation
+- When time pressure prohibits proper TDD
+- Exploring unfamiliar domains (use spikes first)
 
 ---
 
-## Layer 3 - 细节
+## Core Workflow
 
-详见 `GUIDES/` 目录
+### Phase 1: Task Selection
+
+**Entry**: Task list from task-planning
+**Actions**:
+1. Review prioritized task list
+2. Select next task (highest priority, no blockers)
+3. Read related specs:
+   - SPEC.md for requirements
+   - ui-design for UI components
+   - architecture for API contracts
+4. Ask: "What is the simplest test case for this?"
+**Exit**: Task selected, requirements understood
+
+---
+
+### Phase 2: RED - Write Failing Test
+
+**Entry**: Task selected
+**Actions**:
+1. Write the smallest possible test that describes expected behavior
+2. Test should fail (RED) - confirming it tests what we want
+3. Include:
+   - **Arrange**: Set up test data
+   - **Act**: Call the function/endpoint
+   - **Assert**: Verify expected outcome
+4. Ask: "Is this test describing behavior or implementation?"
+**Exit**: Test written and failing
+
+**Test Structure**:
+```javascript
+describe('UserService', () => {
+  describe('createUser', () => {
+    it('should create user with valid email', () => {
+      // Arrange
+      const email = 'test@example.com';
+      const password = 'SecurePass123!';
+
+      // Act
+      const user = UserService.createUser({ email, password });
+
+      // Assert
+      expect(user.email).toBe(email);
+      expect(user.id).toBeDefined();
+      expect(user.passwordHash).not.toBe(password);
+    });
+  });
+});
+```
+
+---
+
+### Phase 3: GREEN - Minimal Implementation
+
+**Entry**: Test failing (RED)
+**Actions**:
+1. Write the minimum code to make the test pass
+2. Don't optimize - just make it work
+3. Hardcode values if needed, then refactor
+4. Focus on getting to GREEN quickly
+5. Ask: "Am I writing code to pass the test, or adding features?"
+**Exit**: Test passes (GREEN)
+
+** GREEN Checklist**:
+- [ ] Test passes
+- [ ] No other tests broken
+- [ ] Implementation is minimal
+- [ ] No TODO comments in code
+
+---
+
+### Phase 4: REFACTOR - Improve Code
+
+**Entry**: Test passing (GREEN)
+**Actions**:
+1. Improve code structure without changing behavior:
+   - Extract duplicated logic
+   - Rename variables for clarity
+   - Improve function organization
+2. Ensure tests still pass after refactoring
+3. Look for:
+   - Code smells (long functions, magic numbers)
+   - Opportunities for extraction
+   - Clear naming
+4. Ask: "Is this code clean? Can I explain it in one sentence?"
+**Exit**: Code improved, tests still passing
+
+**Refactor Checklist**:
+- [ ] No duplicate logic
+- [ ] Meaningful names
+- [ ] Single responsibility per function
+- [ ] No magic numbers/constants
+- [ ] Tests still pass
+
+---
+
+### Phase 5: Loop Until Task Complete
+
+**Entry**: One cycle complete
+**Actions**:
+1. Ask: "Does this task have more test cases?"
+2. If yes, go to Phase 2 with next test case
+3. If no, task is complete
+4. Move to next task
+5. Ask user: "Task [N] complete. Continue to next?"
+**Exit**: All test cases for task pass
+
+**Loop Limit**: Max 10 RED-GREEN-REFACTOR cycles per task. If exceeded, escalate to user.
+
+---
+
+### Phase 6: Task Completion
+
+**Entry**: All tests for task pass
+**Actions**:
+1. Run full test suite
+2. Verify no regressions
+3. Update task list status
+4. Confirm with user before moving on
+**Exit**: Task marked complete
+
+**Run on completion**:
+```bash
+xiaoxiao complete tdd-development docs/xiaoxiao/plans/tdd-development-output.md
+```
+
+---
+
+## Test Anti-Patterns (Iron Rules)
+
+### MUST NOT
+
+1. **Never test mock behavior**
+   - ❌ `expect(mock.fetch).toHaveBeenCalled()`
+   - ✅ Test actual observable outcomes
+
+2. **Don't add production methods only for testing**
+   - ❌ Adding `getBalance()` method just to test internal state
+   - ✅ Test through public API
+
+3. **Don't use mocks without understanding dependencies**
+   - ❌ Mocking everything without knowing what the dependency does
+   - ✅ Mock only external boundaries (HTTP, DB)
+
+4. **Don't test implementation details**
+   - ❌ Testing that a private method is called
+   - ✅ Testing that the public behavior is correct
+
+5. **Don't create order-dependent tests**
+   - Each test must be independently runnable
+
+---
+
+## Constraints
+
+### MUST DO
+
+- Follow RED → GREEN → REFACTOR strictly in order
+- Write test before implementation
+- Keep tests small and focused
+- Use descriptive test names (behavior, not method names)
+- Test both happy path and error paths
+- Run full test suite before completing
+
+### MUST NOT DO
+
+- Skip tests when under time pressure
+- Write implementation before test (violates TDD)
+- Use test coverage as a metric (leads to useless tests)
+- Mock internal dependencies (only external boundaries)
+- Leave failing tests in the codebase
+- Refactor without running tests
+
+---
+
+## Reference Guide
+
+| Topic | File | Load When |
+|-------|------|-----------|
+| Test Naming Conventions | GUIDES/test-naming.md | Writing descriptive test names |
+| Arrange-Act-Assert Pattern | GUIDES/aaa-pattern.md | Structuring tests properly |
+| Mocking Guidelines | GUIDES/mocking.md | When and how to mock |
+| Testable Code Patterns | GUIDES/testable-code.md | Writing testable code |
+| Common TDD Mistakes | GUIDES/tdd-mistakes.md | Avoiding anti-patterns |
+
+---
+
+## Output Example
+
+```markdown
+## Completed Task: User Login
+
+### Tests Added
+- `UserService.createUser` - valid/invalid email
+- `UserService.createUser` - password strength validation
+- `AuthService.login` - correct credentials
+- `AuthService.login` - incorrect credentials
+- `AuthService.login` - account locked
+
+### Code Changes
+- Added `src/services/UserService.js`
+- Added `src/services/AuthService.js`
+- Added `src/middleware/auth.js`
+
+### Test Results
+```
+PASS  src/services/UserService.test.js
+PASS  src/services/AuthService.test.js
+PASS  src/middleware/auth.test.js
+
+Test Suites: 3 passed, 3 total
+Tests: 12 passed, 12 total
+```
+```
+
+---
+
+## CONFIRM Nodes
+
+| Phase | Confirmation Prompt |
+|-------|---------------------|
+| Task Selected | "Starting: [Task name]. Simplest test case: [X]. Ready?" |
+| RED Complete | "Test failing as expected. Proceed to GREEN?" |
+| GREEN Complete | "Test passes. Proceed to REFACTOR?" |
+| REFACTOR Complete | "Code improved, tests pass. Continue to next case?" |
+| Task Complete | "Task [N] done: [N] tests, all passing. Next task?" |
+| All Complete | "Development

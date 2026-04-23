@@ -1,56 +1,314 @@
+---
+name: task-planning
+description: >-
+  Breaks down designs and requirements into actionable task lists with estimates,
+  dependencies, and priorities. Creates sprint-ready backlog from epics and stories.
+  Use after ui-design when implementation planning is needed.
+  NOT for: architecture decisions, UI design, or actual coding.
+version: 1.0
+domain: planning
+role: planner
+triggers:
+  - /task-planning
+  - 任务规划
+  - 规划任务
+  - 拆解任务
+  - 排期
+prerequisites:
+  - ui-design
+output-format: task-list.md
+related-skills:
+  - ui-design
+  - tdd-development
+---
+
 # Task Planning | 任务规划
 
-## Layer 1 - 入口
+## When to Use
 
-**触发词**: `/task-planning`, `任务规划`, `规划任务`, `plan-tasks`
+- After ui-design before tdd-development
+- When creating implementation plans
+- When estimating effort and timeline
+- When prioritizing features for release
+- When breaking down large features into sprintable units
 
-**前置条件**: ui-design 已完成
+## When NOT to Use
 
-**核心动作**:
-1. 拆解任务（EPICS → Tasks）
-2. 估算工作量
-3. 排序任务
-4. 输出任务列表
-
----
-
-## Layer 2 - 上下文
-
-### 目标
-
-将设计和架构转化为可执行的任务清单。
-
-### 完整流程
-
-1. **任务拆解** - 从 UI稿图和架构文档拆解出具体任务
-2. **任务估算** - 每个任务的工作量评估
-3. **依赖排序** - 按依赖关系排序任务
-4. **优先级确认** - 与用户确认优先级
-5. **输出任务列表**
-
-### 判断标准
-
-- 任务粒度适中（1-3天可完成）
-- 无循环依赖
-- 优先级与业务价值一致
-
-### 失败处理
-
-- 任务过大 → 继续拆解
-- 依赖混乱 → 重新梳理
-- 优先级冲突 → 以 P0 为准
-
-### CONFIRM 节点
-
-- 任务列表完成后：**"共 {N} 个任务，预计 {X} 天，确认任务排序吗？"**
-- 确认后：**"任务规划完成，确认后进入 TDD 开发"**
-- 完成后运行：
-  ```bash
-  xiaoxiao complete task-planning docs/xiaoxiao/plans/task-planning-output.md
-  ```
+- Architecture decisions (use architect skill)
+- UI design decisions (use ui-design skill)
+- Actual coding (use tdd-development skill)
+- Just getting status updates on existing work
+- Quick questions without planning context
 
 ---
 
-## Layer 3 - 细节
+## Core Workflow
 
-详见 `GUIDES/` 目录
+### Phase 1: Backlog Extraction
+
+**Entry**: UI designs and architecture exist
+**Actions**:
+1. Read ui-design output - extract all screens and components
+2. Read architecture - note subsystem boundaries
+3. Read SPEC.md - verify scope and priorities
+4. Create initial backlog items (Epics → Stories)
+5. Ask: "Are there any features that were deprioritized?"
+**Exit**: Raw backlog items identified
+
+**Backlog Structure**:
+```markdown
+## Epic: User Authentication
+### Stories
+- [ ] Story: User can sign up with email
+- [ ] Story: User can sign in with password
+- [ ] Story: User can reset password
+
+## Epic: Project Management
+### Stories
+- [ ] Story: User can create a project
+- [ ] Story: User can view project list
+...
+```
+
+---
+
+### Phase 2: Task Decomposition
+
+**Entry**: Backlog items identified
+**Actions**:
+1. For each story, break into tasks:
+   - **Backend tasks**: API endpoints, database changes
+   - **Frontend tasks**: Components, pages, state
+   - **Infra tasks**: Config, deployment, migrations
+2. Each task should be:
+   - **Small**: 1-3 days max
+   - **Testable**: Can verify completion
+   - **Independent**: No blocking dependencies within
+3. Ask: "Is this task too large? Can it be split?"
+**Exit**: All stories decomposed into tasks
+
+**Task Template**:
+```markdown
+### Story: User can sign in with password
+
+#### Tasks
+1. [ ] **Backend**: Create POST /auth/login endpoint
+   - Validate email/password
+   - Return JWT on success
+   - Return 401 on failure
+
+2. [ ] **Frontend**: Create LoginForm component
+   - Email input with validation
+   - Password input with show/hide
+   - Submit button with loading state
+   - Error message display
+
+3. [ ] **Frontend**: Create LoginPage
+   - Wire up LoginForm
+   - Handle success → redirect to dashboard
+   - Handle error → show error message
+
+4. [ ] **Test**: Add login integration tests
+   - Happy path
+   - Invalid credentials
+   - Network error
+```
+
+---
+
+### Phase 3: Dependency Mapping
+
+**Entry**: Tasks decomposed
+**Actions**:
+1. Identify dependencies between tasks:
+   - **Internal**: Within same story (frontend needs API)
+   - **External**: Across stories (auth before project creation)
+   - **Technical**: Database migration before API change
+2. Create dependency graph
+3. Identify the critical path (longest dependency chain)
+4. Ask: "What's blocking other work?"
+**Exit**: Dependencies mapped, critical path identified
+
+**Dependency Format**:
+```markdown
+## Dependencies
+
+### Blocking Relationships
+- Task 3 (LoginPage) blocked by Task 1 (login API)
+- Task 7 (ProjectList) blocked by Task 4 (auth infrastructure)
+
+### Critical Path
+Login API → Auth infrastructure → Project API → ProjectList
+```
+
+---
+
+### Phase 4: Estimation
+
+**Entry**: Dependencies mapped
+**Actions**:
+1. Estimate each task using relative sizing:
+   - **XS**: 1-2 hours
+   - **S**: Half a day
+   - **M**: 1-2 days
+   - **L**: 3-5 days
+   - **XL**: 5+ days (split further)
+2. Add up estimates for each story
+3. Calculate total effort
+4. Ask: "Does this estimate match your intuition?"
+**Exit**: All tasks estimated
+
+**Estimation Guide**:
+```markdown
+| Size | Hours | When to Use |
+|------|-------|-------------|
+| XS | 1-2h | Simple, well-understood |
+| S | 4h | Standard, predictable |
+| M | 1-2d | Some complexity, minor unknowns |
+| L | 3-5d | High complexity, multiple unknowns |
+| XL | 5+d | Break into smaller tasks |
+```
+
+---
+
+### Phase 5: Prioritization
+
+**Entry**: Tasks estimated
+**Actions**:
+1. Apply priority rules:
+   - **P0 (MVP)**: Must have for launch
+   - **P1**: Important, ship soon after
+   - **P2**: Nice to have, future release
+2. Order tasks by:
+   - Priority (P0 first)
+   - Dependencies (blocking tasks first)
+   - Efficiency (parallel when possible)
+3. Create sprint groups if applicable
+4. Confirm priority order with user
+
+**Priority Template**:
+```markdown
+## Task Prioritization
+
+### P0 - MVP (Must have)
+1. [ ] Task 1 - [name] - [M]
+2. [ ] Task 2 - [name] - [L]
+...
+
+### P1 - Important
+1. [ ] Task N - [name] - [S]
+...
+
+### P2 - Nice to have
+1. [ ] Task M - [name] - [M]
+...
+```
+
+**Run on completion**:
+```bash
+xiaoxiao complete task-planning docs/xiaoxiao/plans/task-planning-output.md
+```
+
+---
+
+## Constraints
+
+### MUST DO
+
+- Keep tasks small enough to complete in 1-3 days
+- Identify all dependencies explicitly
+- Include testing tasks with each feature task
+- Group related tasks logically
+- Leave 20% buffer for unexpected complexity
+- Document assumptions that affect estimates
+
+### MUST NOT DO
+
+- Create tasks larger than 5 days (split them)
+- Skip integration points between frontend/backend
+- Forget about documentation tasks
+- Estimate without understanding the implementation
+- Ignore non-functional requirements (security, performance)
+- Plan every detail for P2 tasks (leave flexibility)
+
+---
+
+## Reference Guide
+
+| Topic | File | Load When |
+|-------|------|-----------|
+| Estimation Techniques | GUIDES/estimation.md | Sizing unfamiliar tasks |
+| Dependency Mapping | GUIDES/dependencies.md | Complex dependency graphs |
+| Sprint Planning | GUIDES/sprint-planning.md | Creating sprint backlogs |
+| Task Templates | OUTPUTS/task-templates.md | Standard task formats |
+
+---
+
+## Output: Task List Document
+
+### Required Sections
+
+1. **Overview** (total tasks, total estimate, timeline)
+2. **Epic Breakdown** (stories grouped by epic)
+3. **Task List** (all tasks with estimates and dependencies)
+4. **Priority Order** (P0/P1/P2 with reasoning)
+5. **Sprint Plan** (if applicable, grouped by sprint)
+6. **Assumptions** (what we're assuming in estimates)
+
+### Example Output
+
+```markdown
+# Login Flow - Task Plan
+
+## Overview
+- **Total Tasks**: 12
+- **Total Estimate**: 8 days
+- **Team**: 2 developers
+
+## Story: User Authentication
+
+### Epic: User Authentication
+| Task | Type | Estimate | Dependencies |
+|------|------|----------|--------------|
+| Create auth database schema | Backend | S | - |
+| Implement password hashing | Backend | XS | 1 |
+| Create login API | Backend | M | 2 |
+| Create signup API | Backend | M | 1 |
+| Add JWT generation | Backend | S | 3, 4 |
+| Create LoginForm component | Frontend | M | 3 |
+| Create SignupForm component | Frontend | M | 4 |
+| Create LoginPage | Frontend | S | 5 |
+| Create SignupPage | Frontend | S | 6 |
+| Add auth integration tests | Test | L | 3, 4, 5, 6 |
+
+## Priority Order
+
+### P0 - MVP
+1. Tasks 1-6 (Authentication core)
+2. Tasks 5, 8 (Login flow - user facing)
+
+### P1 - Important
+1. Tasks 7, 9 (Signup flow)
+2. Task 10 (Integration tests)
+
+### P2 - Future
+1. Tasks 11-12 (Remember me, forgot password)
+
+## Assumptions
+- Team has experience with JWT
+- Database migration can happen without downtime
+- Frontend has existing component library
+```
+
+---
+
+## CONFIRM Nodes
+
+| Phase | Confirmation Prompt |
+|-------|---------------------|
+| Phase 1 Complete | "[N] stories identified. Scope looks correct?" |
+| Phase 2 Complete | "[N] tasks created. Task sizes appropriate?" |
+| Phase 3 Complete | "Dependencies mapped. Critical path: [X]. Continue?" |
+| Phase 4 Complete | "Total estimate: [X] days. Matches intuition?" |
+| Phase 5 Complete | "Priority order: P0 [N] tasks, P1 [N] tasks. Confirm?" |
+| Final | "Task planning complete. Proceed to TDD Development?" |
