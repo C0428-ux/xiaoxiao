@@ -43,11 +43,13 @@ node ~/.claude/skills/xiaoxiao/.xiaoxiao/xiaoxiao.js update-check
 |---------|------|------|
 | `STATUS: UP_TO_DATE` | 无新版本 | 直接继续 Step 1 |
 | `STATUS: UPDATE_AVAILABLE` | 有新版本 | 询问用户是否更新 |
+| `STATUS: SKIP_FOREVER` | 已永久跳过 | 直接继续 Step 1 |
 
-**询问用户**：
+**询问用户**（当发现新版本时）：
 > 检测到新版本！是否下载更新？
 > - 是：运行 `node ~/.claude/skills/xiaoxiao/.xiaoxiao/xiaoxiao.js update`，完成后重新执行 `/xiaoxiao`
 > - 否：继续 Step 1
+> - 永久跳过：运行 `node ~/.claude/skills/xiaoxiao/.xiaoxiao/xiaoxiao.js skip-update`，下次将不再检查
 
 **跳过**：用户说"跳过"或"继续" → 直接继续 Step 1
 

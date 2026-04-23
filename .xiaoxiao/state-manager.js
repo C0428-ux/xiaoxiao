@@ -67,6 +67,9 @@ class StateManager {
         resumePoint: null,
         savedAt: null
       },
+      settings: {
+        skipUpdate: false  // true = 永久跳过更新检查
+      },
       createdAt: timestamp,
       updatedAt: timestamp
     };
@@ -123,6 +126,33 @@ class StateManager {
       ...updates
     };
 
+    state.updatedAt = new Date().toISOString();
+    this._write(state);
+    return state;
+  }
+
+  /**
+   * 获取跳过更新设置
+   */
+  getSkipUpdate() {
+    const state = this.read();
+    if (!state) return false;
+    return state.settings?.skipUpdate || false;
+  }
+
+  /**
+   * 设置跳过更新
+   */
+  setSkipUpdate(value) {
+    const state = this.read();
+    if (!state) {
+      throw new Error('State file not found.');
+    }
+
+    if (!state.settings) {
+      state.settings = {};
+    }
+    state.settings.skipUpdate = value;
     state.updatedAt = new Date().toISOString();
     this._write(state);
     return state;

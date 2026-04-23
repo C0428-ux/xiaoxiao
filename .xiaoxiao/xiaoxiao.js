@@ -48,9 +48,10 @@ const handover = new Handover(PROJECT_ROOT, FRAMEWORK_ROOT);
 
 const COMMANDS = {
   'update-check': async () => {
-    // 检查是否跳过更新
-    if (process.env.XIAOXIAO_SKIP_UPDATE === '1') {
-      console.log('⏭️  更新检查已跳过 (XIAOXIAO_SKIP_UPDATE=1)');
+    // 检查是否永久跳过更新
+    if (stateManager.getSkipUpdate()) {
+      console.log('STATUS: SKIP_FOREVER');
+      console.log('已永久跳过更新检查');
       return;
     }
 
@@ -58,27 +59,32 @@ const COMMANDS = {
     const result = await checker.check();
 
     if (result.error) {
-      console.log(`⚠️  检查更新失败: ${result.error}`);
+      console.log(`ERROR: ${result.error}`);
       return;
     }
 
     if (!result.hasUpdate) {
-      console.log('✅ 已是最新版本');
-      console.log(`版本: ${result.local.version} (${result.local.sha})`);
+      console.log('STATUS: UP_TO_DATE');
+      console.log(`VERSION: ${result.local.version}`);
       return;
     }
 
-    console.log('🔔 发现新版本！\n');
-    console.log(`当前版本: ${result.local.version || 'unknown'} (${result.local.sha || 'unknown'})`);
-    console.log(`最新版本: ${result.remote.version} (${result.remote.sha})`);
-    console.log(`更新时间: ${result.remote.date}`);
-    console.log(`更新说明: ${result.remote.message}`);
-    console.log('\n━━━━━━━━━━━━━━━');
-    console.log('选项:');
-    console.log('  是   - 运行 "xiaoxiao update" 下载更新');
-    console.log('  否   - 跳过，继续使用当前版本');
-    console.log('  永远 - 设置 XIAOXIAO_SKIP_UPDATE=1 永久跳过');
-    console.log('━━━━━━━━━━━━━━━\n');
+    console.log('STATUS: UPDATE_AVAILABLE');
+    console.log(`CURRENT: ${result.local.version}`);
+    console.log(`LATEST: ${result.remote.version}`);
+    console.log(`DATE: ${result.remote.date}`);
+    console.log(`COMMIT: ${result.remote.message}`);
+  },
+
+  'skip-update': () => {
+    stateManager.setSkipUpdate(true);
+    console.log('✅ 已永久跳过更新检查');
+    console.log('下次运行时将直接继续 Step 1');
+  },
+
+  'unskip-update': () => {
+    stateManager.setSkipUpdate(false);
+    console.log('✅ 已恢复更新检查');
   },
 
   'update': async () => {
@@ -317,6 +323,8 @@ const COMMANDS = {
   complete <skill>     标记 Skill 完成（需先创建输出文件）
   update-check         检查更新
   update               下载更新
+  skip-update          永久跳过更新检查
+  unskip-update        恢复更新检查
   version              显示版本信息
   skills               列出所有可用 Skill
   load <skill>         加载 Skill 信息（显示完整内容）
