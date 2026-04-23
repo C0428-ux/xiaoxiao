@@ -57,7 +57,15 @@ else
     echo "✅ 配置已追加到 ~/.claude/CLAUDE.md"
 fi
 
-# 3. 验证
+# 3. 初始化版本文件
+if [ ! -f ~/.claude/skills/xiaoxiao/.xiaoxiao/version.json ]; then
+    echo "📝 初始化版本文件..."
+    mkdir -p ~/.claude/skills/xiaoxiao/.xiaoxiao
+    SHA=$(git -C ~/.claude/skills/xiaoxiao rev-parse --short HEAD)
+    echo "{\"version\": \"latest\", \"sha\": \"$SHA\", \"updatedAt\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > ~/.claude/skills/xiaoxiao/.xiaoxiao/version.json
+fi
+
+# 4. 验证安装
 echo ""
 echo "✅ xiaoxiao 安装完成！"
 echo ""
@@ -65,6 +73,7 @@ echo "使用方式："
 echo "  /xiaoxiao          - 开始开发流程"
 echo "  /xiao             - 同上（简写）"
 echo ""
-echo "或手动运行："
-echo "  node ~/.claude/skills/xiaoxiao/xiaoxiao.js start"
-echo "  node ~/.claude/skills/xiaoxiao/xiaoxiao.js status"
+echo "常用命令："
+echo "  node ~/.claude/skills/xiaoxiao/xiaoxiao.js status       - 查看状态"
+echo "  node ~/.claude/skills/xiaoxiao/xiaoxiao.js update-check  - 检查更新"
+echo "  node ~/.claude/skills/xiaoxiao/xiaoxiao.js version       - 显示版本"

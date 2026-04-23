@@ -39,6 +39,7 @@ const PROJECT_ROOT = findProjectRoot(CWD);
 const { StateManager, SKILLS } = require(path.join(FRAMEWORK_ROOT, 'state-manager'));
 const { SkillLoader } = require(path.join(FRAMEWORK_ROOT, 'skill-loader'));
 const { Handover } = require(path.join(FRAMEWORK_ROOT, 'handover'));
+const UpdateChecker = require(path.join(FRAMEWORK_ROOT, 'update-checker'));
 
 // 实例化（注意：skillLoader 从全局加载 skills，stateManager 操作项目本地 state）
 const stateManager = new StateManager(PROJECT_ROOT, FRAMEWORK_ROOT);
@@ -46,6 +47,43 @@ const skillLoader = new SkillLoader(PROJECT_ROOT, FRAMEWORK_ROOT);
 const handover = new Handover(PROJECT_ROOT, FRAMEWORK_ROOT);
 
 const COMMANDS = {
+  'update-check': async () => {
+    const checker = new UpdateChecker(FRAMEWORK_ROOT);
+    const result = await checker.check();
+
+    if (result.error) {
+      console.log(`⚠️  检查更新失败: ${result.error}`);
+      return;
+    }
+
+    if (!result.hasUpdate) {
+      console.log('✅ 已是最新版本');
+      console.log(`版本: ${result.local.version} (${result.local.sha})`);
+      return;
+    }
+
+    console.log('🔔 发现新版本！\n');
+    console.log(`当前版本: ${result.local.version || 'unknown'} (${result.local.sha || 'unknown'})`);
+    console.log(`最新版本: ${result.remote.version} (${result.remote.sha})`);
+    console.log(`更新时间: ${result.remote.date}`);
+    console.log(`更新说明: ${result.remote.message}`);
+    console.log('\n使用 "xiaoxiao update" 下载更新');
+  },
+
+  'update': async () => {
+    const checker = new UpdateChecker(FRAMEWORK_ROOT);
+    try {
+      await checker.update();
+    } catch (err) {
+      console.log(`❌ 更新失败: ${err.message}`);
+    }
+  },
+
+  'version': () => {
+    const checker = new UpdateChecker(FRAMEWORK_ROOT);
+    checker.showVersion();
+  },
+
   'complete': (args) => {
     const skillName = args[0];
     const outputPath = args[1]; // 可选，显式指定输出路径
@@ -266,6 +304,9 @@ const COMMANDS = {
   goto <skill>         跳转到指定 Skill
   interrupt [note]      中断当前 Skill
   complete <skill>     标记 Skill 完成（需先创建输出文件）
+  update-check         检查更新
+  update               下载更新
+  version              显示版本信息
   skills               列出所有可用 Skill
   load <skill>         加载 Skill 信息（显示完整内容）
   list                 列出可执行的 Skills
