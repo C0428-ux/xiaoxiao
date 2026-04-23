@@ -46,6 +46,16 @@ cd ~/.claude/skills/xiaoxiao && bash setup
 node ~/.claude/skills/xiaoxiao/xiaoxiao.js start
 ```
 
+## 常用命令
+
+```bash
+xiaoxiao status        # 查看状态
+xiaoxiao update-check  # 检查更新
+xiaoxiao update        # 下载更新
+xiaoxiao version       # 显示版本
+xiaoxiao resume        # 恢复中断
+```
+
 ## 目录结构
 
 ```
@@ -55,9 +65,12 @@ xiaoxiao/
 ├── README.md             ← 本文件
 ├── setup                 ← 安装脚本
 ├── xiaoxiao.js           ← CLI 入口
+├── update-checker.js     ← 更新检查
 ├── state-manager.js      ← 状态管理
 ├── skill-loader.js       ← Skill 加载
 ├── handover.js           ← 交接协议
+├── .xiaoxiao/
+│   └── version.json      ← 版本信息
 └── skills/              ← 7 个阶段
     └── {skill}/
         ├── SKILL.md      ← 入口（渐进式三层）

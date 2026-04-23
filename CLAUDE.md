@@ -43,8 +43,8 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ## 状态管理
 
 - 状态文件：`.xiaoxiao/state.json`
-- 项目规格：`.SPEC.md`（product-consult 输出）
-- 阶段输出：`docs/xiaoxiao/plans/`（各 Skill 输出）
+- 项目规格：`.SPEC.md`（product-consult 输出，位于项目根目录）
+- 阶段输出：`docs/xiaoxiao/plans/`（其他 Skill 输出）
 
 ## 框架文件位置
 
@@ -71,6 +71,6 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 
 ## 注意事项
 
-- 所有 Skill 输出写入 `docs/xiaoxiao/plans/` 目录
-- `.SPEC.md` 是**项目规格**，`.xiaoxiao/FRAMEWORK.md` 是**框架规格**，不要混淆
+- `docs/xiaoxiao/plans/` 是 Skill 阶段输出目录
+- `.SPEC.md` 是**项目规格**（product-consult 专用输出），`.xiaoxiao/FRAMEWORK.md` 是**框架规格**，不要混淆
 - 遵循渐进式披露：先读 SKILL.md 入口，不够再读 GUIDES/

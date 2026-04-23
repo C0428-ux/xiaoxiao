@@ -124,14 +124,16 @@ related-skills:
 
 **Entry**: All previous phases complete
 **Actions**:
-1. Write the SPEC.md document (see template below)
+1. Write the `.SPEC.md` document in the project root (see template below)
 2. Review with user
 3. Confirm: "This captures [X problem] with [Y scope] and [Z success criteria]. Ready to proceed?"
 4. Run completion command
 
+**Output location**: `./.SPEC.md` (project root)
+
 **Run on completion**:
 ```bash
-xiaoxiao complete product-consult docs/xiaoxiao/plans/product-consult-output.md
+xiaoxiao complete product-consult .SPEC.md
 ```
 
 ---

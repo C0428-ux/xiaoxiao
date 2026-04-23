@@ -67,12 +67,15 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ```
 ~/.claude/skills/xiaoxiao/
 ├── xiaoxiao.js             # CLI 入口
+├── update-checker.js       # 更新检查模块
 ├── state-manager.js        # 状态管理模块
 ├── skill-loader.js         # Skill 加载模块
 ├── handover.js            # 交接协议模块
 ├── FRAMEWORK.md           # 本文件
 ├── README.md              # 总览
 ├── SKILL.md               # 入口技能
+├── .xiaoxiao/
+│   └── version.json       # 版本信息
 └── skills/                # 7 个 Skill 定义
     └── {skill}/
         ├── SKILL.md       # 入口（渐进式三层）
@@ -110,6 +113,17 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ### 中断恢复
 
 任意时刻可中断，状态保存到 `interrupt` 字段，恢复时从断点继续。
+
+## 更新系统
+
+每次执行 `/xiaoxiao` 时自动检查更新：
+
+```bash
+node xiaoxiao.js update-check   # 检查更新
+node xiaoxiao.js update         # 下载更新
+```
+
+版本信息保存在 `.xiaoxiao/version.json`，通过 GitHub API 获取远程最新 commit SHA 进行对比。
 
 ## 渐进式披露
 
