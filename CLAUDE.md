@@ -47,7 +47,7 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 
 ## 状态管理
 
-- 状态文件：`.xiaoxiao/state.json`
+- 状态文件：`xiaoxiao-state.json`（项目根目录，每个项目独立）
 - 项目规格：`.SPEC.md`（product-consult 输出，位于项目根目录）
 - 阶段输出：`docs/xiaoxiao/plans/`（其他 Skill 输出）
 
@@ -56,7 +56,6 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ```
 .xiaoxiao/
 ├── FRAMEWORK.md      # 框架规格（框架自身）
-├── state.json        # 状态管理器
 ├── state-manager.js  # 状态读写
 ├── skill-loader.js   # Skill 加载
 ├── handover.js       # 交接协议

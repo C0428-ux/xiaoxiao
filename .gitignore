@@ -1,6 +1,5 @@
 # XiaoXiao framework - do not upload
-.xiaoxiao/state.json
-.xiaoxiao/version.json
+xiaoxiao-state.json
 .xiaoxiao/backups/
 *.backup
 *.log

@@ -87,10 +87,9 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 
 ```
 项目根/
-├── .SPEC.md               # 项目规格
-├── .xiaoxiao/
-│   └── state.json         # 项目状态
-└── docs/xiaoxiao/plans/  # 阶段输出
+├── xiaoxiao-state.json     ← 项目状态（每个项目独立）
+├── .SPEC.md                ← 产品规格
+└── docs/xiaoxiao/plans/    ← 阶段输出
 ```
 
 ## 状态管理

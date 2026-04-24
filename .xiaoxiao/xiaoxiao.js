@@ -9,14 +9,19 @@ const os = require('os');
 // 全局框架目录（脚本所在目录）
 const FRAMEWORK_DIR = __dirname;
 
-// 项目根目录：从当前目录向上查找 state.json
+// 项目根目录：从当前目录向上查找 xiaoxiao-state.json
 function findProjectRoot(startDir) {
   let dir = startDir;
   const home = os.homedir();
 
   while (dir !== home && dir !== path.parse(dir).root) {
-    const statePath = path.join(dir, '.xiaoxiao', 'state.json');
+    const statePath = path.join(dir, 'xiaoxiao-state.json');
     if (fs.existsSync(statePath)) {
+      return dir;
+    }
+    // 兼容旧路径
+    const oldStatePath = path.join(dir, '.xiaoxiao', 'state.json');
+    if (fs.existsSync(oldStatePath)) {
       return dir;
     }
     dir = path.dirname(dir);
@@ -179,7 +184,7 @@ const COMMANDS = {
 
     stateManager.init(projectName);
     console.log(`✅ 项目初始化完成: ${projectName}`);
-    console.log(`   状态文件: ${path.join(PROJECT_ROOT, '.xiaoxiao', 'state.json')}`);
+    console.log(`   状态文件: ${path.join(PROJECT_ROOT, 'xiaoxiao-state.json')}`);
     console.log(`   输出目录: ${plansDir}`);
     console.log(`\n使用 /xiaoxiao 开始开发流程`);
   },
