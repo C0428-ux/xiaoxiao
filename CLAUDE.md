@@ -37,8 +37,13 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 - 用户说"设计架构"、"技术方案" → `/architect`
 - 用户说"界面设计"、"UI"、"画原型" → `/ui-design`
 - 用户说"任务规划"、"排期"、"拆解任务" → `/task-planning`
-- 用户说"开始开发"、"写代码"、"TDD" → `/tdd-development`
+- 用户说"开始开发"、"写代码"、"TDD"、"修bug"、"迭代" → `/tdd-development`
 - 用户说"发布"、"上线"、"部署" → `/ship`
+
+**维护场景**：
+- 用户说"修bug"、"修复"、"优化" → `/tdd-development`
+- 用户说"加功能"、"添加"、"迭代" → `/task-planning`
+- 用户说"重构"、"调整架构" → `/architect`
 
 ## 状态管理
 

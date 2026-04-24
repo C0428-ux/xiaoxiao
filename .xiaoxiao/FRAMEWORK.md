@@ -110,6 +110,17 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 - `waiting-user` - 等待用户确认
 - `completed` - 全部完成
 
+### 进度保存
+
+每个 Phase 完成后可保存进度：
+
+```bash
+xiaoxiao save-progress <skill> <phase>
+# 例如：xiaoxiao save-progress strategy-review phase2
+```
+
+进度保存在 state.json 中，支持中断后恢复。
+
 ### 中断恢复
 
 任意时刻可中断，状态保存到 `interrupt` 字段，恢复时从断点继续。
