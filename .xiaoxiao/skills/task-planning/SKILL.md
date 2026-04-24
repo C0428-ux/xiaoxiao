@@ -14,6 +14,10 @@ triggers:
   - 规划任务
   - 拆解任务
   - 排期
+  - 加功能
+  - 添加功能
+  - 迭代
+  - 新功能
 prerequisites:
   - ui-design
 output-format: task-list.md
@@ -50,9 +54,9 @@ related-skills:
 **Prerequisites Check**:
 - If no ui-design output found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start task-planning. Run ui-design first."
 **Actions**:
-1. Read ui-design output - extract all screens and components
-2. Read architecture - note subsystem boundaries
-3. Read SPEC.md - verify scope and priorities
+1. Read `docs/xiaoxiao/plans/ui-design-output.md` - extract all screens and components
+2. Read `docs/xiaoxiao/plans/architect-output.md` - note subsystem boundaries
+3. Read `./SPEC.md` - verify scope and priorities
 4. Create initial backlog items (Epics → Stories)
 5. Ask: "Are there any features that were deprioritized?"
 **Exit**: Raw backlog items identified

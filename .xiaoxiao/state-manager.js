@@ -159,6 +159,32 @@ class StateManager {
   }
 
   /**
+   * 保存 Skill 阶段进度
+   */
+  saveProgress(skillName, phase) {
+    const state = this.read();
+    if (!state) {
+      throw new Error('State file not found.');
+    }
+
+    if (!state.skills[skillName]) {
+      throw new Error(`Unknown skill: ${skillName}`);
+    }
+
+    state.skills[skillName].currentPhase = phase;
+    state.skills[skillName].lastProgressAt = new Date().toISOString();
+
+    // 如果这个 skill 是当前 active 的，更新全局 phase
+    if (state.currentSkill === skillName) {
+      state.currentPhase = phase;
+    }
+
+    state.updatedAt = new Date().toISOString();
+    this._write(state);
+    return state;
+  }
+
+  /**
    * 设置当前活跃 Skill
    */
   setCurrentSkill(skillName) {

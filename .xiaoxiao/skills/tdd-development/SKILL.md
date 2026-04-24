@@ -15,6 +15,13 @@ triggers:
   - 开始开发
   - 写代码
   - 开发
+  - 修复
+  - 修bug
+  - bug
+  - 修复bug
+  - 迭代
+  - 优化
+  - 重构
 prerequisites:
   - task-planning
 output-format: code + tests
@@ -52,12 +59,12 @@ related-skills:
 **Prerequisites Check**:
 - If no task list found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start tdd-development. Run task-planning first."
 **Actions**:
-1. Review prioritized task list
+1. Read `docs/xiaoxiao/plans/task-planning-output.md` - review prioritized task list
 2. Select next task (highest priority, no blockers)
 3. Read related specs:
-   - SPEC.md for requirements
-   - ui-design for UI components
-   - architecture for API contracts
+   - Read `./SPEC.md` - for requirements
+   - Read `docs/xiaoxiao/plans/ui-design-output.md` - for UI components
+   - Read `docs/xiaoxiao/plans/architect-output.md` - for API contracts
 4. Ask: "What is the simplest test case for this?"
 **Exit**: Task selected, requirements understood
 

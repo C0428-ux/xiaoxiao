@@ -52,11 +52,17 @@ prerequisites:
 **Prerequisites Check**:
 - If `./SPEC.md` does not exist → **BLOCKED**: "Cannot start strategy-review. Run product-consult first to create SPEC.md."
 **Actions**:
-1. Review SPEC.md problem statement
+1. Read `./SPEC.md` - extract product type, core scenario, and P0 features
 2. Ask: "Is this problem worth solving at this time?"
 3. Ask: "What would we gain? What would we lose by not doing this?"
 4. Assess strategic alignment with business goals
-**Exit**: Clear on strategic intent and value proposition
+5. Ask: "What resources are available for this project?"
+**Exit**: Clear on strategic intent and resource constraints
+
+**Save Progress**:
+```bash
+xiaoxiao save-progress strategy-review phase1
+```
 
 **Key Questions**:
 - "How does this align with [company/product] strategy?"
@@ -69,20 +75,41 @@ prerequisites:
 
 **Entry**: Strategic intent confirmed
 **Actions**:
-1. Define target market segment
-2. Assess market size (TAM/SAM/SOM if applicable)
-3. Identify market trends (growing, stable, declining)
-4. Ask: "What's driving this market?"
-**Exit**: Market opportunity is quantified and validated
+1. Search for market size data using WebSearch:
+   - Query: "[product category] market size 2024 TAM"
+   - Query: "[product type] industry growth trend"
+2. Document findings with sources:
+   - **TAM**: [size] - Source: [URL or report name]
+   - **Trend**: [Growing/Stable/Declining] - Source: [citation]
+   - **Key Drivers**: [1-3 market forces] - Source: [evidence]
+3. If search fails to return useful data:
+   - Report: "Could not find reliable market data for [category]"
+   - Ask user: "Do you have internal estimates for market size?"
+   - Mark TAM as "Unverified - requires user input"
+4. Ask: "Does this market opportunity align with our capabilities?"
+**Exit**: Market opportunity quantified with source citations
+
+**Save Progress**:
+```bash
+xiaoxiao save-progress strategy-review phase2
+```
+
+**IMPORTANT**:
+- ❌ Do NOT fabricate numbers
+- ❌ Do NOT use placeholder values like "[Total Addressable Market]"
+- ✅ Report "Unverified" if data not found
+- ✅ Always cite the source of any data point
 
 **Template**:
 ```markdown
 ## Market Analysis
-- **TAM**: [Total Addressable Market]
-- **SAM**: [Serviceable Addressable Market]
-- **SOM**: [Serviceable Obtainable Market]
-- **Trend**: [Growing/Stable/Declining]
-- **Key Drivers**: [1-3 market forces]
+- **TAM**: [Amount] - Source: [URL/Report/Date]
+- **SAM**: [Amount] - Source: [citation]
+- **SOM**: [Amount] - Source: [basis for estimate]
+- **Trend**: [Growing/Stable/Declining] - Source: [citation]
+- **Key Drivers**: [1-3 market forces with citations]
+
+**Research Notes**: [Any gaps or uncertainties found]
 ```
 
 ---
@@ -91,20 +118,50 @@ prerequisites:
 
 **Entry**: Market analysis complete
 **Actions**:
-1. Identify direct competitors (solutions solving same problem)
-2. Identify indirect competitors (alternative approaches)
-3. Identify substitutes (users solving problem without products)
-4. Assess competitive advantages and moats
-**Exit**: Competitive positioning understood
+1. Search for competitors using WebSearch:
+   - Query: "[product category] competitors"
+   - Query: "[core user need] solutions"
+   - Query: "[product type] market leaders"
+2. For each competitor identified, search for:
+   - Pricing model
+   - Key features
+   - Market share (if available)
+   - Strengths and weaknesses
+3. Document findings with sources:
+   - **Competitor Name**: [brief description] - Source: [URL]
+   - **Pricing**: [if found] - Source: [citation]
+4. If unable to find competitors:
+   - Report: "No direct competitors found for [product type]"
+   - Possible reasons: "Niche market", "Emerging category", "New problem space"
+   - Ask user: "Are you aware of any solutions addressing this problem?"
+5. Assess our positioning:
+   - What do we do that competitors don't?
+   - What is our differentiator?
+   - Is this differentiation sustainable?
+**Exit**: Competitive landscape mapped with source citations
 
-**Analysis Template**:
+**Save Progress**:
+```bash
+xiaoxiao save-progress strategy-review phase3
+```
+
+**IMPORTANT**:
+- ❌ Do NOT invent competitors that don't exist
+- ❌ Do NOT assume we know competitor features without research
+- ✅ Report "Could not verify" if information is uncertain
+- ✅ Distinguish between direct competitors, indirect competitors, and substitutes
+
+**Template**:
 ```markdown
 ## Competitive Landscape
-| Competitor | Target | Strengths | Weaknesses | Moat |
-|------------|--------|-----------|------------|------|
-| [Name]     | [Seg]  | [X]       | [Y]        | [Z]  |
+
+| Competitor | Type | Key Features | Pricing | Source |
+|------------|------|--------------|---------|--------|
+| [Name]     | [Direct/Indirect] | [X] | [$/month or N/A] | [URL] |
 
 **Our Positioning**: [How we differ and why we can win]
+
+**Research Notes**: [Competitors not found / Information uncertain]
 ```
 
 ---
@@ -117,18 +174,31 @@ prerequisites:
    - Is the technology proven or experimental?
    - What are the technical risks?
    - Ask: "What's the biggest technical uncertainty?"
+   - If uncertain, propose a spike or POC
 
 2. **Resource Feasibility**
    - Do we have/can we acquire the needed skills?
    - What's the timeline reality?
    - Ask: "What's the minimum team needed?"
+   - Ask: "What's the estimated development time?"
 
 3. **Economic Feasibility**
-   - What's the development cost?
+   - What's the estimated development cost?
    - What's the expected ROI?
    - Ask: "What does success look like financially?"
+   - If uncertain, provide best-case / worst-case estimates
 
-**Exit**: Feasibility is validated with identified risks
+**Exit**: Feasibility validated with identified risks and uncertainties
+
+**Save Progress**:
+```bash
+xiaoxiao save-progress strategy-review phase4
+```
+
+**IMPORTANT**:
+- ❌ Do not understate risks to please the user
+- ✅ Acknowledge uncertainty explicitly
+- ✅ Provide ranges (e.g., "3-6 months") when exact estimates aren't possible
 
 ---
 
@@ -142,7 +212,18 @@ prerequisites:
    - **Impact**: High/Medium/Low
    - **Mitigation**: What's the response strategy?
 3. Ask: "What's the biggest risk that could kill this?"
-**Exit**: Top risks are identified with mitigation strategies
+4. Ask: "What would make you change your mind about pursuing this?"
+**Exit**: Top risks identified with mitigation strategies
+
+**Save Progress**:
+```bash
+xiaoxiao save-progress strategy-review phase5
+```
+
+**IMPORTANT**:
+- ❌ Do not hide risks that are obvious
+- ✅ Be direct about critical risks
+- ✅ Distinguish between risks we can mitigate vs risks we must accept
 
 ---
 
@@ -155,24 +236,9 @@ prerequisites:
    - **Go**: Proceed with full investment
    - **Pivot**: Modify scope/direction based on findings
    - **No-Go**: Terminate or re-evaluate later
-3. Document reasoning clearly
-4. Confirm decision with user
-
-**Decision Template**:
-```markdown
-## Recommendation: [Go/Pivot/No-Go]
-
-### Reasoning
-[Clear explanation of why]
-
-### Conditions for Success
-- [Condition 1]
-- [Condition 2]
-
-### Watch Items (risks to monitor)
-- [Risk 1]
-- [Risk 2]
-```
+3. If recommending Go, state conditions that must be true
+4. If recommending No-Go, explain what would need to change
+5. Confirm decision with user
 
 **Run on completion**:
 ```bash
@@ -185,19 +251,21 @@ xiaoxiao complete strategy-review docs/xiaoxiao/plans/strategy-review-output.md
 
 ### MUST DO
 
-- Be honest about negative findings - don't sugarcoat
+- Research actual market data, not fabricated numbers
+- Cite sources for all competitive and market information
+- Be honest when data is unavailable or uncertain
+- Challenge assumptions that seem optimistic
 - Consider opportunity cost, not just direct costs
-- Distinguish between risks you can mitigate vs accept
 - Make Go/No-Go decisions based on evidence, not enthusiasm
-- Document assumptions explicitly
 
 ### MUST NOT DO
 
 - Recommend "Go" just because the problem is interesting
+- Fabricate TAM/SAM/SOM numbers without research
+- Invent competitors or feature claims without verification
 - Ignore competitive moats - being first isn't enough
 - Skip technical feasibility when it's uncertain
 - Recommend proceeding when risks outweigh rewards
-- Make decisions based on stakeholder pressure rather than data
 
 ---
 
@@ -218,13 +286,14 @@ xiaoxiao complete strategy-review docs/xiaoxiao/plans/strategy-review-output.md
 ### Required Sections
 
 1. **Executive Summary** (3-5 sentences)
-   - Problem, opportunity, recommendation
+   - Product, opportunity, recommendation
 
 2. **Market Analysis**
-   - Size, trends, key drivers
+   - Size, trends, key drivers (with source citations)
 
 3. **Competitive Landscape**
-   - Direct/indirect competitors, positioning
+   - Direct/indirect competitors (with source citations)
+   - Our positioning and differentiator
 
 4. **Feasibility Summary**
    - Technical, resource, economic assessment
@@ -238,46 +307,8 @@ xiaoxiao complete strategy-review docs/xiaoxiao/plans/strategy-review-output.md
 7. **Conditions for Success**
    - What must be true for this to work
 
-### Example Output
-
-```markdown
-# Login Flow Redesign - Strategy Review
-
-## Executive Summary
-The login abandonment problem represents a significant market opportunity
-(40% of users affected) with moderate competitive intensity. Technical
-feasibility is high given proven auth patterns. Recommended: **Go** with
-pivot to social-first login to differentiate.
-
-## Market Analysis
-- **TAM**: $2.4B (auth解决方案市场)
-- **SAM**: $800M (SMB/SaaS segment)
-- **SOM**: $40M (Year 1 reachable)
-- **Trend**: Growing 15% YoY
-- **Key Drivers**: Security compliance, SSO demand, password fatigue
-
-## Competitive Landscape
-[See competitive analysis table]
-
-## Feasibility Summary
-- **Technical**: Low risk - proven OAuth/social login patterns
-- **Resource**: Medium - needs 2 backend + 1 frontend for MVP
-- **Economic**: 3-month payback period projected
-
-## Risk Assessment
-| Risk | P | I | Mitigation |
-|------|---|---|------------|
-| OAuth provider dependency | M | H | Multi-provider strategy |
-| Migration complexity | H | M | Phased rollout plan |
-
-## Recommendation: **Go**
-[Pivot from email-first to social-first approach]
-
-## Conditions for Success
-- [ ] Secure partnerships with OAuth providers
-- [ ] Complete migration in under 4 months
-- [ ] Achieve 80% login success rate
-```
+8. **Research Notes**
+   - Any data gaps, unverified assumptions, or uncertainties
 
 ---
 
@@ -285,7 +316,7 @@ pivot to social-first login to differentiate.
 
 | Phase | Confirmation Prompt |
 |-------|---------------------|
-| Phase 2 Complete | "Market is [size] with [trend] trend. Continue?" |
+| Phase 2 Complete | "Market is [size] with [trend] trend. Sources: [citations]. Continue?" |
 | Phase 3 Complete | "Competitors: [X]. Our advantage: [Y]. Proceed?" |
 | Phase 4 Complete | "Feasibility: [assessment]. Biggest risk: [X]. Continue?" |
 | Phase 5 Complete | "Top risks: [list]. Acceptable?" |

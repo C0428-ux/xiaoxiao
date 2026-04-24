@@ -51,14 +51,15 @@ related-skills:
 **Prerequisites Check**:
 - If no architecture document found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start ui-design. Run architect first to create architecture document."
 **Actions**:
-1. Review architecture - understand what screens/pages exist
-2. Identify user touchpoints (where users interact with system)
-3. Define page hierarchy and structure:
+1. Read `docs/xiaoxiao/plans/architect-output.md` - understand subsystem boundaries and interfaces
+2. Read `./SPEC.md` - extract P0 features and UX structure guidance
+3. Identify user touchpoints (where users interact with system)
+4. Define page hierarchy and structure:
    - **Primary**: Most used screens
    - **Secondary**: Supporting screens
    - **Utility**: Settings, profile, etc.
-4. Design navigation model (top nav, sidebar, tabs, etc.)
-5. Ask: "What's the primary user journey through this system?"
+5. Design navigation model (top nav, sidebar, tabs, etc.)
+6. Ask: "What's the primary user journey through this system?"
 **Exit**: Page structure and navigation model defined
 
 **IA Template**:

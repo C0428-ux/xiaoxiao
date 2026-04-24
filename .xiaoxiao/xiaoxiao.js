@@ -256,6 +256,22 @@ const COMMANDS = {
     }
   },
 
+  'save-progress': (args) => {
+    const skillName = args[0];
+    const phase = args[1];
+
+    if (!skillName || !phase) {
+      console.log('❌ 请指定 Skill 名称和阶段');
+      console.log('用法: xiaoxiao save-progress <skill> <phase>');
+      return;
+    }
+
+    stateManager.saveProgress(skillName, phase);
+    console.log(`✅ 已保存进度`);
+    console.log(`   Skill: ${skillName}`);
+    console.log(`   Phase: ${phase}`);
+  },
+
   'interrupt': (args) => {
     const state = stateManager.read();
     if (!state) {

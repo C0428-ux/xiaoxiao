@@ -14,6 +14,9 @@ triggers:
   - 设计架构
   - 技术方案
   - 系统设计
+  - 优化架构
+  - 重构
+  - 调整架构
 prerequisites:
   - strategy-review
 output-format: architecture.md
@@ -51,8 +54,8 @@ related-skills:
 **Prerequisites Check**:
 - If `./SPEC.md` does not exist → **BLOCKED**: "Cannot start architect. Run product-consult first to create SPEC.md."
 **Actions**:
-1. Read SPEC.md - extract functional requirements
-2. Read strategy-review - note constraints and decisions
+1. Read `./SPEC.md` - extract functional requirements
+2. Read `docs/xiaoxiao/plans/strategy-review-output.md` - note constraints and decisions
 3. Identify non-functional requirements:
    - **Performance**: latency, throughput, scalability
    - **Reliability**: uptime, recovery, redundancy

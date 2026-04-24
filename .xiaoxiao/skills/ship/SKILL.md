@@ -50,17 +50,17 @@ related-skills:
 **Prerequisites Check**:
 - If no tdd-development output found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start ship. Run tdd-development first."
 **Actions**:
-1. Verify all tasks completed:
-   - [ ] All tests pass locally
-   - [ ] All PRs reviewed and merged
-   - [ ] Code follows project standards
-2. Run pre-release checklist:
+1. Read `docs/xiaoxiao/plans/tdd-development-output.md` - verify tasks completed
+2. Verify all tests pass locally (run test suite)
+3. Verify all PRs reviewed and merged
+4. Check code follows project standards
+5. Run pre-release checklist:
    - [ ] Security scan completed
    - [ ] Performance benchmarks met
    - [ ] Database migrations reviewed
    - [ ] Environment variables configured
-3. Create release candidate
-4. Ask: "Ready for deployment?"
+6. Create release candidate
+7. Ask: "Ready for deployment?"
 **Exit**: Release validated, ready to deploy
 
 **Pre-Release Checklist**:

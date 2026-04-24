@@ -1,15 +1,14 @@
 ---
 name: product-consult
 description: >-
-  Conducts thorough product discovery through structured conversation to identify
-  the core problem, validate real needs vs surface wants, define measurable success
-  criteria, and scope MVP boundaries. Use when starting new projects, adding major
-  features, pivoting product direction, or when requirements are unclear.
+  Designs product features and functionality through structured conversation.
+  Defines what product to build, core features, user flows, and MVP scope.
+  Use when starting new projects, adding major features, or pivoting product direction.
   NOT for: bug fixes, minor UI tweaks, performance optimizations, or tasks with
   existing detailed specs.
 version: 1.0
 domain: product
-role: consultant
+role: product-designer
 triggers:
   - /product-consult
   - 产品咨询
@@ -18,6 +17,9 @@ triggers:
   - 添加功能
   - 需求不明确
   - 需求不清
+  - 做产品
+  - 设计产品
+  - 产品设计
 output-format: SPEC.md
 related-skills:
   - strategy-review
@@ -46,87 +48,116 @@ related-skills:
 
 ## Core Workflow
 
-### Phase 1: Problem Definition
+### Phase 1: Product Type & Core Scenario
 
 **Entry**: User expresses intent to build something or add a feature
 **Actions**:
-1. Ask: "What problem are you trying to solve?"
-2. Ask: "Why does this problem matter? What happens if we don't solve it?"
-3. Ask: "Who is affected by this problem?"
-4. Summarize back: "The core problem is [X]. Is this accurate?"
-**Exit**: User confirms the problem statement
+1. Ask: "What type of product is this?" (e.g., web app, mobile app, API, SaaS platform, internal tool)
+2. Ask: "Who are the primary users?" (e.g., admins, end users, developers, business users)
+3. Ask: "What is the core user scenario you're solving?" (the main flow users will perform)
+4. Ask: "What's the single most important action users must be able to do?"
+5. Summarize back: "This is a [product type] for [users] to [core action]. Correct?"
+**Exit**: Product type and core scenario confirmed
 
-**Questions to probe deeper**:
-- "What would happen if we did nothing for 6 months?"
-- "What's the cost of the status quo?"
-- "Who feels this pain most acutely?"
-
----
-
-### Phase 2: Need Discovery
-
-**Entry**: Problem confirmed in Phase 1
-**Actions**:
-1. Ask: "How do you currently solve this problem?"
-2. Ask: "What would the ideal solution look like?"
-3. Distinguish:
-   - **Functional needs**: What the system must do
-   - **Experience needs**: How it should feel to use
-   - **Emotional needs**: What peace of mind looks like
-4. Ask: "What have you tried before? What worked/didn't work?"
-**Exit**: User validates the need hierarchy
-
-**Warning signs**:
-- User says "make an app" without being able to explain why
-- "It needs to be fast/better/cleaner" without specifics
-- Multiple competing priorities with equal weight
+**Key Questions**:
+- "Is this B2B or B2C?" (helps define complexity)
+- "Is this for internal use or external customers?" (affects security/UX)
+- "What's the first thing a user should see when they open the product?"
 
 ---
 
-### Phase 3: Success Criteria
+### Phase 2: Feature Design
 
-**Entry**: Need hierarchy validated
+**Entry**: Product type confirmed in Phase 1
 **Actions**:
-1. Ask: "How will we know this is successful?"
-2. Convert vague goals to measurable criteria:
-   - ❌ "Fast" → ✅ "<200ms response time at p95"
-   - ❌ "Easy to use" → ✅ "New user completes first task in <3 minutes"
-   - ❌ "Popular" → ✅ "50% weekly active users by month 3"
-3. Confirm: "We'll measure success by [these 3-5 metrics]. Agreed?"
-**Exit**: At least 3 measurable success criteria defined
+1. Ask: "What features are essential for the first version?" (P0)
+2. Ask: "What features are important but not critical?" (P1)
+3. Ask: "What features would be nice to have?" (P2)
+4. For each P0 feature, define the primary user flow:
+   - Entry point: How does user start?
+   - Core steps: What must happen?
+   - Exit point: How does user complete?
+5. Ask: "What should this product ABSOLUTELY NOT do?" (explicit out-of-scope)
+**Exit**: Features prioritized and core flows outlined
 
-**Template**:
+**Feature Template**:
 ```markdown
-## Success Criteria
-- [ ] Metric 1: [specific, measurable outcome]
-- [ ] Metric 2: [specific, measurable outcome]
-- [ ] Metric 3: [specific, measurable outcome]
+## Feature: [Name]
+
+### Primary User Flow
+1. User [action]
+2. System [response]
+3. User [action]
+4. System [response]
+
+### Key Data
+- **Input**: [What user provides]
+- **Output**: [What user receives]
+- **Storage**: [What gets saved]
 ```
 
 ---
 
-### Phase 4: Scope Boundary
+### Phase 3: User Experience Outline
+
+**Entry**: Features defined
+**Actions**:
+1. Ask: "How do users navigate between features?" (navigation structure)
+2. Ask: "What's the main dashboard/home screen layout?"
+3. Ask: "How do users access the P0 features you mentioned?"
+4. Outline key screens needed:
+   - Landing/Home screen
+   - Primary feature screens
+   - Settings/Profile (if needed)
+5. Ask: "Are there any user roles with different access?" (admin vs user)
+**Exit**: High-level UX structure documented
+
+---
+
+### Phase 4: Success Criteria
+
+**Entry**: UX structure outlined
+**Actions**:
+1. Ask: "How will we know this product is successful?"
+2. Define measurable criteria (not technical, but business outcomes):
+   - ❌ "Fast" → ✅ "<3 seconds for primary action"
+   - ❌ "Easy to use" → ✅ "New user completes first task in <5 minutes"
+   - ❌ "Popular" → ✅ "50% weekly active users by month 3"
+3. Confirm: "Success will be measured by [3-5 metrics]. Agreed?"
+**Exit**: 3-5 measurable success criteria defined
+
+**Template**:
+```markdown
+## Success Criteria
+- [ ] [Metric 1]: [specific, measurable outcome]
+- [ ] [Metric 2]: [specific, measurable outcome]
+- [ ] [Metric 3]: [specific, measurable outcome]
+```
+
+---
+
+### Phase 5: MVP Scope
 
 **Entry**: Success criteria confirmed
 **Actions**:
-1. Ask: "What would the absolute minimum viable product look like?"
-2. Ask: "What features are nice-to-have but not critical?"
-3. Define:
-   - **P0 (MVP)**: Must have for launch
+1. Ask: "What is the absolute minimum for launch?"
+2. Define explicit boundaries:
+   - **P0 (MVP)**: Must have for launch - no more, no less
    - **P1**: Important, can ship soon after
    - **P2**: Nice to have, future iteration
-4. Explicitly state what's NOT in scope
+3. Explicitly state what's NOT in scope (prevents creep)
+4. Confirm: "MVP is [X features]. Out of scope: [Y]. Proceed?"
 **Exit**: Clear MVP scope with explicit boundaries
 
 ---
 
-### Phase 5: Output SPEC.md
+### Phase 6: Output SPEC.md
 
 **Entry**: All previous phases complete
 **Actions**:
 1. Write the `.SPEC.md` document in the project root (see template below)
 2. Review with user
-3. Confirm: "This captures [X problem] with [Y scope] and [Z success criteria]. Ready to proceed?"
+3. Confirm: "This defines a [product type] with [N] P0 features. Ready to proceed?"
 4. Run completion command
 
 **Output location**: `./.SPEC.md` (project root)
@@ -142,21 +173,20 @@ xiaoxiao complete product-consult .SPEC.md
 
 ### MUST DO
 
-- Start with "What problem are you solving?" not "What do you want to build?"
-- Distinguish surface requests ("make an app") from underlying needs
-- Verify understanding before moving to next phase
-- Make success criteria measurable and observable
-- Define scope as explicitly as success criteria
-- Document key insights discovered during consultation
+- Ask "what to build" before "why to build"
+- Define product type, core users, and primary scenarios first
+- Design features with actual user flows, not just feature lists
+- Make success criteria measurable and time-bound
+- Define explicit out-of-scope to prevent creep
+- Document UX structure at high level
 
 ### MUST NOT DO
 
-- Accept the first answer as the final answer (always probe deeper)
-- Skip the "why" - understanding motivation is critical
-- Define success as technical metrics before business outcomes
-- Allow scope to creep without re-evaluating priorities
-- Output a spec without user confirmation
-- Rush through discovery when stakes are high
+- Spend too much time on user research (product-design focus, not market-research)
+- Accept "make an app like X" without probing what that means
+- Define technical architecture (that's architect's job)
+- Skip the "what" questions and jump to implementation details
+- Allow unlimited P0 features (MVP should be small)
 
 ---
 
@@ -164,10 +194,10 @@ xiaoxiao complete product-consult .SPEC.md
 
 | Topic | File | Load When |
 |-------|------|-----------|
-| Problem Definition Techniques | GUIDES/problem-definition.md | User can't articulate the problem |
-| Need Discovery Questions | GUIDES/need-discovery.md | Surface needs vs real needs unclear |
+| Product Type Examples | GUIDES/product-types.md | Unclear what product type fits |
+| Feature Prioritization | GUIDES/prioritization.md | Can't decide P0 vs P1 vs P2 |
+| User Flow Design | GUIDES/user-flows.md | Need help mapping user flows |
 | Success Criteria Templates | GUIDES/success-criteria.md | Criteria are vague or unmeasurable |
-| Scope Prioritization | GUIDES/scoping.md | Scope is expanding uncontrollably |
 | SPEC.md Template | OUTPUTS/SPEC-template.md | Writing the output document |
 
 ---
@@ -176,61 +206,73 @@ xiaoxiao complete product-consult .SPEC.md
 
 ### Required Sections
 
-1. **Problem Statement** (1-3 sentences)
-   - One clear sentence describing the core pain point
-
-2. **Success Criteria** (3-5 bulleted, measurable)
-   - Observable outcomes, not implementation details
-
-3. **Scope**
-   - **In**: What's included in MVP
-   - **Out**: What's explicitly excluded
-
-4. **Priority**
-   - P0: MVP only - must have for launch
-   - P1: Important but can ship later
-   - P2: Nice to have, future
-
-5. **Key Insights**
-   - Discoveries during consultation that inform decisions
+1. **Product Type & Users** (product category, primary users, user roles)
+2. **Core Scenario** (the main problem being solved)
+3. **Features** (P0/P1/P2 with primary user flows)
+4. **UX Structure** (high-level screens and navigation)
+5. **Success Criteria** (3-5 measurable outcomes)
+6. **MVP Scope** (explicit In/Out lists)
 
 ### Example Output
 
 ```markdown
-# Login Flow Redesign
+# Task Management SaaS
 
-## Problem Statement
-Users abandon the login flow at a 40% rate, with 60% of abandonments
-occurring at the password reset step. This prevents core product usage
-and drives negative reviews.
+## Product Type & Users
+- **Type**: B2B SaaS Web Application
+- **Primary Users**: Project managers, team leads
+- **User Roles**: Admin (manage team), Member (use tasks)
+
+## Core Scenario
+A project manager creates tasks, assigns them to team members, and tracks progress through to completion.
+
+## Features
+
+### P0 - MVP
+1. **Task Creation**
+   - User clicks "+ New Task"
+   - Fills: title, description, assignee, due date
+   - Task appears in assignee's list
+
+2. **Task List View**
+   - Shows all tasks for current user
+   - Filter by: status, assignee, due date
+   - Sort by: due date, priority, created
+
+3. **Task Status Update**
+   - User drags task between columns: Todo → In Progress → Done
+   - Status updates immediately
+
+### P1
+- Comments on tasks
+- Email notifications
+
+### P2
+- Task dependencies
+- Gantt chart view
+
+## UX Structure
+- **Home**: Dashboard with task counts by status
+- **Task List**: Filterable list of tasks
+- **Task Detail**: Modal or page with task info
+- **Settings**: User profile, team management
 
 ## Success Criteria
-- [ ] Login completion rate increases from 60% to 85%
-- [ ] Password reset completion rate increases from 40% to 75%
-- [ ] Support tickets related to login issues decrease by 50%
-- [ ] Time-to-login for new users under 90 seconds
+- [ ] 80% of tasks created are completed within due date
+- [ ] New user completes first task in <3 minutes
+- [ ] 60% weekly active users within first month
 
-## Scope
+## MVP Scope
 ### In
-- Simplified login form (email/password only)
-- Social login (Google, GitHub)
-- One-click password reset
-- Remember device option
+- Task CRUD
+- Basic task list with filters
+- Kanban-style status board
 
 ### Out
-- Two-factor authentication (P1)
-- SSO integration (P2)
-- Account linking (P2)
-
-## Priority
-P0: Simplified login + password reset
-P1: Social login
-P2: Remember device
-
-## Key Insights
-- Password fatigue is the primary abandonment driver
-- Users prefer social login over email when available
-- Mobile abandonment rate (72%) is significantly higher than desktop (58%)
+- Comments (P1)
+- Notifications (P1)
+- Mobile app (P2)
+- Advanced analytics (P2)
 ```
 
 ---
@@ -239,8 +281,9 @@ P2: Remember device
 
 | Phase | Confirmation Prompt |
 |-------|---------------------|
-| Phase 1 Complete | "The core problem is **[X]**. Is this accurate?" |
-| Phase 2 Complete | "Your needs are: Functional [X], Experience [Y], Emotional [Z]. Correct?" |
-| Phase 3 Complete | "Success will be measured by: 1) [X], 2) [Y], 3) [Z]. Agreed?" |
-| Phase 4 Complete | "MVP scope is [X]. P1 includes [Y]. Out of scope: [Z]. Proceed?" |
+| Phase 1 Complete | "Product type: **[X]**, Core scenario: **[Y]**. Correct?" |
+| Phase 2 Complete | "P0: [A, B, C]. P1: [D, E]. Flows defined. Proceed?" |
+| Phase 3 Complete | "UX Structure: [screens]. Navigation: [model]. Continue?" |
+| Phase 4 Complete | "Success: 1) [X], 2) [Y], 3) [Z]. Agreed?" |
+| Phase 5 Complete | "MVP: [features]. Out of scope: [excluded]. Proceed?" |
 | Final | "SPEC.md is complete. Confirm to proceed to Strategy Review." |
