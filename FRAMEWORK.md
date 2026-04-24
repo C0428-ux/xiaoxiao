@@ -18,16 +18,15 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ~/.claude/skills/xiaoxiao/          ← 全局（框架代码，一次安装）
 ~/projects/myapp/                    ← 具体项目（每个项目独立）
 ├── .SPEC.md                        ← 项目规格
-├── .xiaoxiao/
-│   └── state.json                  ← 项目状态
+├── xiaoxiao-state.json             ← 项目状态（项目根目录）
 └── docs/xiaoxiao/plans/           ← 阶段输出
 ```
 
 | 层级 | 位置 | 说明 |
 |------|------|------|
 | 全局框架 | `~/.claude/skills/xiaoxiao/` | 框架代码，一次安装，永久可用 |
-| 项目本地 | `./.xiaoxiao/` | state.json，每个项目独立 |
-| 项目本地 | `./SPEC.md` | product-consult 输出，每个项目独立 |
+| 项目本地 | `./xiaoxiao-state.json` | 状态文件，每个项目独立 |
+| 项目本地 | `./.SPEC.md` | product-consult 输出，每个项目独立 |
 | 项目本地 | `./docs/xiaoxiao/plans/` | 阶段输出，每个项目独立 |
 
 ## 流程
@@ -74,8 +73,6 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ├── FRAMEWORK.md           # 本文件
 ├── README.md              # 总览
 ├── SKILL.md               # 入口技能
-├── .xiaoxiao/
-│   └── version.json       # 版本信息
 └── skills/                # 7 个 Skill 定义
     └── {skill}/
         ├── SKILL.md       # 入口（渐进式三层）
@@ -133,7 +130,7 @@ node xiaoxiao.js update-check   # 检查更新
 node xiaoxiao.js update         # 下载更新
 ```
 
-版本信息保存在 `.xiaoxiao/version.json`，通过 GitHub API 获取远程最新 commit SHA 进行对比。
+版本信息保存在 `version.json`，通过 GitHub API 获取远程最新 commit SHA 进行对比。
 
 ## 渐进式披露
 

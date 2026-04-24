@@ -54,12 +54,11 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ## 框架文件位置
 
 ```
-.xiaoxiao/
-├── FRAMEWORK.md      # 框架规格（框架自身）
-├── state-manager.js  # 状态读写
-├── skill-loader.js   # Skill 加载
-├── handover.js       # 交接协议
-└── skills/           # 7 个 Skill 定义
+FRAMEWORK.md      # 框架规格（框架自身）
+state-manager.js  # 状态读写
+skill-loader.js   # Skill 加载
+handover.js       # 交接协议
+skills/           # 7 个 Skill 定义
     └── {skill}/
         ├── SKILL.md  # Skill 入口（渐进式）
         ├── GUIDES/   # 细节文档
@@ -76,5 +75,5 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ## 注意事项
 
 - `docs/xiaoxiao/plans/` 是 Skill 阶段输出目录
-- `.SPEC.md` 是**项目规格**（product-consult 专用输出），`.xiaoxiao/FRAMEWORK.md` 是**框架规格**，不要混淆
+- `.SPEC.md` 是**项目规格**（product-consult 专用输出），`FRAMEWORK.md` 是**框架规格**，不要混淆
 - 遵循渐进式披露：先读 SKILL.md 入口，不够再读 GUIDES/

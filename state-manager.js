@@ -15,9 +15,8 @@ class StateManager {
   constructor(projectRoot, frameworkRoot = null) {
     this.projectRoot = projectRoot;
     this.frameworkRoot = frameworkRoot || projectRoot;
-    this.stateDir = path.join(projectRoot, '.xiaoxiao');
-    this.statePath = path.join(projectRoot, 'xiaoxiao-state.json');  // 项目根目录
-    this.backupDir = path.join(this.stateDir, 'backups');
+    this.statePath = path.join(projectRoot, 'xiaoxiao-state.json');
+    this.backupDir = path.join(projectRoot, '.backups');
   }
 
   /**

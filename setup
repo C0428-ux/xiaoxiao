@@ -44,7 +44,7 @@ XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完
 ## 框架位置
 
 - 框架：~/.claude/skills/xiaoxiao/
-- 状态文件：.xiaoxiao/state.json
+- 状态文件：xiaoxiao-state.json
 - 项目规格：.SPEC.md
 
 EOF
@@ -58,11 +58,10 @@ else
 fi
 
 # 3. 初始化版本文件
-if [ ! -f ~/.claude/skills/xiaoxiao/.xiaoxiao/version.json ]; then
+if [ ! -f ~/.claude/skills/xiaoxiao/version.json ]; then
     echo "📝 初始化版本文件..."
-    mkdir -p ~/.claude/skills/xiaoxiao/.xiaoxiao
     SHA=$(git -C ~/.claude/skills/xiaoxiao rev-parse --short HEAD)
-    echo "{\"version\": \"latest\", \"sha\": \"$SHA\", \"updatedAt\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > ~/.claude/skills/xiaoxiao/.xiaoxiao/version.json
+    echo "{\"version\": \"latest\", \"sha\": \"$SHA\", \"updatedAt\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}" > ~/.claude/skills/xiaoxiao/version.json
 fi
 
 # 4. 验证安装
