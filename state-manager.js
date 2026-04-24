@@ -496,7 +496,7 @@ class StateManager {
       fs.mkdirSync(this.backupDir, { recursive: true });
     }
 
-    const src = path.join(this.stateDir, filename);
+    const src = path.join(this.projectRoot, filename);
     const timestamp = Date.now();
     const backupPath = path.join(this.backupDir, `${timestamp}_${filename}`);
 
@@ -516,8 +516,8 @@ class StateManager {
   }
 
   _write(state) {
-    if (!fs.existsSync(this.stateDir)) {
-      fs.mkdirSync(this.stateDir, { recursive: true });
+    if (!fs.existsSync(this.projectRoot)) {
+      fs.mkdirSync(this.projectRoot, { recursive: true });
     }
     fs.writeFileSync(this.statePath, JSON.stringify(state, null, 2), 'utf-8');
   }
