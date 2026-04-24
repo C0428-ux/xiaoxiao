@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 const { execSync } = require('child_process');
 
 const GITHUB_REPO = 'C0428-ux/xiaoxiao';
@@ -10,8 +12,8 @@ class UpdateChecker {
     this.skillPath = skillPath;
   }
 
-  // 直接从本地 git 读取 SHA
   getLocalVersion() {
+    // 优先从 git 读取
     try {
       const sha = execSync('git rev-parse HEAD', {
         cwd: this.skillPath,
@@ -24,6 +26,17 @@ class UpdateChecker {
         sha: sha
       };
     } catch (e) {
+      // 没有 git，从 version.json 读取
+      try {
+        const versionFile = path.join(this.skillPath, 'version.json');
+        if (fs.existsSync(versionFile)) {
+          const data = JSON.parse(fs.readFileSync(versionFile, 'utf-8'));
+          return {
+            version: data.version || data.sha?.substring(0, 7) || 'unknown',
+            sha: data.sha || null
+          };
+        }
+      } catch (e2) {}
       return {
         version: 'unknown',
         sha: null
