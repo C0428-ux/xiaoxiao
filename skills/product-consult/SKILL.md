@@ -169,6 +169,44 @@ xiaoxiao complete product-consult .SPEC.md
 
 ---
 
+## Iteration Management
+
+### New Development Cycle (Adding Features)
+
+When user wants to add new features to existing project:
+
+1. **Check iteration state**: Read `xiaoxiao-state.json` to know current iteration (v1, v2, etc.)
+
+2. **If continuing same project cycle**: Append new features to existing `.SPEC.md`
+   - Add new P0/P1 features under "V[N] Features" section
+   - Do NOT replace existing content
+
+3. **If starting new development cycle**: Create new iteration first
+   ```bash
+   node ~/.claude/skills/xiaoxiao/xiaoxiao.js new-iteration
+   ```
+   Then create `.SPEC.md.v2`, `.SPEC.md.v3`, etc.
+
+4. **SPEC.md versioning**:
+   - First cycle: `.SPEC.md`
+   - Second cycle: `.SPEC.md.v2`
+   - Third cycle: `.SPEC.md.v3`
+
+### MUST DO
+
+- Check current iteration before modifying SPEC.md
+- Append new features instead of replacing existing content
+- Mark each feature with iteration ID (V2, V3, etc.)
+- Track which iteration each feature belongs to
+
+### MUST NOT DO
+
+- Do not create fresh SPEC.md if project already exists
+- Do not overwrite previous iteration's SPEC.md
+- Do not reset project state without user confirmation
+
+---
+
 ## Constraints
 
 ### MUST DO

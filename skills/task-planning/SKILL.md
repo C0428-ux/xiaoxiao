@@ -217,6 +217,48 @@ xiaoxiao complete task-planning docs/xiaoxiao/plans/task-planning-output.md
 
 ---
 
+## Iteration Management
+
+### Starting a New Iteration
+
+When user says "add feature", "new development cycle", or "start iteration":
+
+1. **Check current iteration state** (from `xiaoxiao-state.json`):
+   - If `currentIteration` has unstarted/incomplete skills → continue that iteration
+   - If all skills are completed → create new iteration
+
+2. **Create new iteration** by running:
+   ```bash
+   node ~/.claude/skills/xiaoxiao/xiaoxiao.js new-iteration
+   ```
+   This calls `stateManager.startNewIteration()` which:
+   - Completes current iteration with summary
+   - Resets all skills to pending
+   - Creates new iteration (v2, v3, etc.)
+
+3. **Output file naming**: Use version suffix when adding features
+   - First cycle: `docs/xiaoxiao/plans/task-planning-output.md`
+   - Second cycle: `docs/xiaoxiao/plans/task-planning-output-v2.md`
+   - Third cycle: `docs/xiaoxiao/plans/task-planning-output-v3.md`
+   - Same applies to other skill outputs
+
+4. **SPEC.md handling**: Append new features to existing SPEC.md, mark with current iteration ID
+
+### MUST DO for Iteration
+
+- Read `xiaoxiao-state.json` before starting to know which iteration we're in
+- When adding features to existing project, create new iteration (don't restart from v1)
+- Output files should use v2, v3 suffix to avoid overwriting previous cycle's work
+- Complete iteration after finishing all P0 tasks: `xiaoxiao complete-iteration "<summary>"`
+
+### MUST NOT DO
+
+- Do not overwrite previous iteration's output files
+- Do not reset skills if previous iteration is incomplete
+- Do not modify .SPEC.md by replacing content; only append new sections
+
+---
+
 ## Constraints
 
 ### MUST DO

@@ -72,6 +72,17 @@ skills/           # 7 个 Skill 定义
 3. CONFIRM 节点 → 暂停，等用户确认
 4. Skill 完成 → 自动交接下一个 Skill
 
+## 迭代管理
+
+每次开发周期称为一个**迭代（Iteration）**，状态文件追踪完整历史：
+
+- 迭代命名：`v1`, `v2`, `v3` ...
+- 每次新开发周期自动创建新迭代，所有 skills 重置为 pending
+- 产出物路径固定（`.SPEC.md`, `docs/xiaoxiao/plans/`），由 iteration 区分版本
+- 不覆盖旧版本产出物，新功能作为新 iteration 追加
+
+**恢复项目时**：读取 `xiaoxiao-state.json` 的 `currentIteration` 和 `iterations[]` 了解历史。
+
 ## 注意事项
 
 - `docs/xiaoxiao/plans/` 是 Skill 阶段输出目录
