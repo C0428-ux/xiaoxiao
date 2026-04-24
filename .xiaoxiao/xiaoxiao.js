@@ -154,9 +154,13 @@ const COMMANDS = {
         console.log(`📄 输出: ${path.relative(PROJECT_ROOT, finalOutputPath)}`);
         console.log(`\n▶ 进入下一阶段: ${nextSkill}`);
       } else {
+        // 所有技能完成，标记迭代完成
+        stateManager.completeIteration('完成所有阶段');
         console.log(`✅ ${skillName} 完成`);
         console.log(`📄 输出: ${path.relative(PROJECT_ROOT, finalOutputPath)}`);
         console.log(`\n🎉 所有阶段完成！`);
+        console.log(`\n📌 迭代 ${state.currentIteration} 已完成`);
+        console.log(`   使用 "xiaoxiao new-iteration" 开始新功能开发`);
       }
     } else {
       console.log(`✅ ${skillName} 标记为完成`);
@@ -187,10 +191,11 @@ const COMMANDS = {
       return;
     }
 
+    const currentIter = stateManager.getCurrentIteration();
+
     console.log(`📊 XiaoXiao 状态\n`);
     console.log(`项目: ${status.project.name}`);
-    console.log(`当前阶段: ${status.currentSkill || 'idle'}`);
-    console.log(`阶段状态: ${status.currentPhase}\n`);
+    console.log(`当前迭代: ${status.currentIteration || '无'} ${currentIter?.summary ? `(${currentIter.summary})` : ''}\n`);
 
     console.log('Skills:');
     for (const [name, skill] of Object.entries(status.skills)) {
@@ -272,6 +277,39 @@ const COMMANDS = {
     console.log(`   Phase: ${phase}`);
   },
 
+  'new-iteration': () => {
+    try {
+      const state = stateManager.startNewIteration();
+      console.log(`✅ 已开始新迭代: ${state.currentIteration}`);
+      console.log(`   项目: ${state.project.name}`);
+      console.log(`   迭代总数: ${state.iterations.length}`);
+      console.log(`   所有 Skills 已重置为 pending`);
+    } catch (e) {
+      console.log(`❌ 失败: ${e.message}`);
+    }
+  },
+
+  'iterations': () => {
+    const iterations = stateManager.getAllIterations();
+    const current = stateManager.getCurrentIteration();
+
+    console.log(`📋 迭代历史 (${iterations.length} 个)\n`);
+
+    iterations.forEach(iter => {
+      const marker = iter.id === current?.id ? '→' : ' ';
+      const status = iter.completedAt ? '✅' : '🔄';
+      console.log(`${marker} ${status} ${iter.id} - ${iter.summary || '进行中'}`);
+      console.log(`   开始: ${iter.startedAt}`);
+      if (iter.completedAt) {
+        console.log(`   完成: ${iter.completedAt}`);
+      }
+    });
+
+    if (current) {
+      console.log(`\n当前迭代: ${current.id}`);
+    }
+  },
+
   'interrupt': (args) => {
     const state = stateManager.read();
     if (!state) {
@@ -331,27 +369,29 @@ const COMMANDS = {
 用法: xiaoxiao <command> [args]
 
 命令:
-  init-project [name]  初始化项目（创建目录结构和状态）
-  status               显示当前状态
-  resume               恢复中断
-  goto <skill>         跳转到指定 Skill
-  interrupt [note]      中断当前 Skill
-  complete <skill>     标记 Skill 完成（需先创建输出文件）
-  update-check         检查更新
-  update               下载更新
-  skip-update          永久跳过更新检查
-  unskip-update        恢复更新检查
-  version              显示版本信息
-  skills               列出所有可用 Skill
-  load <skill>         加载 Skill 信息（显示完整内容）
-  list                 列出可执行的 Skills
-  help                 显示帮助
+  init-project [name]    初始化项目（创建目录结构和状态）
+  status                  显示当前状态
+  iterations              显示所有迭代历史
+  new-iteration           开始新迭代（新功能/第二轮开发）
+  resume                  恢复中断
+  goto <skill>            跳转到指定 Skill
+  interrupt [note]         中断当前 Skill
+  complete <skill>        标记 Skill 完成（需先创建输出文件）
+  update-check            检查更新
+  update                  下载更新
+  skip-update             永久跳过更新检查
+  unskip-update           恢复更新检查
+  version                 显示版本信息
+  skills                  列出所有可用 Skill
+  load <skill>            加载 Skill 信息（显示完整内容）
+  list                    列出可执行的 Skills
+  help                    显示帮助
 
 示例:
   xiaoxiao init-project my-project
   xiaoxiao status
-  xiaoxiao complete product-consult docs/xiaoxiao/plans/product-consult-output.md
-  xiaoxiao goto strategy-review
+  xiaoxiao iterations
+  xiaoxiao new-iteration
 
 Skills:
   product-consult → strategy-review → architect → ui-design → task-planning → tdd-development → ship

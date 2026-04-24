@@ -32,7 +32,7 @@ class StateManager {
     }
 
     const state = {
-      version: '0.6',
+      version: '0.7',  // 版本升级，支持迭代
       currentSkill: null,
       currentPhase: 'idle',
       project: {
@@ -51,6 +51,20 @@ class StateManager {
         };
         return acc;
       }, {}),
+      // 迭代历史
+      iterations: [
+        {
+          id: 'v1',
+          number: 1,
+          startedAt: timestamp,
+          completedAt: null,
+          summary: null,
+          specFile: '.SPEC.md',
+          plansDir: 'docs/xiaoxiao/plans'
+        }
+      ],
+      currentIteration: 'v1',
+      // 旧版本兼容字段（保留但不使用）
       handover: {
         from: null,
         to: null,
@@ -68,7 +82,7 @@ class StateManager {
         savedAt: null
       },
       settings: {
-        skipUpdate: false  // true = 永久跳过更新检查
+        skipUpdate: false
       },
       createdAt: timestamp,
       updatedAt: timestamp
@@ -288,6 +302,113 @@ class StateManager {
 
     this._write(state);
     return state;
+  }
+
+  /**
+   * 开始新一轮迭代
+   */
+  startNewIteration() {
+    const state = this.read();
+    if (!state) {
+      throw new Error('State file not found.');
+    }
+
+    // 完成当前迭代（如果存在未完成的）
+    if (state.currentIteration) {
+      const currentIter = this.getCurrentIteration();
+      if (currentIter && !currentIter.completedAt) {
+        this.completeIteration('未完成迭代');
+      }
+    }
+
+    // 创建新迭代
+    const timestamp = new Date().toISOString();
+    const prevIterations = state.iterations || [];
+    const nextNumber = prevIterations.length + 1;
+    const nextId = `v${nextNumber}`;
+
+    const newIteration = {
+      id: nextId,
+      number: nextNumber,
+      startedAt: timestamp,
+      completedAt: null,
+      summary: null,
+      specFile: '.SPEC.md',  // 始终使用当前路径
+      plansDir: 'docs/xiaoxiao/plans'  // 始终使用当前路径
+    };
+
+    state.iterations = [...prevIterations, newIteration];
+    state.currentIteration = nextId;
+
+    // 重置所有 skills 为 pending
+    for (const skill of SKILLS) {
+      state.skills[skill] = {
+        status: 'pending',
+        startedAt: null,
+        completedAt: null,
+        outputs: {},
+        loopCount: 0,
+        blockedReason: null
+      };
+    }
+    state.currentSkill = null;
+    state.currentPhase = 'idle';
+
+    this._write(state);
+    return state;
+  }
+
+  /**
+   * 完成当前迭代
+   */
+  completeIteration(summary) {
+    const state = this.read();
+    if (!state) {
+      throw new Error('State file not found.');
+    }
+
+    const currentIterId = state.currentIteration;
+    const iterations = state.iterations.map(iter => {
+      if (iter.id === currentIterId) {
+        return {
+          ...iter,
+          completedAt: new Date().toISOString(),
+          summary: summary
+        };
+      }
+      return iter;
+    });
+
+    state.iterations = iterations;
+    this._write(state);
+    return state;
+  }
+
+  /**
+   * 获取当前迭代信息
+   */
+  getCurrentIteration() {
+    const state = this.read();
+    if (!state || !state.currentIteration) return null;
+    return state.iterations?.find(iter => iter.id === state.currentIteration) || null;
+  }
+
+  /**
+   * 获取指定迭代
+   */
+  getIteration(iterId) {
+    const state = this.read();
+    if (!state) return null;
+    return state.iterations?.find(iter => iter.id === iterId) || null;
+  }
+
+  /**
+   * 获取所有迭代
+   */
+  getAllIterations() {
+    const state = this.read();
+    if (!state) return [];
+    return state.iterations || [];
   }
 
   /**
