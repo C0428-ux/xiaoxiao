@@ -47,6 +47,8 @@ related-skills:
 ### Phase 1: Pre-Release Validation
 
 **Entry**: Development complete
+**Prerequisites Check**:
+- If no tdd-development output found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start ship. Run tdd-development first."
 **Actions**:
 1. Verify all tasks completed:
    - [ ] All tests pass locally

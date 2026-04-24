@@ -49,6 +49,8 @@ related-skills:
 ### Phase 1: Task Selection
 
 **Entry**: Task list from task-planning
+**Prerequisites Check**:
+- If no task list found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start tdd-development. Run task-planning first."
 **Actions**:
 1. Review prioritized task list
 2. Select next task (highest priority, no blockers)

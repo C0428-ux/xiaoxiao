@@ -48,6 +48,8 @@ related-skills:
 ### Phase 1: Requirements Extraction
 
 **Entry**: SPEC.md and strategy-review output exist
+**Prerequisites Check**:
+- If `./SPEC.md` does not exist → **BLOCKED**: "Cannot start architect. Run product-consult first to create SPEC.md."
 **Actions**:
 1. Read SPEC.md - extract functional requirements
 2. Read strategy-review - note constraints and decisions

@@ -48,6 +48,8 @@ related-skills:
 ### Phase 1: Information Architecture
 
 **Entry**: Architecture document exists
+**Prerequisites Check**:
+- If no architecture document found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start ui-design. Run architect first to create architecture document."
 **Actions**:
 1. Review architecture - understand what screens/pages exist
 2. Identify user touchpoints (where users interact with system)

@@ -49,6 +49,8 @@ prerequisites:
 ### Phase 1: Direction Validation
 
 **Entry**: SPEC.md exists from product-consult
+**Prerequisites Check**:
+- If `./SPEC.md` does not exist → **BLOCKED**: "Cannot start strategy-review. Run product-consult first to create SPEC.md."
 **Actions**:
 1. Review SPEC.md problem statement
 2. Ask: "Is this problem worth solving at this time?"

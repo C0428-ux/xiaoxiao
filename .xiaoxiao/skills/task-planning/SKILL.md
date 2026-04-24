@@ -47,6 +47,8 @@ related-skills:
 ### Phase 1: Backlog Extraction
 
 **Entry**: UI designs and architecture exist
+**Prerequisites Check**:
+- If no ui-design output found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start task-planning. Run ui-design first."
 **Actions**:
 1. Read ui-design output - extract all screens and components
 2. Read architecture - note subsystem boundaries
