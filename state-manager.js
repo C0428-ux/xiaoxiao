@@ -27,7 +27,7 @@ class StateManager {
 
     // 备份已有状态
     if (fs.existsSync(this.statePath)) {
-      this._backup('state.json');
+      this._backup('xiaoxiao-state.json');
     }
 
     const state = {
