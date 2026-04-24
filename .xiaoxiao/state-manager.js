@@ -117,8 +117,16 @@ class StateManager {
       throw new Error('State file not found.');
     }
 
+    // 如果 skill 不存在，初始化它（兼容旧状态文件）
     if (!state.skills[skillName]) {
-      throw new Error(`Unknown skill: ${skillName}`);
+      state.skills[skillName] = {
+        status: 'pending',
+        startedAt: null,
+        completedAt: null,
+        outputs: {},
+        loopCount: 0,
+        blockedReason: null
+      };
     }
 
     state.skills[skillName] = {
@@ -167,8 +175,17 @@ class StateManager {
       throw new Error('State file not found.');
     }
 
+    // 如果 skill 不存在，初始化它（兼容旧状态文件）
     if (!state.skills[skillName]) {
-      throw new Error(`Unknown skill: ${skillName}`);
+      state.skills[skillName] = {
+        status: 'pending',
+        startedAt: null,
+        completedAt: null,
+        outputs: {},
+        loopCount: 0,
+        blockedReason: null,
+        currentPhase: null
+      };
     }
 
     state.skills[skillName].currentPhase = phase;
