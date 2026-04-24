@@ -16,3 +16,4 @@ Thumbs.db
 node_modules/
 *.tmp
 .claude/settings.json
+version.json
