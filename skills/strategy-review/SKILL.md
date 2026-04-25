@@ -75,7 +75,7 @@ xiaoxiao save-progress strategy-review phase1
 
 **Entry**: Strategic intent confirmed
 **Actions**:
-1. Search for market size data using WebSearch:
+1. Search for market size data using search skill:
    - Query: "[product category] market size 2024 TAM"
    - Query: "[product type] industry growth trend"
 2. Document findings with sources:
@@ -118,7 +118,7 @@ xiaoxiao save-progress strategy-review phase2
 
 **Entry**: Market analysis complete
 **Actions**:
-1. Search for competitors using WebSearch:
+1. Search for competitors using search skill:
    - Query: "[product category] competitors"
    - Query: "[core user need] solutions"
    - Query: "[product type] market leaders"
@@ -240,6 +240,8 @@ xiaoxiao save-progress strategy-review phase5
 4. If recommending No-Go, explain what would need to change
 5. Confirm decision with user
 
+**Final CONFIRM**: "Strategy Review 完成。文档已输出到 docs/xiaoxiao/plans/strategy-review-output.md。确认进入 Architect 阶段？"
+
 **Run on completion**:
 ```bash
 xiaoxiao complete strategy-review docs/xiaoxiao/plans/strategy-review-output.md
@@ -324,3 +326,4 @@ This updates `xiaoxiao-state.json` and records the skill output path.
 | Phase 4 Complete | "Feasibility: [assessment]. Biggest risk: [X]. Continue?" |
 | Phase 5 Complete | "Top risks: [list]. Acceptable?" |
 | Phase 6 Complete | "Recommendation: **[Go/Pivot/No-Go]**. Confirmed?" |
+| Final | "Strategy Review 完成。文档已输出到 docs/xiaoxiao/plans/strategy-review-output.md。确认进入 Architect 阶段？" |

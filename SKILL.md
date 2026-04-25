@@ -94,13 +94,6 @@ node ~/.claude/skills/xiaoxiao/xiaoxiao.js status
 | 6. tdd-development | TDD开发 | 代码 |
 | 7. ship | 发布上线 | 上线 |
 
-## CONFIRM 节点
-
-每个阶段完成后，Claude 会停下来问你确认：
-
-> "阶段完成，确认进入下一阶段？"
-
-你确认后自动进入下一阶段。
 
 ## 状态管理
 
@@ -121,10 +114,10 @@ node ~/.claude/skills/xiaoxiao/xiaoxiao.js status
 │   ├── ui-design/
 │   ├── task-planning/
 │   ├── tdd-development/
-│   └── ship/
+│   ├── ship/
+│   └── search/              ← 内置搜索工具（供其他skill调用）
 ```
 
-## 使用示例
 
 **新建项目**：
 ```
@@ -148,13 +141,8 @@ Claude：开始 product-consult（基于现有代码）
 ...
 ```
 
-## 中断与恢复
-
-- 说"中断" → 保存当前进度
-- 说"继续" → 从断点恢复
-
 ## 注意事项
 
 - 每个阶段产出写入项目目录，不是框架目录
-- 遵循渐进式披露：先读 SKILL.md，不够再读 GUIDES/
+- 遵循渐进式披露：每执行一个skill先读 SKILL.md，不够再读 GUIDES/
 - .SPEC.md 是**项目规格**，FRAMEWORK.md 是**框架规格**

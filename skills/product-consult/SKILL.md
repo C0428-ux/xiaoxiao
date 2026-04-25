@@ -162,6 +162,8 @@ related-skills:
 
 **Output location**: `./.SPEC.md` (project root)
 
+**Final CONFIRM**: "SPEC.md 已完成并保存。确认进入 Strategy Review 阶段？"
+
 **MUST: Update state after completion**
 ```bash
 xiaoxiao complete product-consult .SPEC.md
@@ -327,4 +329,4 @@ A project manager creates tasks, assigns them to team members, and tracks progre
 | Phase 3 Complete | "UX Structure: [screens]. Navigation: [model]. Continue?" |
 | Phase 4 Complete | "Success: 1) [X], 2) [Y], 3) [Z]. Agreed?" |
 | Phase 5 Complete | "MVP: [features]. Out of scope: [excluded]. Proceed?" |
-| Final | "SPEC.md is complete. Confirm to proceed to Strategy Review." |
+| Final | "SPEC.md 已完成并保存。确认进入 Strategy Review 阶段？" |
