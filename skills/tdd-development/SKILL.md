@@ -90,6 +90,7 @@ NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
    - `docs/xiaoxiao/plans/ui-design/preview.html` - main preview
    - `docs/xiaoxiao/plans/ui-design/pages/*.html` - individual pages
    - Extract component structures for frontend tasks
+   - **IMPORTANT**: Frontend implementations follow UI design, not task-planning descriptions
 4. Analyze task dependencies (DAG):
    - Backend tasks: API, database, auth
    - Frontend tasks: components, pages (depend on backend)

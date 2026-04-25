@@ -54,7 +54,7 @@ related-skills:
 **Prerequisites Check**:
 - If no ui-design output found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start task-planning. Run ui-design first."
 **Actions**:
-1. Read `docs/xiaoxiao/plans/ui-design-output.md` - extract all screens and components
+1. Read `docs/xiaoxiao/plans/ui-design/` - reference screens and components (do NOT copy UI specs into task descriptions)
 2. Read `docs/xiaoxiao/plans/architect-output.md` - note subsystem boundaries
 3. Read `./SPEC.md` - verify scope and priorities
 4. Create initial backlog items (Epics → Stories)
@@ -75,6 +75,11 @@ related-skills:
 - [ ] Story: User can view project list
 ...
 ```
+
+**IMPORTANT: UI Reference vs Copy**
+- When creating frontend tasks, reference UI design files, don't duplicate specs
+- Example: Write "Implement LoginForm per ui-design/preview.html" not "LoginForm: email input + password input + submit button"
+- TDD Development will read the actual UI design files for implementation details
 
 ---
 
@@ -104,12 +109,11 @@ related-skills:
    - Return 401 on failure
 
 2. [ ] **Frontend**: Create LoginForm component
-   - Email input with validation
-   - Password input with show/hide
-   - Submit button with loading state
-   - Error message display
+   - Reference: `docs/xiaoxiao/plans/ui-design/preview.html` (Login section)
+   - Implementation follows UI design, not task description
 
 3. [ ] **Frontend**: Create LoginPage
+   - Reference: `docs/xiaoxiao/plans/ui-design/pages/login.html`
    - Wire up LoginForm
    - Handle success → redirect to dashboard
    - Handle error → show error message
@@ -119,6 +123,12 @@ related-skills:
    - Invalid credentials
    - Network error
 ```
+
+**IMPORTANT: Frontend tasks must reference UI design files**
+- Task descriptions should reference the actual UI design, not duplicate specs
+- Example: "Create LoginForm per ui-design/preview.html" not full component spec
+- TDD workers will read UI design files directly for implementation details
+- This avoids task-planning re-doing ui-design's work
 
 ---
 
