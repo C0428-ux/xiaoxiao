@@ -53,13 +53,20 @@ related-skills:
 **Entry**: UI designs and architecture exist
 **Prerequisites Check**:
 - If no ui-design output found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start task-planning. Run ui-design first."
+- If no architect output found → **BLOCKED**: "Cannot start task-planning. Run architect first to get technology stack."
 **Actions**:
-1. Read `docs/xiaoxiao/plans/ui-design/` - reference screens and components (do NOT copy UI specs into task descriptions)
-2. Read `docs/xiaoxiao/plans/architect-output.md` - note subsystem boundaries
+1. Read `docs/xiaoxiao/plans/architect-output.md` - extract technology stack (required for task estimation)
+2. Read `docs/xiaoxiao/plans/ui-design/` - reference screens and components (do NOT copy UI specs into task descriptions)
 3. Read `./SPEC.md` - verify scope and priorities
 4. Create initial backlog items (Epics → Stories)
 5. Ask: "Are there any features that were deprioritized?"
 **Exit**: Raw backlog items identified
+
+**Technology Stack MUST come from architect skill**:
+- Frontend: React/Vue/Angular (from architect-output.md technology-stack section)
+- Backend: Node.js/Go/Python/etc (from architect-output.md)
+- Database: PostgreSQL/MongoDB/etc (from architect-output.md)
+- **Do NOT make technology decisions in task-planning** - that was done in architect phase
 
 **Backlog Structure**:
 ```markdown

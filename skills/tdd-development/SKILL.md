@@ -103,17 +103,24 @@ NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
 ### Phase 2: Task Distribution
 
 **Entry**: Task analysis complete
+**IMPORTANT**: You MUST use Agent tool to spawn parallel workers. DO NOT implement tasks yourself.
+**Prerequisites**:
+- This phase MUST be executed using Agent tool with subagent_type "parallel-dispatcher"
+- You act as orchestrator, spawning workers for independent tasks
+- You CANNOT skip this and directly implement code
+
 **Actions**:
 1. Initialize Message Bus:
    ```bash
    mkdir -p docs/xiaoxiao/plans/tdd/.message-bus/events
    ```
-2. Use **parallel-dispatcher** pattern:
+2. Use **parallel-dispatcher** to dispatch workers:
    - Read task dependencies from task-planning output
    - Identify first parallel group (no blockers)
-   - Dispatch workers using Agent tool:
-     - **Backend workers**: receive API/DB tasks
-     - **Frontend workers**: receive component tasks + UI design path
+   - **MUST use Agent tool to spawn task-worker agents**
+   - **DO NOT implement code directly yourself**
+   - Backend workers receive API/DB tasks
+   - Frontend workers receive component tasks + UI design path
 3. Maximum 5 concurrent workers
 4. Monitor via Message Bus:
    - `worker-status.json` - worker heartbeats
@@ -124,6 +131,8 @@ NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
 **Exit**: All tasks distributed and monitored
 
 **Reference**: `agents/parallel-dispatcher.md`, `agents/task-worker.md`
+
+**CONFIRM**: "Workers dispatched for [N] parallel tasks. Monitoring..."
 
 ---
 
