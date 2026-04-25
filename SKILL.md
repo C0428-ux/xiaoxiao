@@ -9,35 +9,22 @@ version: 0.7
 
 # XiaoXiao | AI 开发流程框架
 
-## 概述
+## 强制执行协议
 
-XiaoXiao 通过 7 个有序的 Skill，引导项目从概念到上线的完整流程。
+**规则**：
+- 必须按顺序执行每个 Step，不得跳过
+- 每个 Step 必须执行验证（检查点）才能进入下一步
+- 使用 `xiaoxiao save-progress xiaoxiao <step>` 标记步骤完成
+- CONFIRM 节点必须等待用户确认，不得自动继续
 
-## 开发流程
+---
 
-```
-产品咨询 → 战略评审 → 架构师 → 界面设计 → 任务规划 → TDD开发 → 发布上线
-```
+## Step 0: 检查更新
 
-## 核心原则
+**动作**：
+1. 执行 `node xiaoxiao.js update-check`
 
-- **做少**：窄比宽好，YAGNI
-- **做精**：完整做完，RED-GREEN-REFACTOR
-- **有证据**：interest ≠ demand
-- **用系统**：系统化调试
-- **会收尾**：no half-done projects
-
-## 开始流程
-
-### Step 0: 检查更新
-
-运行更新检查命令：
-
-```bash
-node ~/.claude/skills/xiaoxiao/xiaoxiao.js update-check
-```
-
-**根据输出决定下一步**：
+**验证**：根据输出决定下一步
 
 | 输出包含 | 含义 | 操作 |
 |---------|------|------|
@@ -47,102 +34,152 @@ node ~/.claude/skills/xiaoxiao/xiaoxiao.js update-check
 
 **询问用户**（当发现新版本时）：
 > 检测到新版本！是否下载更新？
-> - 是：运行 `node ~/.claude/skills/xiaoxiao/xiaoxiao.js update`，完成后重新执行 `/xiaoxiao`
+> - 是：运行 `node xiaoxiao.js update`
 > - 否：继续 Step 1
-> - 永久跳过：运行 `node ~/.claude/skills/xiaoxiao/xiaoxiao.js skip-update`，下次将不再检查
+> - 永久跳过：运行 `node xiaoxiao.js skip-update`
 
-**跳过**：用户说"跳过"或"继续" → 直接继续 Step 1
+**CONFIRM**："版本检查完成。继续？"
 
-### Step 1: 检查项目状态
+---
 
+## Step 1: 检查项目状态
+
+**动作**：
+1. 执行 `node xiaoxiao.js status`
+2. 读取 `xiaoxiao-state.json`（如果存在）
+
+**验证**：状态已获取
+
+**CONFIRM**：
+- 如果没有 state.json："未检测到项目。是要新建项目还是现有项目添加功能？"
+- 如果有 state.json："检测到已有项目：[项目名]。从当前阶段继续还是重新开始？"
+
+---
+
+## Step 2: 项目初始化
+
+**根据用户回答执行**：
+
+### 情况 A：新建项目
+
+**动作**：
+1. 执行 `node xiaoxiao.js init-project [项目名]`
+2. 向用户询问项目名称（如果未提供）
+3. 创建项目目录和初始状态
+
+**验证**：项目已初始化
+
+**CONFIRM**："项目 [名称] 已创建。继续进入产品咨询阶段？"
+
+### 情况 B：现有项目添加功能
+
+**动作**：
+1. 读取项目结构（package.json, README, 主要源码文件）
+2. 询问用户要添加什么功能
+3. 基于现有代码开始 product-consult
+4. 执行 `node xiaoxiao.js init-project` 初始化状态（如尚未初始化）
+
+**验证**：现有项目已理解，功能需求已明确
+
+**CONFIRM**："现有项目：[项目名]。要添加：[功能]。继续进入产品咨询？"
+
+---
+
+## Step 3: 读取并执行 product-consult
+
+**动作**：
+1. 读取 `skills/product-consult/SKILL.md`
+2. **同时读取** `skills/product-consult/PROTOCOL.json`（机器可读协议，供框架验证执行）
+3. 执行 product-consult skill（按 SKILL.md 的 Step 顺序）
+
+**验证**：product-consult 阶段完成
+
+**CONFIRM**："product-consult 完成。确认进入战略评审阶段？"
+
+---
+
+## Step 4: 自动进入下一个 Skill
+
+**每个 Skill 完成后**：
+1. 读取下一个 Skill 的 `SKILL.md`
+2. **同时读取**对应的 `PROTOCOL.json`
+3. 按 Step 顺序执行
+
+| 完成 | 读取 |
+|------|------|
+| product-consult | `skills/strategy-review/SKILL.md` + `PROTOCOL.json` |
+| strategy-review | `skills/architect/SKILL.md` + `PROTOCOL.json` |
+| architect | `skills/ui-design/SKILL.md` + `PROTOCOL.json` |
+| ui-design | `skills/task-planning/SKILL.md` + `PROTOCOL.json` |
+| task-planning | `skills/tdd-development/SKILL.md` + `PROTOCOL.json` |
+| tdd-development | `skills/ship/SKILL.md` + `PROTOCOL.json` |
+| ship | 完成 |
+
+**CONFIRM**：每个阶段完成后询问确认才能进入下一个
+
+---
+
+## 状态更新命令
+
+每个 Step 完成后必须执行：
 ```bash
-node ~/.claude/skills/xiaoxiao/xiaoxiao.js status
+node xiaoxiao.js save-progress xiaoxiao step[N]-complete
 ```
 
-- 如果没有 state.json → 询问用户是新建项目还是现有项目添加功能
-- 如果有 → 从当前阶段继续
+---
 
-### Step 2: 项目判断
+## 渐进式披露说明
 
-**情况 A：没有 state.json（新建项目）**
-→ 运行 `node ~/.claude/skills/xiaoxiao/xiaoxiao.js init-project`
+**三层结构**：
 
-**情况 B：没有 state.json，但当前目录已有项目代码**
-→ 先了解现有项目：
-  1. 读取项目结构（package.json, README, 主要源码文件）
-  2. 询问用户要添加什么功能
-  3. 基于现有代码开始 product-consult
-→ 运行 `node ~/.claude/skills/xiaoxiao/xiaoxiao.js init-project` 初始化状态
+1. **入口层**（本文件）：框架入口，硬性执行脚本
+2. **Skill 层**（`skills/*/SKILL.md` + `PROTOCOL.json`）：执行脚本 + 机器可读协议
+3. **参考层**（`skills/*/GUIDES/*`）：详细文档，按需读取
 
-### Step 3: 开始 product-consult
-
-读取并执行：
-
+**读取顺序**：
 ```
-~/.claude/skills/xiaoxiao/skills/product-consult/SKILL.md
+用户触发 → 读取根 SKILL.md → 执行 Step → 读取 skill SKILL.md + PROTOCOL.json → 执行 → 下一个 skill
 ```
 
-## 7 个阶段
+**PROTOCOL.json 作用**：
+- 供 `xiaoxiao.js continue` 命令读取并逐步引导执行
+- 框架验证每个 Step 是否按顺序执行
+- 每个 Phase 的 entry/exit 命令由框架自动执行
 
-| 阶段 | 说明 | 产出 |
-|------|------|------|
-| 1. product-consult | 产品咨询，明确需求 | .SPEC.md |
-| 2. strategy-review | 战略评审，评估方向 | 战略建议 |
-| 3. architect | 架构设计 | 架构文档 |
-| 4. ui-design | 界面设计 | 设计文档 |
-| 5. task-planning | 任务规划 | 任务列表 |
-| 6. tdd-development | TDD开发 | 代码 |
-| 7. ship | 发布上线 | 上线 |
-
-
-## 状态管理
-
-- 项目状态：`xiaoxiao-state.json`（项目根目录）
-- 项目规格：`.SPEC.md`
-- 阶段输出：`docs/xiaoxiao/plans/`
+---
 
 ## 架构
 
 ```
-~/.claude/skills/xiaoxiao/     ← 全局框架
-├── SKILL.md                  ← 本文件
+D:\XiaoXiao\
+├── SKILL.md                  ← 入口文件（本文件）
 ├── xiaoxiao.js               ← CLI
+├── state-manager.js          ← 状态管理
+├── skill-loader.js           ← Skill 加载
+├── handover.js               ← 交接协议
 ├── skills/                   ← 7 个阶段
 │   ├── product-consult/
+│   │   ├── SKILL.md         ← 执行脚本
+│   │   ├── PROTOCOL.json    ← 机器可读协议
+│   │   └── GUIDES/          ← 参考文档
 │   ├── strategy-review/
 │   ├── architect/
 │   ├── ui-design/
 │   ├── task-planning/
 │   ├── tdd-development/
 │   ├── ship/
-│   └── search/              ← 内置搜索工具（供其他skill调用）
+│   └── search/              ← 内置搜索工具
+└── docs/xiaoxiao/plans/     ← 阶段输出目录
 ```
 
+---
 
-**新建项目**：
-```
-用户：/xiaoxiao
-Claude：检查项目状态，未初始化
-Claude：询问"新建项目还是现有项目添加功能？"
-用户：新建项目
-Claude：运行 init-project
-Claude：开始 product-consult
-...
-```
+## 核心原则
 
-**现有项目添加功能**：
-```
-用户：/xiaoxiao
-Claude：检查项目状态，未初始化，但发现现有项目
-Claude：询问"检测到现有项目，要添加什么功能？"
-用户：想加一个用户登录功能
-Claude：读取现有项目结构，了解技术栈
-Claude：开始 product-consult（基于现有代码）
-...
-```
+- **做少**：窄比宽好，YAGNI
+- **做精**：完整做完，RED-GREEN-REFACTOR
+- **有证据**：interest ≠ demand
+- **用系统**：系统化调试
+- **会收尾**：no half-done projects
 
-## 注意事项
-
-- 每个阶段产出写入项目目录，不是框架目录
-- 遵循渐进式披露：每执行一个skill先读 SKILL.md，不够再读 GUIDES/
-- .SPEC.md 是**项目规格**，FRAMEWORK.md 是**框架规格**
+**关键**：每个 CONFIRM 节点必须等待用户确认，不得自动继续。

@@ -24,263 +24,179 @@ related-skills:
 
 # UI Design | 界面设计
 
-## What Changed in v2
+## 强制执行协议
 
-- **Output**: Markdown 文档 → HTML 预览文件（可直接在浏览器打开）
-- **Iteration**: 用户可在视觉上判定设计，不满意则修改
-- **Presets**: 5 种设计风格预设供选择
-- **Preview Tool**: 内置 HTML 生成器，双击即可预览
-
----
-
-## When to Use
-
-- After architect when screens need visual design
-- When designing new screens or flows
-- When redesigning existing interfaces
-- When component libraries need definition
-
-## When NOT to Use
-
-- Backend or API design (use architect)
-- Task breakdown or estimation (use task-planning)
-- Implementation (use tdd-development)
-- Just asking for code snippets without design context
+**规则**：
+- 必须按顺序执行每个 Step，不得跳过
+- 每个 Step 必须执行验证（检查点）才能进入下一步
+- 使用 `xiaoxiao save-progress <skill> <step>` 标记步骤完成
+- CONFIRM 节点必须等待用户确认，不得自动继续
 
 ---
 
-## EXECUTION PROTOCOL
+## Step 1: 初始化
 
-本 skill 的执行协议在 `PROTOCOL.json` 中定义，框架将验证每步执行。使用 `xiaoxiao continue` 启动交互式引导。
+**动作**：
+1. 执行 `xiaoxiao save-progress ui-design step1-complete`
+2. 检查 `docs/xiaoxiao/plans/architect-output.md` 是否存在
+3. 检查 `./SPEC.md` 是否存在
 
-## ENTRY CHECK（必须首先执行）
+**验证**：两个文件都存在
 
-1. 运行 `xiaoxiao save-progress ui-design phase0-start`
-2. 才能开始 Phase 0
+**CONFIRM**："Step 1 完成。架构文档和 SPEC.md 都存在。继续？"
 
 ---
 
-## Core Workflow
+## Step 2: 设计风格选择
 
-### Phase 0: Design Style Selection
-
-**Entry**: Architecture document exists
-**Actions**:
-1. Read `docs/xiaoxiao/plans/architect-output.md` - understand subsystem boundaries
-2. Read `./SPEC.md` - extract P0 features and UX structure
-3. Present 5 design style presets to user:
+**动作**：
+1. 读取 `docs/xiaoxiao/plans/architect-output.md` - 了解子系统边界
+2. 读取 `./SPEC.md` - 提取 P0 功能
+3. 向用户展示 5 种设计风格预设：
 
 ```
 ┌─────────────────────────────────────────────────────────┐
 │  设计风格选择                                            │
 ├─────────────────────────────────────────────────────────┤
-│  [1] Modern SaaS      - B2B 产品、后台管理              │
+│  [1] Modern SaaS      - B2B 产品、后台管理               │
 │  [2] Apple Minimal    - 消费级 App、工具                │
 │  [3] Enterprise       - 企业内部系统                    │
-│  [4] Creative         - 作品集、创意网站                │
-│  [5] Dashboard        - 数据平台、Analytics             │
+│  [4] Creative         - 作品集、创意网站                 │
+│  [5] Dashboard        - 数据平台、Analytics              │
 └─────────────────────────────────────────────────────────┘
 ```
 
-4. Ask: "哪个设计风格最符合你的产品气质？"
-5. Load selected preset from `GUIDES/design-presets.md`
-**Exit**: Design preset confirmed
+4. 询问用户："哪个设计风格最符合你的产品气质？"
+5. 加载选中预设（从 `GUIDES/design-presets.md`）
+
+**验证**：设计预设已确认
+
+**CONFIRM**："设计风格：[风格]。这是你喜欢的方向吗？"
 
 ---
 
-### Phase 1: Information Architecture
+## Step 3: 信息架构
 
-**Entry**: Design preset confirmed
-**Prerequisites Check**:
-- If no architecture document found → **BLOCKED**: "Cannot start ui-design. Run architect first."
-**Actions**:
-1. Define page hierarchy and structure:
-   - **Primary**: Most used screens (Dashboard, Home)
-   - **Secondary**: Supporting screens (Settings, Profile)
-   - **Utility**: Rarely accessed screens
-2. Design navigation model:
-   - Top nav (适合 3-5 项)
-   - Sidebar (适合 5+ 项)
-   - Tabs (适合同页面面板切换)
-3. Identify user touchpoints for each P0 feature
-4. Ask: "导航结构：[top nav/sidebar]。这是你熟悉的方式吗？"
-**Exit**: IA confirmed
+**动作**：
+1. 定义页面层级结构：
+   - Primary：最常用页面（Dashboard、首页）
+   - Secondary：支持页面（设置、个人中心）
+   - Utility：很少访问的页面
+2. 设计导航模型：
+   - 顶部导航（适合 3-5 项）
+   - 侧边栏（适合 5+ 项）
+   - 标签页（适合同页面面板切换）
+3. 识别每个 P0 功能的用户接触点
+4. 询问用户："导航结构：[top nav/sidebar]。这是你熟悉的方式吗？"
 
----
+**验证**：IA 确认
 
-### Phase 2: Screen Design
-
-**Entry**: IA confirmed
-**Actions**:
-1. For each screen:
-   - Define content structure (see `GUIDES/component-patterns.md`)
-   - Select appropriate components from pattern library
-   - Write HTML using Tailwind CSS classes
-2. Use Tailwind CDN in preview - no build step needed
-3. Generate preview using `preview/generate.js`
-4. Ask: "页面 [X] 设计完成。预览效果如何？需要调整吗？"
-**Exit**: All screens designed and preview generated
-
-**Screen Template**:
-```html
-<!-- Page: [Name] -->
-<div class="page-container">
-  <!-- Header -->
-  <header class="page-header">
-    <h1>[Page Title]</h1>
-    <button class="btn btn-primary">[Primary Action]</button>
-  </header>
-
-  <!-- Content -->
-  <main class="page-content">
-    <!-- Components based on content type -->
-  </main>
-</div>
-```
+**CONFIRM**："IA：[结构]。导航：[模型]。继续？"
 
 ---
 
-### Phase 3: Preview & Iteration (NEW)
+## Step 4: 页面设计
 
-**Entry**: Screens designed
-**Iteration Loop**:
-```
-┌──────────────────────────────────────────────┐
-│  生成预览 → 用户预览 → [不满意? 修改]        │
-│       ↓                                      │
-│  [满意? 继续下一个]                           │
-└──────────────────────────────────────────────┘
-```
+**动作**：
+1. 对每个页面：
+   - 定义内容结构
+   - 从模式库选择适当组件
+   - 使用 Tailwind CSS 类编写 HTML
+2. 使用 Tailwind CDN 预览（无需构建步骤）
+3. 生成预览：`node skills/ui-design/preview/generate.js --data <page-data.json> --output docs/xiaoxiao/plans/ui-design/preview.html`
+4. 询问用户："页面 [X] 设计完成。预览效果如何？需要调整吗？"
 
-**Actions**:
-1. Run: `node skills/ui-design/preview/generate.js --data <page-data.json> --output docs/xiaoxiao/plans/ui-design/preview.html`
-2. Open preview file for user
-3. For each screen, ask:
+**验证**：所有页面设计完成
+
+**CONFIRM**："页面设计完成。共 [N] 个页面。继续？"
+
+---
+
+## Step 5: 预览与迭代
+
+**动作**：
+1. 运行预览生成
+2. 打开预览文件给用户
+3. 对每个页面询问：
    - "这个页面的设计是否表达了正确的信息层次？"
    - "颜色、间距、组件是否合适？"
    - "有什么需要调整的吗？"
-4. If user requests changes:
-   - Modify the HTML
-   - Regenerate preview
-   - Repeat until satisfied
-5. Confirm each screen before moving on
-**Exit**: All screens approved by user
+4. 如果用户要求修改：
+   - 修改 HTML
+   - 重新生成预览
+   - 重复直到满意
+5. 确认每个页面后再继续下一个
+
+**验证**：所有页面用户已审批
+
+**CONFIRM**："所有页面已审批。继续？"
 
 ---
 
-### Phase 4: Component Definition
+## Step 6: 组件定义
 
-**Entry**: All screens approved
-**Actions**:
-1. Define reusable components used across screens:
-   - Atomic: Button, Input, Badge, Icon
-   - Molecular: Card, Form Group, Modal
-   - Organism: Navigation, Data Table, Filter Panel
-2. Document component states (default, hover, disabled, error)
-3. Reference `GUIDES/component-patterns.md` for best practices
-4. Ask: "组件库定义完成。需要补充哪些组件规格吗？"
-**Exit**: Component library documented
+**动作**：
+1. 定义跨页面可复用组件：
+   - Atomic：Button、Input、Badge、Icon
+   - Molecular：Card、Form Group、Modal
+   - Organism：Navigation、Data Table、Filter Panel
+2. 记录组件状态（默认、悬停、禁用、错误）
+3. 参考 `GUIDES/component-patterns.md`
+4. 询问用户："组件库定义完成。需要补充哪些组件规格吗？"
+
+**验证**：组件库已定义
+
+**CONFIRM**："组件库定义完成。继续？"
 
 ---
 
-### Phase 5: Final Review
+## Step 7: 最终审查
 
-**Entry**: Component library defined
-**Actions**:
-1. Review complete design with user
-2. Check against original requirements:
-   - All P0 features have screens?
-   - Navigation supports user flows?
-   - Component patterns applied consistently?
-3. Ask: "设计整体审批通过了吗？"
-4. If yes, save output and proceed
+**动作**：
+1. 与用户一起审查完整设计
+2. 对照原始需求检查：
+   - 所有 P0 功能有页面？
+   - 导航支持用户流程？
+   - 组件模式应用一致？
+3. 询问用户："设计整体审批通过了吗？"
 
-**Output Structure**:
+**验证**：设计整体审批通过
+
+**CONFIRM**："UI Design 整体审批通过了吗？确认后进入 Task Planning。"
+
+---
+
+## Step 8: 输出文件
+
+**动作**：
+1. 创建输出目录结构：
 ```
 docs/xiaoxiao/plans/ui-design/
-├── preview.html              # 完整预览（多页面）
+├── preview.html              # 完整预览
 ├── pages/
-│   ├── dashboard.html        # 各页面单独 HTML
+│   ├── dashboard.html
 │   ├── settings.html
 │   └── ...
 ├── components/
-│   └── component-spec.md    # 组件规格文档
-└── design-tokens.json        # 设计令牌（颜色、字体、间距）
+│   └── component-spec.md    # 组件规格
+└── design-tokens.json        # 设计令牌
+```
+2. 执行 `xiaoxiao complete ui-design docs/xiaoxiao/plans/ui-design/`
+
+**验证**：所有文件已创建
+
+**CONFIRM**："UI Design 完成。文件已保存。确认进入 Task Planning 阶段？"
+
+---
+
+## 状态更新命令
+
+每个 Step 完成后必须执行：
+```bash
+xiaoxiao save-progress ui-design step[N]-complete
 ```
 
-**Run on completion**:
+最终完成必须执行：
 ```bash
 xiaoxiao complete ui-design docs/xiaoxiao/plans/ui-design/
 ```
-This updates `xiaoxiao-state.json` and records the skill output path.
-
-**IMPORTANT**: Without running `xiaoxiao complete`, the skill is not marked as done and next skills will be blocked.
-
----
-
-## Design Preset Reference
-
-Choose from 5 presets defined in `GUIDES/design-presets.md`:
-
-| Preset | Key Characteristics |
-|--------|---------------------|
-| **Modern SaaS** | Blue accent, 8px grid, subtle shadows, generous white space |
-| **Apple Minimal** | Near-monochrome, large type hierarchy, 12px rounded corners |
-| **Enterprise** | Information-dense, small radius, borders not shadows |
-| **Creative** | Dark theme, orange accent, asymmetric layouts, bold typography |
-| **Dashboard** | Dark slate background, chart colors, data-optimized spacing |
-
----
-
-## Component Patterns
-
-Reference `GUIDES/component-patterns.md` for:
-- Button, Input, Card, Modal, Navigation
-- Table, Form, Toast, Alert, Badge
-- Empty State, Loading, Dropdown, Tabs, Drawer, Avatar, Tooltip
-- Layout patterns (single column, two column, grid)
-
----
-
-## Constraints
-
-### MUST DO
-
-- Generate actual HTML that renders correctly
-- Run preview and let user visually judge each screen
-- Iterate based on user feedback before proceeding
-- Use consistent component patterns across screens
-- Consider responsive behavior (mobile-first)
-- Design for empty states, loading states, error states
-
-### MUST NOT DO
-
-- Output markdown documents as "design"
-- Skip the preview/iteration step
-- Use purple-on-white gradients or Inter/Roboto defaults
-- Generate generic AI aesthetics
-- Overcomplicate with animations or interactions
-- Skip validation states on forms
-
----
-
-## CONFIRM Nodes
-
-| Phase | Prompt |
-|-------|--------|
-| Phase 0 | "设计风格: **[X]**。这是你喜欢的方向吗？" |
-| Phase 1 | "IA: [structure]。导航: [model]。继续？" |
-| Phase 2 Screen N | "页面 **[Name]** 完成。预览效果如何？需要调整吗？" |
-| Phase 3 | "所有页面已审批。组件定义完成。继续？" |
-| Final | "UI Design 整体审批通过了吗？确认后进入 Task Planning。" |
-
----
-
-## Reference Guide
-
-| Topic | File |
-|-------|------|
-| Design Presets (5 styles) | `GUIDES/design-presets.md` |
-| Component Patterns | `GUIDES/component-patterns.md` |
-| Preview Generator | `preview/generate.js` |
-| Design Tokens Template | `OUTPUTS/design-tokens.json` |

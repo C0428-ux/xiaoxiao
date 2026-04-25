@@ -5,7 +5,7 @@ description: >-
   GREEN (minimal code pass) → REFACTOR (improve without breaking).
   Distributes independent tasks to parallel workers via Message Bus.
   Frontend tasks read UI design files for visual reference.
-  Use after task-planning to implement the planned tasks.
+  Use after task-planning when implementing the planned tasks.
 version: 2.0
 domain: development
 role: developer
@@ -32,339 +32,197 @@ related-skills:
 
 # TDD Development | TDD 开发
 
-## What Changed in v2
+## 强制执行协议
 
-- **Task Distribution**: 使用 parallel-dispatcher 并行分发任务给 workers
-- **UI Design Alignment**: 前端任务必须读取 UI 设计文件
-- **TDD Iron Law**: 强化 RED/GREEN 必须运行测试验证
-- **Message Bus**: 通过文件协调并行 workers
-
----
-
-## When to Use
-
-- After task-planning when implementing features
-- When code quality and testability are priorities
-- When parallel execution can speed up development
-- When refactoring legacy code safely
-
-## When NOT to Use
-
-- Architecture decisions (use architect skill)
-- UI design (use ui-design skill)
-- Quick prototypes with no test requirements
-- When time pressure prohibits proper TDD
+**规则**：
+- 必须按顺序执行每个 Step，不得跳过
+- 每个 Step 必须执行验证（检查点）才能进入下一步
+- 使用 `xiaoxiao save-progress <skill> <step>` 标记步骤完成
+- CONFIRM 节点必须等待用户确认，不得自动继续
 
 ---
 
-## TDD Iron Law
+## Step 1: 初始化
 
-```
-NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
-```
+**动作**：
+1. 执行 `xiaoxiao save-progress tdd-development step1-complete`
+2. 检查 `docs/xiaoxiao/plans/task-planning-output.md` 是否存在
+3. 检查 `docs/xiaoxiao/plans/ui-design/` 是否存在（前端任务需要）
 
-**Rules:**
-1. RED: 写一个最小的失败测试
-2. **必须运行测试验证失败**（不能跳过）
-3. GREEN: 写最小代码通过测试（YAGNI）
-4. **必须运行测试验证通过**（不能跳过）
-5. REFACTOR: 仅在测试通过后清理代码
+**验证**：任务列表和 UI 设计都存在
 
-**Violating the letter of the rules is violating the spirit of the rules.**
+**CONFIRM**："Step 1 完成。任务列表和 UI 设计都存在。继续？"
 
 ---
 
-## EXECUTION PROTOCOL
+## Step 2: 读取需求
 
-本 skill 的执行协议在 `PROTOCOL.json` 中定义，框架将验证每步执行。使用 `xiaoxiao continue` 启动交互式引导。
+**动作**：
+1. 读取 `docs/xiaoxiao/plans/task-planning-output.md` - 审查优先级任务列表
+2. 读取 `./SPEC.md` - 获取需求
+3. 读取 `docs/xiaoxiao/plans/architect-output.md` - 获取 API 契约
 
-## ENTRY CHECK（必须首先执行）
+**验证**：需求和 API 契约已读取
 
-1. 运行 `xiaoxiao save-progress tdd-development phase1-start`
-2. 才能开始 Phase 1
-
----
-
-## Core Workflow
-
-### Phase 1: Read UI Design & Task Analysis
-
-**Entry**: Task list from task-planning
-**Prerequisites Check**:
-- If no task list found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start tdd-development. Run task-planning first."
-**Actions**:
-1. Read `docs/xiaoxiao/plans/task-planning-output.md` - review prioritized task list
-2. Read related specs:
-   - `./SPEC.md` - for requirements
-   - `docs/xiaoxiao/plans/architect-output.md` - for API contracts
-3. **Read UI Design (Frontend tasks must read)**:
-   - `docs/xiaoxiao/plans/ui-design/preview.html` - main preview
-   - `docs/xiaoxiao/plans/ui-design/pages/*.html` - individual pages
-   - Extract component structures for frontend tasks
-   - **IMPORTANT**: Frontend implementations follow UI design, not task-planning descriptions
-4. Analyze task dependencies (DAG):
-   - Backend tasks: API, database, auth
-   - Frontend tasks: components, pages (depend on backend)
-   - Identify parallel groups
-5. Ask: "Found [N] backend tasks, [N] frontend tasks. [N] can run in parallel. Proceed?"
-**Exit**: Task analysis complete, parallel groups identified
+**CONFIRM**："需求读取完成。继续？"
 
 ---
 
-### Phase 2: Task Distribution
+## Step 3: 读取 UI 设计（前端任务必须执行）
 
-**Entry**: Task analysis complete
-**IMPORTANT**: You MUST use Agent tool to spawn parallel workers. DO NOT implement tasks yourself.
-**Prerequisites**:
-- This phase MUST be executed using Agent tool with subagent_type "parallel-dispatcher"
-- You act as orchestrator, spawning workers for independent tasks
-- You CANNOT skip this and directly implement code
+**动作**：
+1. 读取 `docs/xiaoxiao/plans/ui-design/preview.html` - 主预览
+2. 读取 `docs/xiaoxiao/plans/ui-design/pages/*.html` - 各页面
+3. 提取组件结构
+4. **重要**：前端实现遵循 UI 设计，不遵循任务描述
 
-**Actions**:
-1. Initialize Message Bus:
+**验证**：UI 设计已读取
+
+**CONFIRM**："UI 设计读取完成。发现 [N] 个页面。继续？"
+
+---
+
+## Step 4: 任务分析
+
+**动作**：
+1. 分析任务依赖（DAG）：
+   - Backend 任务：API、数据库、认证
+   - Frontend 任务：组件、页面（依赖 backend）
+   - 识别并行组
+2. 识别第一个并行组（无阻塞）
+3. 向用户确认："发现 [N] 个后端任务，[N] 个前端任务。[N] 个可以并行。开始？"
+
+**验证**：并行组已识别
+
+**CONFIRM**："找到 [N] 个后端任务，[N] 个前端任务。[N] 个可以并行。继续？"
+
+---
+
+## Step 5: 任务分发（必须使用 Agent）
+
+**动作**：
+1. 初始化 Message Bus：
    ```bash
    mkdir -p docs/xiaoxiao/plans/tdd/.message-bus/events
    ```
-2. Use **parallel-dispatcher** to dispatch workers:
-   - Read task dependencies from task-planning output
-   - Identify first parallel group (no blockers)
-   - **MUST use Agent tool to spawn task-worker agents**
-   - **DO NOT implement code directly yourself**
-   - Backend workers receive API/DB tasks
-   - Frontend workers receive component tasks + UI design path
-3. Maximum 5 concurrent workers
-4. Monitor via Message Bus:
-   - `worker-status.json` - worker heartbeats
-   - `events/TASK_COMPLETE_*.event` - completion events
-   - `events/TASK_FAILED_*.event` - failure events
-5. When tasks complete, dispatch next parallel group
-6. Blocked tasks auto-dispatch when dependencies complete
-**Exit**: All tasks distributed and monitored
+2. 使用 **parallel-dispatcher** 分发 workers：
+   - 从 task-planning output 读取任务依赖
+   - 识别第一个并行组
+   - **必须使用 Agent 工具生成 task-worker agents**
+   - **不能自己直接实现代码**
+   - Backend workers 接收 API/DB 任务
+   - Frontend workers 接收组件任务 + UI 设计路径
+3. 最多 5 个并发 workers
+4. 通过 Message Bus 监控：
+   - `worker-status.json` - worker 心跳
+   - `events/TASK_COMPLETE_*.event` - 完成事件
+   - `events/TASK_FAILED_*.event` - 失败事件
 
-**Reference**: `agents/parallel-dispatcher.md`, `agents/task-worker.md`
+**验证**：Workers 已分发
 
-**CONFIRM**: "Workers dispatched for [N] parallel tasks. Monitoring..."
+**CONFIRM**："Workers 已分发：[N] 个并行任务。监控中..."
 
 ---
 
-### Phase 3: RED - Write Failing Test
+## Step 6: TDD 循环（每个任务执行）
 
-**Entry**: Task selected by worker
-**Actions**:
-1. Write the smallest possible test that describes expected behavior
-2. Test must:
-   - **Arrange**: Set up test data
-   - **Act**: Call the function/endpoint
-   - **Assert**: Verify expected outcome
-3. **CRITICAL: Run test to verify it fails**
+对每个任务执行 RED-GREEN-REFACTOR：
+
+### 6.1 RED - 写失败测试
+
+**动作**：
+1. 写一个最小的测试描述预期行为
+2. 测试必须：
+   - Arrange：设置测试数据
+   - Act：调用函数/端点
+   - Assert：验证预期结果
+3. **关键：运行测试验证失败**
    ```bash
    npm test -- --testPathPattern="path/to/test.test.ts"
    ```
-4. Verify failure is expected (not due to typos/errors)
-5. Ask: "Test failing correctly. Proceed to GREEN?"
+4. 验证失败是预期的（不是由于拼写错误/错误）
 
-**Test Structure**:
-```javascript
-describe('UserService', () => {
-  describe('createUser', () => {
-    it('should create user with valid email', () => {
-      // Arrange
-      const email = 'test@example.com';
-      const password = 'SecurePass123!';
+**验证**：测试失败（已验证）
 
-      // Act
-      const user = UserService.createUser({ email, password });
-
-      // Assert
-      expect(user.email).toBe(email);
-      expect(user.id).toBeDefined();
-      expect(user.passwordHash).not.toBe(password);
-    });
-  });
-});
-```
-
-**Exit**: Test written and failing (verified)
+**CONFIRM**："测试失败（已验证）。继续到 GREEN？"
 
 ---
 
-### Phase 4: GREEN - Minimal Implementation
+### 6.2 GREEN - 最小实现
 
-**Entry**: Test failing (RED)
-**Actions**:
-1. Write the **minimum code** to make the test pass
-2. **YAGNI**: Don't add features beyond the test
-3. **CRITICAL: Run test to verify it passes**
+**动作**：
+1. 写**最小代码**使测试通过
+2. **YAGNI**：不要添加测试以外的特性
+3. **关键：运行测试验证通过**
    ```bash
    npm test -- --testPathPattern="path/to/test.test.ts"
    ```
-4. Verify:
-   - Test passes
-   - No other tests broken
-   - No TODO comments in code
-5. Ask: "Test passes. Proceed to REFACTOR?"
+4. 验证：
+   - 测试通过
+   - 没有其他测试被破坏
+   - 没有 TODO 注释
+5. 询问用户："测试通过。继续到 REFACTOR？"
 
-**GREEN Checklist**:
-- [ ] Test passes (verified by running)
-- [ ] No other tests broken
-- [ ] Implementation is minimal
-- [ ] No TODO comments in code
-- [ ] No YAGNI features
+**验证**：测试通过（已验证）
 
-**Exit**: Test passes (verified)
+**CONFIRM**："测试通过（已验证）。继续到 REFACTOR？"
 
 ---
 
-### Phase 5: REFACTOR - Improve Code
+### 6.3 REFACTOR - 改进代码
 
-**Entry**: Test passing (GREEN)
-**Actions**:
-1. Improve code structure without changing behavior:
-   - Extract duplicated logic
-   - Rename variables for clarity
-   - Improve function organization
-2. **Keep tests green** - run tests after each refactor
-3. Look for:
-   - Code smells (long functions, magic numbers)
-   - Opportunities for extraction
-   - Clear naming
-4. Ask: "Code improved, tests still green. Next test case?"
+**动作**：
+1. 改进代码结构不改变行为：
+   - 提取重复逻辑
+   - 重命名变量以提高清晰度
+   - 改进函数组织
+2. **保持测试绿色** - 每次重构后运行测试
+3. 寻找：
+   - 代码味道（长函数、魔法数字）
+   - 提取机会
+   - 清晰的命名
+4. 询问用户："代码改进，测试仍然绿色。下一个测试用例？"
 
-**Refactor Checklist**:
-- [ ] No duplicate logic
-- [ ] Meaningful names
-- [ ] Single responsibility per function
-- [ ] No magic numbers/constants
-- [ ] Tests still pass (verified by running)
+**验证**：代码改进，测试通过（已验证）
 
-**Exit**: Code improved, tests still passing
+**CONFIRM**："代码改进，测试绿色（已验证）。继续到下一个用例？"
 
 ---
 
-### Phase 6: Loop Until Task Complete
+### 6.4 循环直到任务完成
 
-**Entry**: One cycle complete
-**Actions**:
-1. Ask: "Does this task have more test cases?"
-2. If yes, go to Phase 3 with next test case
-3. If no, task is complete
-4. Report completion to Message Bus:
-   - Write `TASK_COMPLETE_{taskId}.event`
-   - Update `worker-status.json`
+**动作**：
+1. 询问："这个任务有更多测试用例吗？"
+2. 如果是，回到 6.1
+3. 如果不是，任务完成
+4. 报告完成到 Message Bus：
+   - 写入 `TASK_COMPLETE_{taskId}.event`
+   - 更新 `worker-status.json`
 
-**Loop Limit**: Max 10 RED-GREEN-REFACTOR cycles per task. If exceeded, escalate to user.
+**验证**：任务完成
 
----
-
-### Phase 7: Integration & Completion
-
-**Entry**: All parallel tasks complete
-**Actions**:
-1. Run full test suite
-2. Verify no regressions
-3. Integration test if needed
-4. Confirm with user before moving on
-
-**Run on completion**:
-```bash
-xiaoxiao complete tdd-development docs/xiaoxiao/plans/tdd/
-```
-This updates `xiaoxiao-state.json` and records the skill output path.
-
-**IMPORTANT**: Without running `xiaoxiao complete`, the skill is not marked as done and next skills will be blocked.
+**CONFIRM**："任务 [N] 完成：[N] 个测试，全部通过。等待并行任务..."
 
 ---
 
-## Test Anti-Patterns (Iron Rules)
+## Step 7: 集成与完成
 
-### MUST NOT
+**动作**：
+1. 运行完整测试套件
+2. 验证没有回归
+3. 需要时运行集成测试
+4. 向用户确认后继续
 
-1. **Never test mock behavior**
-   - ❌ `expect(mock.fetch).toHaveBeenCalled()`
-   - ✅ Test actual observable outcomes
+**验证**：完整测试套件通过
 
-2. **Don't add production methods only for testing**
-   - ❌ Adding `getBalance()` method just to test internal state
-   - ✅ Test through public API
-
-3. **Don't use mocks without understanding dependencies**
-   - ❌ Mocking everything without knowing what the dependency does
-   - ✅ Mock only external boundaries (HTTP, DB)
-
-4. **Don't test implementation details**
-   - ❌ Testing that a private method is called
-   - ✅ Testing that the public behavior is correct
-
-5. **Don't create order-dependent tests**
-   - Each test must be independently runnable
-
-6. **Don't skip RED/GREEN verification**
-   - ❌ Writing test but not running it
-   - ✅ Always run `npm test` to verify RED fails and GREEN passes
+**CONFIRM**："开发完成。[N] 个任务完成。运行完整测试套件？"
 
 ---
 
-## Task Distribution Pattern
+## Step 8: 输出文档
 
-### Backend Group
-- API endpoints
-- Database schemas
-- Authentication/authorization
-- Service layer
-
-### Frontend Group
-- UI components (read `docs/xiaoxiao/plans/ui-design/preview.html`)
-- Pages
-- State management
-- API integration
-
-### Dependency Rules
-- Frontend tasks depend on their corresponding backend API
-- Workers use file-based Message Bus coordination
-- Maximum 5 parallel workers
-
----
-
-## Constraints
-
-### MUST DO
-
-- Follow RED → GREEN → REFACTOR strictly in order
-- **Run tests to verify RED fails** (mandatory)
-- **Run tests to verify GREEN passes** (mandatory)
-- Keep tests small and focused
-- Use descriptive test names (behavior, not method names)
-- Test both happy path and error paths
-- Frontend workers read UI design files
-- Run full test suite before completing
-
-### MUST NOT DO
-
-- Skip tests when under time pressure
-- Write implementation before test (violates TDD Iron Law)
-- Use test coverage as a metric
-- Mock internal dependencies
-- Leave failing tests in the codebase
-- Refactor without running tests
-- Skip RED/GREEN verification
-- Add features beyond what the test requires
-
----
-
-## Reference Guide
-
-| Topic | File |
-|-------|------|
-| Parallel Dispatcher | `agents/parallel-dispatcher.md` |
-| Task Worker | `agents/task-worker.md` |
-| Subagent Patterns | `GUIDES/subagent-patterns.md` |
-| Test Naming Conventions | `GUIDES/test-naming.md` |
-| TDD Mistakes | `GUIDES/tdd-mistakes.md` |
-
----
-
-## Output
-
+**动作**：
+1. 创建输出目录：
 ```
 docs/xiaoxiao/plans/tdd/
 ├── .message-bus/
@@ -376,17 +234,37 @@ docs/xiaoxiao/plans/tdd/
 ├── completed-tasks.md
 └── test-results.md
 ```
+2. 执行 `xiaoxiao complete tdd-development docs/xiaoxiao/plans/tdd/`
+
+**验证**：输出已创建
+
+**CONFIRM**："TDD Development 完成。文档已保存。确认进入 Ship 阶段？"
 
 ---
 
-## CONFIRM Nodes
+## TDD 铁律
 
-| Phase | Prompt |
-|-------|--------|
-| Phase 1 | "Found [N] backend, [N] frontend tasks. [N] parallel groups. Proceed?" |
-| Phase 2 | "Workers dispatched: [N]. Monitoring for completions..." |
-| RED | "Test failing as expected (verified by running). Proceed to GREEN?" |
-| GREEN | "Test passes (verified by running). Proceed to REFACTOR?" |
-| REFACTOR | "Code improved, tests green. Continue to next case?" |
-| Task Complete | "Task [N] done: [N] tests, all passing. Waiting for parallel tasks..." |
-| All Complete | "Development complete. [N] tasks done. Run full test suite?" |
+```
+NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+```
+
+**规则**：
+1. RED：写一个最小的失败测试
+2. **必须运行测试验证失败**（不能跳过）
+3. GREEN：写最小代码通过测试（YAGNI）
+4. **必须运行测试验证通过**（不能跳过）
+5. REFACTOR：仅在测试通过后清理代码
+
+---
+
+## 状态更新命令
+
+每个 Step 完成后必须执行：
+```bash
+xiaoxiao save-progress tdd-development step[N]-complete
+```
+
+最终完成必须执行：
+```bash
+xiaoxiao complete tdd-development docs/xiaoxiao/plans/tdd/
+```

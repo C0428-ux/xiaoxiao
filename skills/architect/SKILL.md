@@ -19,7 +19,7 @@ triggers:
   - 调整架构
 prerequisites:
   - strategy-review
-output-format: architecture.md
+output-format: docs/xiaoxiao/plans/architect-output.md
 related-skills:
   - strategy-review
   - ui-design
@@ -28,285 +28,156 @@ related-skills:
 
 # Architect | 架构师
 
-## When to Use
+## 强制执行协议
 
-- After strategy-review before ui-design
-- When starting a new system or major subsystem
-- When existing architecture needs significant change
-- When technical decisions need documentation (ADRs)
-- When scaling or refactoring decisions are being made
-
-## When NOT to Use
-
-- UI/UX design decisions (use ui-design skill)
-- Task-level planning (use task-planning skill)
-- Implementation details (use tdd-development skill)
-- When you just need a quick code snippet
-- Minor feature additions with established patterns
+**规则**：
+- 必须按顺序执行每个 Step，不得跳过
+- 每个 Step 必须执行验证（检查点）才能进入下一步
+- 使用 `xiaoxiao save-progress <skill> <step>` 标记步骤完成
+- CONFIRM 节点必须等待用户确认，不得自动继续
 
 ---
 
-## EXECUTION PROTOCOL
+## Step 1: 初始化
 
-本 skill 的执行协议在 `PROTOCOL.json` 中定义，框架将验证每步执行。使用 `xiaoxiao continue` 启动交互式引导。
+**动作**：
+1. 执行 `xiaoxiao save-progress architect step1-complete`
+2. 检查 `./SPEC.md` 是否存在
+3. 检查 `docs/xiaoxiao/plans/strategy-review-output.md` 是否存在
 
-## ENTRY CHECK（必须首先执行）
+**验证**：两个文件都存在
 
-1. 运行 `xiaoxiao save-progress architect phase1-start`
-2. 才能开始 Phase 1
-
----
-
-## Core Workflow
-
-### Phase 1: Requirements Extraction
-
-**Entry**: SPEC.md and strategy-review output exist
-**Prerequisites Check**:
-- If `./SPEC.md` does not exist → **BLOCKED**: "Cannot start architect. Run product-consult first to create SPEC.md."
-**Actions**:
-1. Read `./SPEC.md` - extract functional requirements
-2. Read `docs/xiaoxiao/plans/strategy-review-output.md` - note constraints and decisions
-3. Identify non-functional requirements:
-   - **Performance**: latency, throughput, scalability
-   - **Reliability**: uptime, recovery, redundancy
-   - **Security**: authentication, authorization, data protection
-   - **Observability**: logging, metrics, tracing
-4. Ask: "What are the top 3 technical constraints we must respect?"
-**Exit**: Requirements organized by category with constraints identified
+**CONFIRM**："Step 1 完成。SPEC.md 和 strategy-review-output.md 都存在。继续？"
 
 ---
 
-### Phase 2: Architecture Pattern Selection
+## Step 2: 需求提取
 
-**Entry**: Requirements extracted
-**Actions**:
-1. Evaluate architectural patterns:
-   - **Monolith**: Simple deployment, tight coupling
-   - **Modular Monolith**: Clean boundaries, single deployment
-   - **Microservices**: Independent scaling, distributed complexity
-   - **Event-Driven**: Async, eventual consistency
-   - **Layered**: Traditional web apps, clear separation
-2. Ask: "Which pattern best fits our scale, team, and constraints?"
-3. Document the choice with trade-off rationale
-**Exit**: Selected pattern with justification
+**动作**：
+1. 读取 `./SPEC.md` - 提取功能需求
+2. 读取 `docs/xiaoxiao/plans/strategy-review-output.md` - 记录约束和决策
+3. 识别非功能需求：
+   - 性能：延迟、吞吐量、扩展性
+   - 可靠性：正常运行时间、恢复、冗余
+   - 安全性：认证、授权、数据保护
+   - 可观测性：日志、指标、追踪
 
-**Decision Matrix**:
-```markdown
-| Pattern | Best For | Avoid When |
-|---------|----------|------------|
-| Monolith | <10 devs, fast iteration | Multiple teams, scaling |
-| Modular Monolith | Clean domain boundaries | Requires discipline |
-| Microservices | Independent deploy, scaling | Complexity overhead |
-| Event-Driven | Async workflows | Debugging difficulty |
+**验证**：需求已按类别组织
+
+**CONFIRM**："需求提取完成。识别到 [N] 个功能需求，[N] 个非功能约束。继续？"
+
+---
+
+## Step 3: 架构模式选择
+
+**动作**：
+1. 向用户提问："团队规模多大？"（<10人 / 10-50人 / 50+人）
+2. 向用户提问："最看重什么？"（快速迭代 / 稳定性 / 扩展性 / 成本）
+3. 根据回答推荐架构模式：
+   - <10人 + 快速迭代 → Monolith 或 Modular Monolith
+   - 10-50人 + 扩展性 → Modular Monolith 或 Microservices
+   - 50+人 + 独立部署 → Microservices
+4. 记录选择的模式和理由
+
+**验证**：架构模式已选择并记录理由
+
+**CONFIRM**："架构模式：[模式]。理由：[理由]。继续？"
+
+---
+
+## Step 4: 子系统分解
+
+**动作**：
+1. 识别bounded contexts / 主要领域
+2. 定义子系统，每个子系统有单一职责
+3. 为每个子系统命名（统一语言）
+4. 记录子系统职责
+5. 识别横切关注点（认证、日志、配置）
+
+**验证**：子系统列表已创建
+
+**CONFIRM**："子系统：[列表]。共 [N] 个。继续？"
+
+---
+
+## Step 5: 接口与数据流设计
+
+**动作**：
+1. 定义子系统之间的接口
+2. 明确：
+   - API 契约（请求/响应格式）
+   - 事件模式（异步通信）
+   - 数据所有权（谁是数据源）
+3. 设计数据流：同步 vs 异步路径
+4. 记录错误处理和回退路径
+
+**验证**：关键接口已定义
+
+**CONFIRM**："接口设计完成。定义了 [N] 个 API。继续？"
+
+---
+
+## Step 6: 技术决策
+
+**动作**：
+1. 为每个子系统做出关键技术选择：
+   - 语言/框架
+   - 数据库（SQL vs NoSQL，具体技术）
+   - 基础设施（云、容器、serverless）
+2. 为每个重大决策创建 ADR（架构决策记录）
+3. 向用户确认："有什么技术是你已有 expertise 想继续用的？"
+
+**验证**：技术栈已定义，每个重大决策有 ADR
+
+**CONFIRM**："技术栈：[栈]。ADR：[N] 个。继续？"
+
+---
+
+## Step 7: 风险与缓解
+
+**动作**：
+1. 识别 3-5 个主要技术风险
+2. 对每个风险评估：
+   - 概率：高/中/低
+   - 影响：高/中/低
+   - 缓解策略
+3. 向用户确认："有什么风险会导致架构失败？"
+
+**验证**：风险列表已创建
+
+**CONFIRM**："主要风险：[列表]。继续？"
+
+---
+
+## Step 8: 输出文档
+
+**动作**：
+1. 创建 `docs/xiaoxiao/plans/architect-output.md`
+2. 包含以下章节：
+   - Overview（系统目的和范围）
+   - Architecture Pattern（选择的模式及理由）
+   - Subsystem Decomposition（子系统及职责）
+   - Interface Design（关键 API 和数据流）
+   - Technology Stack（每个子系统的技术选择及理由）
+   - ADRs（重大决策记录）
+   - Architecture Diagram（Mermaid 图）
+   - Cross-Cutting Concerns（认证、日志、配置）
+3. 执行 `xiaoxiao complete architect docs/xiaoxiao/plans/architect-output.md`
+
+**验证**：文档已创建且包含所有章节
+
+**CONFIRM**："Architect 完成。文档已保存。确认进入 UI Design 阶段？"
+
+---
+
+## 状态更新命令
+
+每个 Step 完成后必须执行：
+```bash
+xiaoxiao save-progress architect step[N]-complete
 ```
 
----
-
-### Phase 3: Subsystem Decomposition
-
-**Entry**: Architecture pattern selected
-**Actions**:
-1. Identify bounded contexts / major domains
-2. Define subsystems with single responsibility
-3. Name each subsystem clearly (ubiquitous language)
-4. Document subsystem responsibilities
-5. Identify cross-cutting concerns (auth, logging, config)
-**Exit**: System decomposed into named subsystems with responsibilities
-
-**Template**:
-```markdown
-## Subsystems
-
-### [Subsystem 1 Name]
-- **Responsibility**: [What it owns and does]
-- **Boundaries**: [What it does NOT do]
-- **Key APIs**: [Main interfaces]
-
-### [Subsystem 2 Name]
-...
-```
-
----
-
-### Phase 4: Interface & Data Flow Design
-
-**Entry**: Subsystems defined
-**Actions**:
-1. Define interfaces between subsystems
-2. Specify:
-   - **API contracts** (request/response shapes)
-   - **Event schemas** (for async communication)
-   - **Data ownership** (who is source of truth)
-3. Design data flow: sync vs async paths
-4. Document error handling and fallback paths
-**Exit**: Clear interface definitions with examples
-
-**Example Interface**:
-```markdown
-## Auth Service → User Service
-
-### GetUserById
-- **Request**: `GET /users/{id}`
-- **Response**: `{ id, email, role, createdAt }`
-- **Errors**: 404 if not found
-- **Owner**: User Service (source of truth)
-```
-
----
-
-### Phase 5: Technology Decisions
-
-**Entry**: Interfaces designed
-**Actions**:
-1. Make key technology choices per subsystem:
-   - **Language/Framework**: Justify with requirements fit
-   - **Database**: SQL vs NoSQL, specific technology
-   - **Infrastructure**: Cloud, containers, serverless
-2. Create ADR (Architecture Decision Record) for each significant choice
-3. Ask: "What's our rollback plan if this technology fails?"
-**Exit**: Technology stack defined with rationales
-
-**ADR Template**:
-```markdown
-# ADR-001: [Decision Title]
-
-## Status
-Accepted
-
-## Context
-[Problem statement and constraints]
-
-## Decision
-[What we decided and why]
-
-## Consequences
-- **Positive**: [Benefits]
-- **Negative**: [Trade-offs]
-- **Neutral**: [Affected but not good/bad]
-
-## Alternatives Considered
-- **[Alternative 1]**: [Why rejected]
-```
-
----
-
-### Phase 6: Architecture Documentation
-
-**Entry**: All technical decisions made
-**Actions**:
-1. Create architecture diagram (Mermaid preferred)
-2. Document all ADRs
-3. Create data flow diagram showing request paths
-4. Document deployment architecture
-5. Review with user for validation
-
-**Run on completion**:
+最终完成必须执行：
 ```bash
 xiaoxiao complete architect docs/xiaoxiao/plans/architect-output.md
 ```
-This updates `xiaoxiao-state.json` and records the skill output path.
-
-**IMPORTANT**: Without running `xiaoxiao complete`, the skill is not marked as done and next skills will be blocked.
-
----
-
-## Constraints
-
-### MUST DO
-
-- Start with requirements, not technology preferences
-- Consider team size and expertise when choosing patterns
-- Document trade-offs explicitly, not just decisions
-- Identify cross-cutting concerns early
-- Create ADRs for significant decisions
-- Design for failure and recovery
-
-### MUST NOT DO
-
-- Choose microservices because they're "modern"
-- Skip non-functional requirements
-- Over-engineer for hypothetical future scale
-- Ignore operational complexity
-- Make technology decisions without understanding trade-offs
-- Skip security considerations
-
----
-
-## Reference Guide
-
-| Topic | File | Load When |
-|-------|------|-----------|
-| Architecture Patterns | GUIDES/patterns.md | Choosing between Monolith/Microservices/etc |
-| API Design Guidelines | GUIDES/api-design.md | Defining service interfaces |
-| Data Modeling | GUIDES/data-modeling.md | Database selection and schema design |
-| Security Architecture | GUIDES/security.md | Auth, authorization, data protection |
-| ADR Template | OUTPUTS/adr-template.md | Documenting decisions |
-| Mermaid Diagrams | OUTPUTS/diagram-examples.md | Architecture diagram reference |
-
----
-
-## Output: Architecture Document
-
-### Required Sections
-
-1. **Overview** (system purpose and scope)
-2. **Architecture Pattern** (chosen pattern with rationale)
-3. **Subsystem Decomposition** (with responsibilities)
-4. **Interface Design** (key APIs and data flows)
-5. **Technology Stack** (per subsystem with justification)
-6. **ADRs** (significant decisions)
-7. **Architecture Diagram** (Mermaid)
-8. **Cross-Cutting Concerns** (auth, logging, config)
-
-### Example Output
-
-```markdown
-# Login System Architecture
-
-## Overview
-[System purpose and what it covers/not covers]
-
-## Architecture Pattern
-**Modular Monolith** - chosen for team size (5 devs) and iteration speed
-
-## Subsystems
-[See subsystem template above]
-
-## Key Interfaces
-[See interface examples above]
-
-## Technology Stack
-| Component | Choice | Rationale |
-|-----------|--------|-----------|
-| Auth | JWT + refresh tokens | Stateless, industry standard |
-| User DB | PostgreSQL | ACID compliance, relational data |
-| Cache | Redis | High read, low latency |
-
-## ADRs
-[ADR-001: PostgreSQL for user data]
-[ADR-002: JWT for authentication]
-
-## Architecture Diagram
-```mermaid
-graph TD
-    Client --> Gateway
-    Gateway --> AuthSvc
-    Gateway --> UserSvc
-    AuthSvc --> Redis
-    UserSvc --> PostgreSQL
-```
-
-## Cross-Cutting
-- **Auth**: JWT with 15min access / 7d refresh
-- **Logging**: Structured JSON to stdout
-- **Config**: Environment variables, no hardcoding
-```
-
----
-
-## CONFIRM Nodes
-
-| Phase | Confirmation Prompt |
-|-------|---------------------|
-| Phase 2 Complete | "Architecture pattern: **[X]**. Rationale: [

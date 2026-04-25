@@ -16,352 +16,173 @@ triggers:
   - deploy
 prerequisites:
   - tdd-development
-output-format: deployment-report.md
+output-format: docs/xiaoxiao/plans/ship-output.md
 related-skills:
   - tdd-development
 ---
 
 # Ship | 发布上线
 
-## When to Use
+## 强制执行协议
 
-- After tdd-development when all tasks complete
-- When deploying to any environment (staging, production)
-- When validating releases before going live
-- When rolling back problematic deployments
-- When establishing monitoring for new features
-
-## When NOT to Use
-
-- Development or coding tasks (use tdd-development)
-- Architecture decisions (use architect)
-- UI design (use ui-design)
-- Task planning (use task-planning)
-- Quick hotfixes without proper process
-- When tests are failing
+**规则**：
+- 必须按顺序执行每个 Step，不得跳过
+- 每个 Step 必须执行验证（检查点）才能进入下一步
+- 使用 `xiaoxiao save-progress <skill> <step>` 标记步骤完成
+- CONFIRM 节点必须等待用户确认，不得自动继续
 
 ---
 
-## EXECUTION PROTOCOL
+## Step 1: 初始化
 
-本 skill 的执行协议在 `PROTOCOL.json` 中定义，框架将验证每步执行。使用 `xiaoxiao continue` 启动交互式引导。
+**动作**：
+1. 执行 `xiaoxiao save-progress ship step1-complete`
+2. 检查 `docs/xiaoxiao/plans/tdd/` 是否存在（开发输出）
+3. 运行本地测试套件：`npm test`
+4. 验证所有 PR 已审查并合并
 
-## ENTRY CHECK（必须首先执行）
+**验证**：测试通过，PR 已合并
 
-1. 运行 `xiaoxiao save-progress ship phase1-start`
-2. 才能开始 Phase 1
+**CONFIRM**："Step 1 完成。测试通过，代码已合并。继续？"
 
 ---
 
-## Core Workflow
+## Step 2: 预发布检查
 
-### Phase 1: Pre-Release Validation
+**动作**：
+1. 运行预发布清单：
+   - [ ] 安全扫描完成
+   - [ ] 性能基准达标
+   - [ ] 数据库迁移已审查
+   - [ ] 环境变量已配置
+2. 创建发布候选版本
+3. 询问用户："准备部署了吗？"
 
-**Entry**: Development complete
-**Prerequisites Check**:
-- If no tdd-development output found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start ship. Run tdd-development first."
-**Actions**:
-1. Read `docs/xiaoxiao/plans/tdd-development-output.md` - verify tasks completed
-2. Verify all tests pass locally (run test suite)
-3. Verify all PRs reviewed and merged
-4. Check code follows project standards
-5. Run pre-release checklist:
-   - [ ] Security scan completed
-   - [ ] Performance benchmarks met
-   - [ ] Database migrations reviewed
-   - [ ] Environment variables configured
-6. Create release candidate
-7. Ask: "Ready for deployment?"
-**Exit**: Release validated, ready to deploy
+**验证**：预发布检查完成
 
-**Pre-Release Checklist**:
-```markdown
-## Pre-Release Validation
+**CONFIRM**："预发布检查：[N] 通过，[N] 失败。准备好部署了？"
 
-### Code Quality
-- [ ] All tests passing (local)
-- [ ] All tests passing (CI)
-- [ ] Code review approved
-- [ ] No security vulnerabilities (lint/scan)
-- [ ] No console errors in logs
+---
 
-### Performance
-- [ ] API response < [SLA] p95
-- [ ] Page load < [SLA] ms
-- [ ] No memory leaks detected
+## Step 3: 部署执行
 
-### Data
-- [ ] Migration scripts reviewed
-- [ ] Rollback scripts prepared
-- [ ] Seed data ready (if needed)
+**动作**：
+1. 通知利益相关者部署开始
+2. 执行部署步骤：
+   - 构建产物
+   - 部署到目标环境
+   - 运行数据库迁移
+3. 监控部署进度
+4. 验证部署成功
+5. 询问用户："部署成功。继续验证？"
 
-### Config
-- [ ] Environment variables set
-- [ ] Secrets secured (not in code)
-- [ ] Feature flags configured
+**验证**：部署成功
+
+**CONFIRM**："已部署到 [环境]。验证成功？"
+
+---
+
+## Step 4: 部署后验证
+
+**动作**：
+1. 运行冒烟测试（关键路径）
+2. 验证关键指标：
+   - 错误率：在正常范围内
+   - 延迟：在 SLA 内
+   - 流量：正常模式
+3. 检查日志是否有错误
+4. 验证数据完整性
+5. 询问用户："所有验证通过。向用户发布？"
+
+**验证**：验证完成
+
+**CONFIRM**："冒烟测试：[N] 通过。验证指标？"
+
+---
+
+## Step 5: 生产发布
+
+**动作**：
+1. 启用新部署的流量（尽可能逐步）
+2. 监控 15-30 分钟：
+   - 错误率
+   - 延迟
+   - 用户指标
+3. 观察异常
+4. 设置发布后监控
+5. 通知成功发布
+
+**验证**：新版本正在服务生产流量
+
+**CONFIRM**："正在服务 [X]% 流量。监控 30 分钟。"
+
+---
+
+## Step 6: 发布后监控
+
+**动作**：
+1. 监控 24-48 小时：
+   - 错误率
+   - 性能指标
+   - 用户反馈
+   - 支持工单
+2. 设置异常警报
+3. 记录经验教训
+4. 更新操作手册（如需要）
+5. 关闭发布
+
+**验证**：监控完成，发布关闭
+
+**CONFIRM**："发布后监控完成（24-48h）。有异常需要处理吗？"
+
+---
+
+## Step 7: 回滚准备
+
+**动作**：
+1. 确保回滚计划就绪
+2. 记录回滚触发条件：
+   - 错误率大幅上升
+   - 关键功能损坏
+   - 性能降至 SLA 以下
+   - 发现安全问题
+   - 检测到数据损坏
+3. 询问用户："需要我现在准备详细的回滚方案文档吗？"
+
+**验证**：回滚准备就绪
+
+**CONFIRM**："回滚准备就绪。继续？"
+
+---
+
+## Step 8: 输出文档
+
+**动作**：
+1. 创建 `docs/xiaoxiao/plans/ship-output.md`
+2. 包含以下章节：
+   - Release Summary（版本、更改、持续时间）
+   - Pre-Release Validation（检查清单结果）
+   - Deployment Steps（执行的步骤）
+   - Post-Release Validation（冒烟测试结果）
+   - Monitoring Setup（配置的警报）
+   - Incidents（如有）
+   - Lessons Learned
+3. 执行 `xiaoxiao complete ship docs/xiaoxiao/plans/ship-output.md`
+
+**验证**：文档已创建且包含所有章节
+
+**CONFIRM**："Ship 完成。文档已保存。所有阶段完成！"
+
+---
+
+## 状态更新命令
+
+每个 Step 完成后必须执行：
+```bash
+xiaoxiao save-progress ship step[N]-complete
 ```
 
----
-
-### Phase 2: Deployment Execution
-
-**Entry**: Pre-release validated
-**Actions**:
-1. Announce deployment start (notify stakeholders)
-2. Execute deployment steps (specific to infrastructure):
-   - Build artifacts
-   - Deploy to target environment
-   - Run database migrations
-3. Monitor deployment progress
-4. Verify deployment success
-5. Ask: "Deployment successful. Proceed to validation?"
-**Exit**: Application deployed to target environment
-
-**Deployment Announcement Template**:
-```markdown
-## 🚀 Deployment Started
-
-**Project**: [Name]
-**Version**: [Version/Commit]
-**Environment**: [Staging/Production]
-**Deployed by**: [User]
-**Time**: [Timestamp]
-
-### Changes
-- [List of features/changes]
-
-### Monitoring
-[Link to monitoring dashboard]
-```
-
----
-
-### Phase 3: Post-Deploy Validation
-
-**Entry**: Deployment complete
-**Actions**:
-1. Run smoke tests (critical paths)
-2. Verify key metrics:
-   - **Error rate**: Within normal bounds
-   - **Latency**: Within SLA
-   - **Traffic**: Normal pattern
-3. Check logging for errors
-4. Verify data integrity
-5. Ask: "All validations passed. Release to users?"
-**Exit**: Validation complete, ready for traffic
-
-**Smoke Test Template**:
-```markdown
-## Post-Deploy Smoke Tests
-
-### Critical Paths
-- [ ] Login flow works
-- [ ] Core feature X accessible
-- [ ] API health check passes
-- [ ] No increase in error rate
-
-### Metrics Check
-| Metric | Expected | Actual | Status |
-|--------|----------|--------|--------|
-| Error rate | <0.1% | X% | ✅/❌ |
-| p95 latency | <200ms | Xms | ✅/❌ |
-| Uptime | 99.9% | X% | ✅/❌ |
-```
-
----
-
-### Phase 4: Production Release
-
-**Entry**: Validation passed
-**Actions**:
-1. Enable traffic to new deployment (gradual if possible)
-2. Monitor for 15-30 minutes:
-   - Error rates
-   - Latency
-   - User-facing metrics
-3. Watch for anomalies
-4. Set up post-launch monitoring
-5. Announce successful release
-**Exit**: New version serving production traffic
-
----
-
-### Phase 5: Post-Launch Monitoring
-
-**Entry**: Production release complete
-**Actions**:
-1. Monitor for 24-48 hours:
-   - Error rates
-   - Performance metrics
-   - User feedback
-   - Support tickets
-2. Set up alerts for anomalies
-3. Document lessons learned
-4. Update runbooks if needed
-5. Close release
-
-**Monitoring Template**:
-```markdown
-## 📊 Post-Launch Monitoring (24h)
-
-### Key Metrics
-| Metric | Baseline | Current | Delta |
-|--------|----------|---------|-------|
-| Error rate | X% | X% | +/-Y% |
-| p95 latency | Xms | Xms | +/-Y% |
-| Requests/sec | X | X | +/-Y% |
-
-### Incidents
-- None / [List any incidents]
-
-### User Feedback
-[Summary of feedback received]
-
-### Lessons Learned
-[What went well/what to improve]
-```
-
-**Run on completion**:
+最终完成必须执行：
 ```bash
 xiaoxiao complete ship docs/xiaoxiao/plans/ship-output.md
 ```
-This updates `xiaoxiao-state.json` and records the skill output path.
-
-**IMPORTANT**: Without running `xiaoxiao complete`, the skill is not marked as done and next skills will be blocked.
-
----
-
-## Rollback Procedures
-
-### When to Rollback
-
-- Error rate spikes significantly
-- Critical functionality broken
-- Performance degrades below SLA
-- Security issue discovered
-- Data corruption detected
-
-### How to Rollback
-
-1. **Immediate Actions**:
-   ```bash
-   # Stop traffic to new version
-   # Route to previous stable version
-   ```
-
-2. **Communication**:
-   ```markdown
-   ## ⚠️ Rollback Initiated
-
-   **Reason**: [Description]
-   **Impact**: [What's affected]
-   **ETA**: [Time to complete]
-   ```
-
-3. **Post-Rollback**:
-   - Verify system stable
-   - Investigate root cause
-   - Plan fix before next release
-
----
-
-## Constraints
-
-### MUST DO
-
-- Verify all tests pass before deployment
-- Have working rollback plan ready
-- Monitor immediately after deployment
-- Communicate with stakeholders
-- Document everything (deploys, incidents, resolutions)
-- Keep deployment small and frequent
-
-### MUST NOT DO
-
-- Deploy with failing tests
-- Skip monitoring after deployment
-- Deploy on Fridays or before holidays (unless critical)
-- Force push to production without validation
-- Ignore warning signs in metrics
-- Deploy during high-traffic periods (unless urgent)
-
----
-
-## Reference Guide
-
-| Topic | File | Load When |
-|-------|------|-----------|
-| Deployment Scripts | GUIDES/deployment-scripts.md | Environment-specific deployment |
-| Rollback Procedures | GUIDES/rollback.md | Emergency rollback steps |
-| Monitoring Setup | GUIDES/monitoring.md | Setting up alerts and dashboards |
-| Incident Response | GUIDES/incident-response.md | Handling production issues |
-| Release Checklist | OUTPUTS/release-checklist.md | Pre-release validation |
-
----
-
-## Output: Deployment Report
-
-### Required Sections
-
-1. **Release Summary** (version, changes, duration)
-2. **Pre-Release Validation** (checklist results)
-3. **Deployment Steps** (what was executed)
-4. **Post-Release Validation** (smoke test results)
-5. **Monitoring Setup** (alerts configured)
-6. **Incidents** (if any)
-7. **Lessons Learned**
-
-### Example Output
-
-```markdown
-# Release Report: v2.1.0
-
-## Summary
-- **Version**: 2.1.0 (commit abc123)
-- **Environment**: Production
-- **Duration**: 45 minutes
-- **Status**: ✅ Success
-
-## Changes
-- Feature: User authentication (OAuth)
-- Feature: Project dashboard redesign
-- Fix: Login timeout issue
-
-## Pre-Release
-- [x] All tests passing
-- [x] Code review approved
-- [x] Security scan clean
-- [x] Migration reviewed
-
-## Deployment Steps
-1. 14:00 - Build artifacts
-2. 14:15 - Deploy to staging
-3. 14:25 - Smoke tests passed
-4. 14:30 - Deploy to production
-5. 14:35 - Monitoring enabled
-
-## Post-Release Monitoring (48h)
-| Metric | Expected | Actual |
-|--------|----------|--------|
-| Error rate | <0.1% | 0.05% |
-| p95 latency | <200ms | 145ms |
-
-## Incidents
-None
-
-## Lessons Learned
-- OAuth integration took longer than expected (3d vs 2d estimate)
-- Consider OAuth token refresh in next release
-```
-
----
-
-## CONFIRM Nodes
-
-| Phase | Confirmation Prompt |
-|-------|---------------------|
-| Phase 1 Complete | "Pre-release checks: [N] passed, [N] failed. Proceed?" |
-| Phase 2 Complete | "Deployed to [environment]. Verify success?" |
-| Phase 3 Complete | "Smoke tests: [N] passed. Validating metrics?" |
-| Phase 4 Complete | "Serving [X]% traffic. Monitoring for 30min." |
-| Final | "Release successful. Monitoring for 24-48h. Done?" |
