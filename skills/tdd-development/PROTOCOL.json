@@ -1,0 +1,86 @@
+{
+  "skill": "tdd-development",
+  "description": "TDD开发",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Read UI Design & Task Analysis",
+      "entry": { "command": "save-progress", "args": ["tdd-development", "phase1-start"] },
+      "actions": [
+        "Read task-planning-output.md",
+        "Read SPEC.md and architect-output.md",
+        "Read UI design files for frontend tasks",
+        "Analyze task dependencies",
+        "Identify parallel groups"
+      ],
+      "exit": { "command": "save-progress", "args": ["tdd-development", "phase1"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase2",
+      "name": "Task Distribution",
+      "entry": { "command": "save-progress", "args": ["tdd-development", "phase2-start"] },
+      "actions": [
+        "Initialize Message Bus",
+        "Dispatch workers using parallel-dispatcher",
+        "Monitor via worker-status.json",
+        "Dispatch next group as dependencies complete"
+      ],
+      "exit": { "command": "save-progress", "args": ["tdd-development", "phase2"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase3",
+      "name": "RED - Write Failing Test",
+      "entry": { "command": "save-progress", "args": ["tdd-development", "phase3-start"] },
+      "actions": [
+        "Write smallest possible test",
+        "Run test to verify it fails",
+        "Verify failure is expected"
+      ],
+      "exit": { "command": "save-progress", "args": ["tdd-development", "phase3"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase4",
+      "name": "GREEN - Minimal Implementation",
+      "entry": { "command": "save-progress", "args": ["tdd-development", "phase4-start"] },
+      "actions": [
+        "Write minimum code to pass test",
+        "Run test to verify it passes",
+        "Verify no other tests broken"
+      ],
+      "exit": { "command": "save-progress", "args": ["tdd-development", "phase4"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase5",
+      "name": "REFACTOR - Improve Code",
+      "entry": { "command": "save-progress", "args": ["tdd-development", "phase5-start"] },
+      "actions": [
+        "Improve code structure without changing behavior",
+        "Keep tests green after each refactor",
+        "Look for code smells"
+      ],
+      "exit": { "command": "save-progress", "args": ["tdd-development", "phase5"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase6",
+      "name": "Integration & Completion",
+      "entry": { "command": "save-progress", "args": ["tdd-development", "phase6-start"] },
+      "actions": [
+        "Run full test suite",
+        "Verify no regressions",
+        "Confirm with user before moving on",
+        "Final CONFIRM before completion"
+      ],
+      "exit": { "command": "save-progress", "args": ["tdd-development", "phase6"] },
+      "requiresConfirm": true
+    }
+  ],
+  "final": {
+    "command": "complete",
+    "args": ["tdd-development", "docs/xiaoxiao/plans/tdd/"]
+  }
+}

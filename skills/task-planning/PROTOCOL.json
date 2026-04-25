@@ -1,0 +1,76 @@
+{
+  "skill": "task-planning",
+  "description": "任务规划",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Backlog Extraction",
+      "entry": { "command": "save-progress", "args": ["task-planning", "phase1-start"] },
+      "actions": [
+        "Read architect-output.md for technology stack",
+        "Read ui-design/ directory",
+        "Read SPEC.md",
+        "Create initial backlog items",
+        "Ask about deprioritized features"
+      ],
+      "exit": { "command": "save-progress", "args": ["task-planning", "phase1"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase2",
+      "name": "Task Decomposition",
+      "entry": { "command": "save-progress", "args": ["task-planning", "phase2-start"] },
+      "actions": [
+        "Break stories into tasks",
+        "Identify backend/frontend/infra tasks",
+        "Ensure tasks are small and testable",
+        "Ask if tasks can be split"
+      ],
+      "exit": { "command": "save-progress", "args": ["task-planning", "phase2"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase3",
+      "name": "Dependency Mapping",
+      "entry": { "command": "save-progress", "args": ["task-planning", "phase3-start"] },
+      "actions": [
+        "Identify dependencies between tasks",
+        "Create dependency graph",
+        "Identify critical path",
+        "Ask what's blocking other work"
+      ],
+      "exit": { "command": "save-progress", "args": ["task-planning", "phase3"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase4",
+      "name": "Estimation",
+      "entry": { "command": "save-progress", "args": ["task-planning", "phase4-start"] },
+      "actions": [
+        "Estimate using relative sizing",
+        "Add up estimates per story",
+        "Calculate total effort",
+        "Ask if estimate matches intuition"
+      ],
+      "exit": { "command": "save-progress", "args": ["task-planning", "phase4"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase5",
+      "name": "Prioritization",
+      "entry": { "command": "save-progress", "args": ["task-planning", "phase5-start"] },
+      "actions": [
+        "Apply priority rules (P0/P1/P2)",
+        "Order tasks by priority and dependencies",
+        "Create sprint groups if applicable",
+        "Confirm priority order with user"
+      ],
+      "exit": { "command": "save-progress", "args": ["task-planning", "phase5"] },
+      "requiresConfirm": true
+    }
+  ],
+  "final": {
+    "command": "complete",
+    "args": ["task-planning", "docs/xiaoxiao/plans/task-planning-output.md"]
+  }
+}

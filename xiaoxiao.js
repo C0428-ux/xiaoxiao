@@ -367,6 +367,123 @@ const COMMANDS = {
     executable.forEach(s => console.log(`  - ${s}`));
   },
 
+  'audit': () => {
+    const result = stateManager.audit();
+    if (!result.exists) {
+      console.log('❌ 未找到状态文件');
+      return;
+    }
+
+    console.log(`📊 XiaoXiao 审计报告\n`);
+    console.log(`项目: ${result.project}`);
+    console.log(`迭代: ${result.currentIteration}\n`);
+
+    let hasIssues = false;
+    for (const skill of result.skills) {
+      const statusIcon = skill.status === 'completed' ? '✅' :
+                        skill.status === 'active' ? '🔄' :
+                        skill.status === 'blocked' ? '🚫' : '⏳';
+      const outputIcon = skill.outputExists ? '✅' : '❌';
+
+      console.log(`${statusIcon} ${skill.name} (${skill.status})`);
+      console.log(`   输出: ${outputIcon} ${skill.expectedOutput}`);
+
+      if (skill.status === 'completed' && !skill.outputExists) {
+        console.log(`   ⚠️  状态显示完成但输出文件不存在`);
+        hasIssues = true;
+      } else if (skill.status === 'pending' && skill.outputExists) {
+        console.log(`   ⚠️  输出文件存在但状态未更新`);
+        hasIssues = true;
+      }
+    }
+
+    if (!hasIssues) {
+      console.log('\n✅ 所有 Skills 状态正常');
+    } else {
+      console.log('\n⚠️  发现问题，使用 "xiaoxiao fix-missing <skill>" 修复');
+    }
+  },
+
+  'fix-missing': (args) => {
+    const skillName = args[0];
+    if (!skillName) {
+      console.log('❌ 请指定 Skill 名称');
+      console.log('用法: xiaoxiao fix-missing <skill>');
+      console.log('可用 Skills:', SKILLS.join(', '));
+      return;
+    }
+
+    const diagnosis = stateManager.diagnose(skillName);
+    if (diagnosis.error) {
+      console.log(`❌ ${diagnosis.error}`);
+      return;
+    }
+
+    console.log(`📋 ${skillName} 诊断结果\n`);
+    console.log(`状态: ${diagnosis.status}`);
+    console.log(`输出文件: ${diagnosis.expectedOutput}`);
+    console.log(`文件存在: ${diagnosis.outputExists ? '是' : '否'}`);
+
+    if (diagnosis.issues.length > 0) {
+      console.log('\n发现问题:');
+      diagnosis.issues.forEach(issue => {
+        console.log(`  - ${issue.message}`);
+      });
+      console.log('\n补救选项:');
+      console.log('  1) mark-complete - 标记为完成（文件已存在）');
+      console.log('  2) mark-pending - 标记为未完成（重新做）');
+      console.log('  3) reset - 重置状态');
+      console.log('\n使用 "xiaoxiao fix-missing <skill> <action>" 执行修复');
+    } else {
+      console.log('\n✅ 未发现问题');
+    }
+  },
+
+  'continue': () => {
+    const state = stateManager.read();
+    if (!state) {
+      console.log('❌ 未找到状态文件。先运行 "xiaoxiao init-project" 初始化项目。');
+      return;
+    }
+
+    // 找到当前或下一个需要执行的 skill
+    let currentSkill = state.currentSkill;
+    if (!currentSkill) {
+      // 找到第一个未完成的 skill
+      for (const skillName of SKILLS) {
+        if (state.skills[skillName].status !== 'completed') {
+          currentSkill = skillName;
+          break;
+        }
+      }
+    }
+
+    if (!currentSkill) {
+      console.log('🎉 所有 Skills 已完成！');
+      console.log(`迭代 ${state.currentIteration} 已完成`);
+      console.log('使用 "xiaoxiao new-iteration" 开始新功能开发');
+      return;
+    }
+
+    const skillState = state.skills[currentSkill];
+    const skillStatus = skillState.status;
+
+    console.log(`📍 当前: ${currentSkill} (${skillStatus})`);
+    console.log('\n使用 "xiaoxiao goto ' + currentSkill + '" 开始或继续执行');
+
+    // 显示 skill 的 PROTOCOL.json（如果存在）
+    const protocolPath = path.join(FRAMEWORK_ROOT, 'skills', currentSkill, 'PROTOCOL.json');
+    if (fs.existsSync(protocolPath)) {
+      const protocol = JSON.parse(fs.readFileSync(protocolPath, 'utf-8'));
+      console.log('\n📋 执行协议:');
+      if (protocol.phases) {
+        protocol.phases.forEach((phase, i) => {
+          console.log(`  ${i + 1}. ${phase.name} ${phase.requiresConfirm ? '⚠️ 需确认' : ''}`);
+        });
+      }
+    }
+  },
+
   'help': () => {
     console.log(`
 🔧 XiaoXiao CLI
@@ -376,11 +493,15 @@ const COMMANDS = {
 命令:
   init-project [name]    初始化项目（创建目录结构和状态）
   status                  显示当前状态
+  audit                   审计所有 Skills 状态和输出
+  fix-missing <skill>     诊断并修复 Skill 状态问题
+  continue                显示当前 Skill 并指导继续
   iterations              显示所有迭代历史
   new-iteration           开始新迭代（新功能/第二轮开发）
   resume                  恢复中断
   goto <skill>            跳转到指定 Skill
   interrupt [note]         中断当前 Skill
+  save-progress <skill> <phase>  保存进度
   complete <skill>        标记 Skill 完成（需先创建输出文件）
   update-check            检查更新
   update                  下载更新
@@ -394,9 +515,10 @@ const COMMANDS = {
 
 示例:
   xiaoxiao init-project my-project
+  xiaoxiao audit
+  xiaoxiao fix-missing strategy-review
   xiaoxiao status
-  xiaoxiao iterations
-  xiaoxiao new-iteration
+  xiaoxiao continue
 
 Skills:
   product-consult → strategy-review → architect → ui-design → task-planning → tdd-development → ship

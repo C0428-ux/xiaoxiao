@@ -1,0 +1,89 @@
+{
+  "skill": "strategy-review",
+  "description": "战略评审，评估方向",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Direction Validation",
+      "entry": { "command": "save-progress", "args": ["strategy-review", "phase1-start"] },
+      "actions": [
+        "Read SPEC.md",
+        "Ask if problem is worth solving",
+        "Ask what would be gained/lost",
+        "Assess strategic alignment",
+        "Ask about available resources"
+      ],
+      "exit": { "command": "save-progress", "args": ["strategy-review", "phase1"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase2",
+      "name": "Market Analysis",
+      "entry": { "command": "save-progress", "args": ["strategy-review", "phase2-start"] },
+      "actions": [
+        "Search market size data using search skill",
+        "Document TAM, Trend, Key Drivers",
+        "Handle search failures",
+        "Confirm market opportunity"
+      ],
+      "exit": { "command": "save-progress", "args": ["strategy-review", "phase2"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase3",
+      "name": "Competitive Landscape",
+      "entry": { "command": "save-progress", "args": ["strategy-review", "phase3-start"] },
+      "actions": [
+        "Search competitors using search skill",
+        "Document competitor info",
+        "Assess positioning",
+        "Identify differentiator"
+      ],
+      "exit": { "command": "save-progress", "args": ["strategy-review", "phase3"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase4",
+      "name": "Feasibility Assessment",
+      "entry": { "command": "save-progress", "args": ["strategy-review", "phase4-start"] },
+      "actions": [
+        "Assess technical feasibility",
+        "Assess resource feasibility",
+        "Assess economic feasibility",
+        "Identify uncertainties"
+      ],
+      "exit": { "command": "save-progress", "args": ["strategy-review", "phase4"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase5",
+      "name": "Risk Identification",
+      "entry": { "command": "save-progress", "args": ["strategy-review", "phase5-start"] },
+      "actions": [
+        "Identify top 3-5 risks",
+        "Assess probability and impact",
+        "Define mitigation strategies",
+        "Ask biggest risk that could kill this"
+      ],
+      "exit": { "command": "save-progress", "args": ["strategy-review", "phase5"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase6",
+      "name": "Go/No-Go Decision",
+      "entry": { "command": "save-progress", "args": ["strategy-review", "phase6-start"] },
+      "actions": [
+        "Synthesize findings into recommendation",
+        "Decide Go/Pivot/No-Go",
+        "State conditions for success",
+        "Final CONFIRM before completion"
+      ],
+      "exit": { "command": "save-progress", "args": ["strategy-review", "phase6"] },
+      "requiresConfirm": true
+    }
+  ],
+  "final": {
+    "command": "complete",
+    "args": ["strategy-review", "docs/xiaoxiao/plans/strategy-review-output.md"]
+  }
+}

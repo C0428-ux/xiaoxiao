@@ -46,6 +46,17 @@ related-skills:
 
 ---
 
+## EXECUTION PROTOCOL
+
+本 skill 的执行协议在 `PROTOCOL.json` 中定义，框架将验证每步执行。使用 `xiaoxiao continue` 启动交互式引导。
+
+## ENTRY CHECK（必须首先执行）
+
+1. 运行 `xiaoxiao save-progress architect phase1-start`
+2. 才能开始 Phase 1
+
+---
+
 ## Core Workflow
 
 ### Phase 1: Requirements Extraction

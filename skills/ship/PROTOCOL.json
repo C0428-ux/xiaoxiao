@@ -1,0 +1,77 @@
+{
+  "skill": "ship",
+  "description": "发布上线",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Pre-Release Validation",
+      "entry": { "command": "save-progress", "args": ["ship", "phase1-start"] },
+      "actions": [
+        "Read tdd-development-output.md",
+        "Verify all tests pass",
+        "Verify all PRs reviewed and merged",
+        "Run pre-release checklist",
+        "Create release candidate"
+      ],
+      "exit": { "command": "save-progress", "args": ["ship", "phase1"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase2",
+      "name": "Deployment Execution",
+      "entry": { "command": "save-progress", "args": ["ship", "phase2-start"] },
+      "actions": [
+        "Announce deployment start",
+        "Execute deployment steps",
+        "Monitor deployment progress",
+        "Verify deployment success"
+      ],
+      "exit": { "command": "save-progress", "args": ["ship", "phase2"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase3",
+      "name": "Post-Deploy Validation",
+      "entry": { "command": "save-progress", "args": ["ship", "phase3-start"] },
+      "actions": [
+        "Run smoke tests",
+        "Verify key metrics",
+        "Check logging for errors",
+        "Verify data integrity"
+      ],
+      "exit": { "command": "save-progress", "args": ["ship", "phase3"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase4",
+      "name": "Production Release",
+      "entry": { "command": "save-progress", "args": ["ship", "phase4-start"] },
+      "actions": [
+        "Enable traffic to new deployment",
+        "Monitor for 15-30 minutes",
+        "Watch for anomalies",
+        "Set up post-launch monitoring"
+      ],
+      "exit": { "command": "save-progress", "args": ["ship", "phase4"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase5",
+      "name": "Post-Launch Monitoring",
+      "entry": { "command": "save-progress", "args": ["ship", "phase5-start"] },
+      "actions": [
+        "Monitor for 24-48 hours",
+        "Set up alerts",
+        "Document lessons learned",
+        "Update runbooks",
+        "Final CONFIRM before completion"
+      ],
+      "exit": { "command": "save-progress", "args": ["ship", "phase5"] },
+      "requiresConfirm": true
+    }
+  ],
+  "final": {
+    "command": "complete",
+    "args": ["ship", "docs/xiaoxiao/plans/ship-output.md"]
+  }
+}

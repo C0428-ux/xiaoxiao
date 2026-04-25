@@ -1,0 +1,86 @@
+{
+  "skill": "ui-design",
+  "description": "界面设计",
+  "phases": [
+    {
+      "id": "phase0",
+      "name": "Design Style Selection",
+      "entry": { "command": "save-progress", "args": ["ui-design", "phase0-start"] },
+      "actions": [
+        "Read architect-output.md",
+        "Read SPEC.md",
+        "Present 5 design presets",
+        "User selects preset"
+      ],
+      "exit": { "command": "save-progress", "args": ["ui-design", "phase0"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase1",
+      "name": "Information Architecture",
+      "entry": { "command": "save-progress", "args": ["ui-design", "phase1-start"] },
+      "actions": [
+        "Define page hierarchy",
+        "Design navigation model",
+        "Identify user touchpoints",
+        "Confirm navigation structure"
+      ],
+      "exit": { "command": "save-progress", "args": ["ui-design", "phase1"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase2",
+      "name": "Screen Design",
+      "entry": { "command": "save-progress", "args": ["ui-design", "phase2-start"] },
+      "actions": [
+        "Define content structure",
+        "Select components",
+        "Write HTML using Tailwind CSS",
+        "Generate preview"
+      ],
+      "exit": { "command": "save-progress", "args": ["ui-design", "phase2"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase3",
+      "name": "Preview & Iteration",
+      "entry": { "command": "save-progress", "args": ["ui-design", "phase3-start"] },
+      "actions": [
+        "Generate preview HTML",
+        "User previews and judges",
+        "Iterate based on feedback",
+        "Confirm each screen"
+      ],
+      "exit": { "command": "save-progress", "args": ["ui-design", "phase3"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase4",
+      "name": "Component Definition",
+      "entry": { "command": "save-progress", "args": ["ui-design", "phase4-start"] },
+      "actions": [
+        "Define reusable components",
+        "Document component states",
+        "Reference component patterns"
+      ],
+      "exit": { "command": "save-progress", "args": ["ui-design", "phase4"] },
+      "requiresConfirm": true
+    },
+    {
+      "id": "phase5",
+      "name": "Final Review",
+      "entry": { "command": "save-progress", "args": ["ui-design", "phase5-start"] },
+      "actions": [
+        "Review complete design",
+        "Check against requirements",
+        "Final CONFIRM before completion"
+      ],
+      "exit": { "command": "save-progress", "args": ["ui-design", "phase5"] },
+      "requiresConfirm": true
+    }
+  ],
+  "final": {
+    "command": "complete",
+    "args": ["ui-design", "docs/xiaoxiao/plans/ui-design/"]
+  }
+}

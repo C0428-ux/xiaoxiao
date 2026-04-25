@@ -522,6 +522,159 @@ class StateManager {
     fs.writeFileSync(this.statePath, JSON.stringify(state, null, 2), 'utf-8');
   }
 
+  /**
+   * 审计所有 Skills 的状态和输出
+   */
+  audit() {
+    const state = this.read();
+    if (!state) {
+      return { exists: false, skills: [] };
+    }
+
+    // skill 输出文件映射
+    const outputMap = {
+      'product-consult': '.SPEC.md',
+      'strategy-review': 'docs/xiaoxiao/plans/strategy-review-output.md',
+      'architect': 'docs/xiaoxiao/plans/architect-output.md',
+      'ui-design': 'docs/xiaoxiao/plans/ui-design/',
+      'task-planning': 'docs/xiaoxiao/plans/task-planning-output.md',
+      'tdd-development': 'docs/xiaoxiao/plans/tdd/',
+      'ship': 'docs/xiaoxiao/plans/ship-output.md'
+    };
+
+    const results = [];
+    for (const skillName of SKILLS) {
+      const skillState = state.skills[skillName];
+      const expectedOutput = outputMap[skillName];
+      let outputExists = false;
+
+      if (expectedOutput) {
+        const fullPath = path.join(this.projectRoot, expectedOutput);
+        outputExists = fs.existsSync(fullPath);
+      }
+
+      results.push({
+        name: skillName,
+        status: skillState.status,
+        outputExists,
+        expectedOutput,
+        completedAt: skillState.completedAt,
+        currentPhase: skillState.currentPhase,
+        blockedReason: skillState.blockedReason
+      });
+    }
+
+    return {
+      exists: true,
+      project: state.project?.name,
+      currentIteration: state.currentIteration,
+      skills: results
+    };
+  }
+
+  /**
+   * 诊断单个 Skill 的问题
+   */
+  diagnose(skillName) {
+    const state = this.read();
+    if (!state) {
+      return { error: 'No state file' };
+    }
+
+    const skillState = state.skills[skillName];
+    if (!skillState) {
+      return { error: `Unknown skill: ${skillName}` };
+    }
+
+    // 输出文件映射
+    const outputMap = {
+      'product-consult': '.SPEC.md',
+      'strategy-review': 'docs/xiaoxiao/plans/strategy-review-output.md',
+      'architect': 'docs/xiaoxiao/plans/architect-output.md',
+      'ui-design': 'docs/xiaoxiao/plans/ui-design/',
+      'task-planning': 'docs/xiaoxiao/plans/task-planning-output.md',
+      'tdd-development': 'docs/xiaoxiao/plans/tdd/',
+      'ship': 'docs/xiaoxiao/plans/ship-output.md'
+    };
+
+    const expectedOutput = outputMap[skillName];
+    const fullPath = path.join(this.projectRoot, expectedOutput);
+    const outputExists = fs.existsSync(fullPath);
+
+    return {
+      skillName,
+      status: skillState.status,
+      outputExists,
+      expectedOutput: expectedOutput,
+      fullPath,
+      phase: skillState.currentPhase,
+      completedAt: skillState.completedAt,
+      // 问题分析
+      issues: this._analyzeIssues(skillName, skillState, outputExists)
+    };
+  }
+
+  _analyzeIssues(skillName, skillState, outputExists) {
+    const issues = [];
+
+    if (skillState.status === 'completed' && !outputExists) {
+      issues.push({ type: 'output-missing', message: '状态显示完成但输出文件不存在' });
+    }
+
+    if (skillState.status === 'pending' && outputExists) {
+      issues.push({ type: 'output-exists-but-pending', message: '输出文件存在但状态未更新' });
+    }
+
+    if (skillState.status === 'active' && !skillState.currentPhase) {
+      issues.push({ type: 'no-phase', message: '状态为 active 但没有记录 phase' });
+    }
+
+    return issues;
+  }
+
+  /**
+   * 修复 Skill 状态
+   */
+  fixSkill(skillName, action) {
+    const state = this.read();
+    if (!state) {
+      throw new Error('No state file');
+    }
+
+    const skillState = state.skills[skillName];
+    if (!skillState) {
+      throw new Error(`Unknown skill: ${skillName}`);
+    }
+
+    switch (action) {
+      case 'mark-complete':
+        state.skills[skillName].status = 'completed';
+        state.skills[skillName].completedAt = new Date().toISOString();
+        break;
+      case 'mark-pending':
+        state.skills[skillName].status = 'pending';
+        state.skills[skillName].completedAt = null;
+        break;
+      case 'reset':
+        state.skills[skillName] = {
+          status: 'pending',
+          startedAt: null,
+          completedAt: null,
+          outputs: {},
+          loopCount: 0,
+          blockedReason: null,
+          currentPhase: null
+        };
+        break;
+      default:
+        throw new Error(`Unknown action: ${action}`);
+    }
+
+    state.updatedAt = new Date().toISOString();
+    this._write(state);
+    return state;
+  }
+
   _getNextSkill(current) {
     const idx = SKILLS.indexOf(current);
     if (idx === -1 || idx === SKILLS.length - 1) return null;
