@@ -1,0 +1,129 @@
+{
+  "$schema": "https://design-tokens.org/schema/v1",
+  "name": "{{PROJECT_NAME}}",
+  "preset": "{{PRESET_NAME}}",
+  "created": "{{DATE}}",
+
+  "color": {
+    "background": {
+      "value": "{{COLOR_BG}}",
+      "type": "color"
+    },
+    "surface": {
+      "value": "{{COLOR_SURFACE}}",
+      "type": "color"
+    },
+    "border": {
+      "value": "{{COLOR_BORDER}}",
+      "type": "color"
+    },
+    "text": {
+      "primary": {
+        "value": "{{COLOR_TEXT_PRIMARY}}",
+        "type": "color"
+      },
+      "secondary": {
+        "value": "{{COLOR_TEXT_SECONDARY}}",
+        "type": "color"
+      }
+    },
+    "accent": {
+      "value": "{{COLOR_ACCENT}}",
+      "type": "color"
+    },
+    "semantic": {
+      "success": { "value": "{{COLOR_SUCCESS}}", "type": "color" },
+      "warning": { "value": "{{COLOR_WARNING}}", "type": "color" },
+      "error": { "value": "{{COLOR_ERROR}}", "type": "color" }
+    }
+  },
+
+  "typography": {
+    "fontFamily": {
+      "display": { "value": "{{FONT_DISPLAY}}", "type": "fontFamily" },
+      "body": { "value": "{{FONT_BODY}}", "type": "fontFamily" }
+    },
+    "fontSize": {
+      "xs": { "value": "12px", "type": "fontSize" },
+      "sm": { "value": "14px", "type": "fontSize" },
+      "base": { "value": "16px", "type": "fontSize" },
+      "lg": { "value": "18px", "type": "fontSize" },
+      "xl": { "value": "20px", "type": "fontSize" },
+      "2xl": { "value": "24px", "type": "fontSize" },
+      "3xl": { "value": "30px", "type": "fontSize" },
+      "4xl": { "value": "36px", "type": "fontSize" }
+    },
+    "lineHeight": {
+      "tight": { "value": "1.25", "type": "lineHeight" },
+      "normal": { "value": "1.5", "type": "lineHeight" },
+      "relaxed": { "value": "1.75", "type": "lineHeight" }
+    }
+  },
+
+  "spacing": {
+    "0": { "value": "0px" },
+    "1": { "value": "4px" },
+    "2": { "value": "8px" },
+    "3": { "value": "12px" },
+    "4": { "value": "16px" },
+    "5": { "value": "20px" },
+    "6": { "value": "24px" },
+    "8": { "value": "32px" },
+    "10": { "value": "40px" },
+    "12": { "value": "48px" },
+    "16": { "value": "64px" }
+  },
+
+  "borderRadius": {
+    "none": { "value": "0px" },
+    "sm": { "value": "4px" },
+    "md": { "value": "{{BORDER_RADIUS}}px" },
+    "lg": { "value": "12px" },
+    "xl": { "value": "16px" },
+    "full": { "value": "9999px" }
+  },
+
+  "shadow": {
+    "sm": { "value": "0 1px 2px rgba(0,0,0,0.05)" },
+    "md": { "value": "0 4px 6px rgba(0,0,0,0.1)" },
+    "lg": { "value": "0 10px 15px rgba(0,0,0,0.1)" }
+  },
+
+  "component": {
+    "button": {
+      "primary": {
+        "background": { "value": "{color.accent.value}" },
+        "color": { "value": "#ffffff" },
+        "paddingX": { "value": "20px" },
+        "paddingY": { "value": "10px" },
+        "radius": { "value": "{borderRadius.md.value}" }
+      },
+      "secondary": {
+        "background": { "value": "transparent" },
+        "color": { "value": "{color.text.primary.value}" },
+        "border": { "value": "1px solid {color.border.value}" },
+        "paddingX": { "value": "20px" },
+        "paddingY": { "value": "10px" },
+        "radius": { "value": "{borderRadius.md.value}" }
+      }
+    },
+    "input": {
+      "background": { "value": "{color.surface.value}" },
+      "border": { "value": "1px solid {color.border.value}" },
+      "color": { "value": "{color.text.primary.value}" },
+      "paddingX": { "value": "14px" },
+      "paddingY": { "value": "10px" },
+      "radius": { "value": "{borderRadius.md.value}" },
+      "focus": {
+        "border": { "value": "{color.accent.value}" },
+        "ring": { "value": "0 0 0 3px color-mix(in srgb, {color.accent.value} 20%, transparent)" }
+      }
+    },
+    "card": {
+      "background": { "value": "{color.surface.value}" },
+      "border": { "value": "1px solid {color.border.value}" },
+      "radius": { "value": "{borderRadius.md.value}" },
+      "padding": { "value": "24px" }
+    }
+  }
+}

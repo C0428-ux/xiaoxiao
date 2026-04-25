@@ -1,12 +1,11 @@
 ---
 name: ui-design
 description: >-
-  Designs user interfaces and interactions by translating product requirements
-  into screen layouts, component structures, and user flows. Produces wireframes,
-  ASCII prototypes, and design specifications. Use after architect when defining
-  how users interact with the system.
+  Designs user interfaces by producing actual visual output (HTML pages) that users
+  can see and judge directly. Supports iteration based on user feedback before
+  proceeding. Use after architect when the product needs screen designs.
   NOT for: backend design, task planning, or implementation.
-version: 1.0
+version: 2.0
 domain: design
 role: designer
 triggers:
@@ -17,7 +16,7 @@ triggers:
   - 交互设计
 prerequisites:
   - architect
-output-format: ui-design.md
+output-format: HTML preview files in docs/xiaoxiao/plans/ui-design/
 related-skills:
   - architect
   - task-planning
@@ -25,209 +24,207 @@ related-skills:
 
 # UI Design | 界面设计
 
+## What Changed in v2
+
+- **Output**: Markdown 文档 → HTML 预览文件（可直接在浏览器打开）
+- **Iteration**: 用户可在视觉上判定设计，不满意则修改
+- **Presets**: 5 种设计风格预设供选择
+- **Preview Tool**: 内置 HTML 生成器，双击即可预览
+
+---
+
 ## When to Use
 
-- After architect before task-planning
+- After architect when screens need visual design
 - When designing new screens or flows
 - When redesigning existing interfaces
 - When component libraries need definition
-- When user interaction patterns need validation
 
 ## When NOT to Use
 
-- Backend or API design (use architect skill)
-- Task breakdown or estimation (use task-planning skill)
-- Implementation (use tdd-development skill)
+- Backend or API design (use architect)
+- Task breakdown or estimation (use task-planning)
+- Implementation (use tdd-development)
 - Just asking for code snippets without design context
-- Minor copy changes without structural impact
 
 ---
 
 ## Core Workflow
 
-### Phase 1: Information Architecture
+### Phase 0: Design Style Selection
 
 **Entry**: Architecture document exists
-**Prerequisites Check**:
-- If no architecture document found in `docs/xiaoxiao/plans/` → **BLOCKED**: "Cannot start ui-design. Run architect first to create architecture document."
 **Actions**:
-1. Read `docs/xiaoxiao/plans/architect-output.md` - understand subsystem boundaries and interfaces
-2. Read `./SPEC.md` - extract P0 features and UX structure guidance
-3. Identify user touchpoints (where users interact with system)
-4. Define page hierarchy and structure:
-   - **Primary**: Most used screens
-   - **Secondary**: Supporting screens
-   - **Utility**: Settings, profile, etc.
-5. Design navigation model (top nav, sidebar, tabs, etc.)
-6. Ask: "What's the primary user journey through this system?"
-**Exit**: Page structure and navigation model defined
+1. Read `docs/xiaoxiao/plans/architect-output.md` - understand subsystem boundaries
+2. Read `./SPEC.md` - extract P0 features and UX structure
+3. Present 5 design style presets to user:
 
-**IA Template**:
-```markdown
-## Information Architecture
-
-### Page Hierarchy
-1. **Dashboard** (Primary) - /dashboard
-   - Overview of key metrics and actions
-2. **Projects** (Primary) - /projects
-   - List and manage projects
-3. **Settings** (Utility) - /settings
-   - User and system settings
-
-### Navigation Model
-[Top bar with: Logo | Dashboard | Projects | Settings]
-
-### User Journeys
-1. [Login] → [Dashboard] → [Project Detail]
-2. [Login] → [Projects] → [New Project]
 ```
+┌─────────────────────────────────────────────────────────┐
+│  设计风格选择                                            │
+├─────────────────────────────────────────────────────────┤
+│  [1] Modern SaaS      - B2B 产品、后台管理              │
+│  [2] Apple Minimal    - 消费级 App、工具                │
+│  [3] Enterprise       - 企业内部系统                    │
+│  [4] Creative         - 作品集、创意网站                │
+│  [5] Dashboard        - 数据平台、Analytics             │
+└─────────────────────────────────────────────────────────┘
+```
+
+4. Ask: "哪个设计风格最符合你的产品气质？"
+5. Load selected preset from `GUIDES/design-presets.md`
+**Exit**: Design preset confirmed
+
+---
+
+### Phase 1: Information Architecture
+
+**Entry**: Design preset confirmed
+**Prerequisites Check**:
+- If no architecture document found → **BLOCKED**: "Cannot start ui-design. Run architect first."
+**Actions**:
+1. Define page hierarchy and structure:
+   - **Primary**: Most used screens (Dashboard, Home)
+   - **Secondary**: Supporting screens (Settings, Profile)
+   - **Utility**: Rarely accessed screens
+2. Design navigation model:
+   - Top nav (适合 3-5 项)
+   - Sidebar (适合 5+ 项)
+   - Tabs (适合同页面面板切换)
+3. Identify user touchpoints for each P0 feature
+4. Ask: "导航结构：[top nav/sidebar]。这是你熟悉的方式吗？"
+**Exit**: IA confirmed
 
 ---
 
 ### Phase 2: Screen Design
 
-**Entry**: Information architecture defined
+**Entry**: IA confirmed
 **Actions**:
-1. Design each screen with ASCII wireframes or Mermaid
-2. For each screen specify:
-   - **Header**: Navigation, breadcrumbs
-   - **Content Area**: Main content, lists, forms
-   - **Sidebar**: Contextual navigation if needed
-   - **Footer**: Secondary actions, help links
-3. Define component states (default, hover, disabled, error)
-4. Ask: "Does this layout support the user's primary task?"
-**Exit**: All screens wireframed with component states
+1. For each screen:
+   - Define content structure (see `GUIDES/component-patterns.md`)
+   - Select appropriate components from pattern library
+   - Write HTML using Tailwind CSS classes
+2. Use Tailwind CDN in preview - no build step needed
+3. Generate preview using `preview/generate.js`
+4. Ask: "页面 [X] 设计完成。预览效果如何？需要调整吗？"
+**Exit**: All screens designed and preview generated
 
-**Wireframe Example**:
-```markdown
-## Screen: Project List
+**Screen Template**:
+```html
+<!-- Page: [Name] -->
+<div class="page-container">
+  <!-- Header -->
+  <header class="page-header">
+    <h1>[Page Title]</h1>
+    <button class="btn btn-primary">[Primary Action]</button>
+  </header>
 
-```
-+--------------------------------------------------+
-| Logo   Dashboard | Projects | Settings    [User] |
-+--------------------------------------------------+
-| + New Project                                     |
-+--------------------------------------------------+
-| [Search projects...]                              |
-+--------------------------------------------------+
-| +----------------------------------------+-------+
-| | [Icon] Project Alpha              >    | ...   |
-| | Last edited: 2 hours ago               |       |
-| +----------------------------------------+-------+|
-| | [Icon] Project Beta                >    | ...   |
-| | Last edited: yesterday                   |       |
-| +----------------------------------------+-------+|
-+--------------------------------------------------+
-```
+  <!-- Content -->
+  <main class="page-content">
+    <!-- Components based on content type -->
+  </main>
+</div>
 ```
 
 ---
 
-### Phase 3: Interaction Design
+### Phase 3: Preview & Iteration (NEW)
 
-**Entry**: Screens wireframed
-**Actions**:
-1. Define user interactions and flows:
-   - How users navigate between screens
-   - Form submission flows
-   - Feedback mechanisms (success, error, loading)
-2. Identify micro-interactions:
-   - Button states
-   - Form validation
-   - Toast notifications
-3. Define edge cases:
-   - Empty states
-   - Loading states
-   - Error states
-4. Ask: "What happens when something goes wrong?"
-**Exit**: Interaction patterns documented
-
-**Flow Example**:
-```markdown
-## Interaction: Create Project
-
-### Happy Path
-1. User clicks [+ New Project]
-2. Modal opens with form
-3. User fills: Name (required), Description (optional)
-4. User clicks [Create]
-5. Modal closes, project appears in list
-6. Toast: "Project created"
-
-### Error: Empty Name
-1. User clicks [+ New Project]
-2. Modal opens
-3. User clicks [Create] without entering name
-4. Field shows: "Project name is required"
-5. Modal stays open
-
-### Loading State
-1. User clicks [Create]
-2. Button shows spinner, disabled
-3. After 500ms, modal closes
+**Entry**: Screens designed
+**Iteration Loop**:
 ```
+┌──────────────────────────────────────────────┐
+│  生成预览 → 用户预览 → [不满意? 修改]        │
+│       ↓                                      │
+│  [满意? 继续下一个]                           │
+└──────────────────────────────────────────────┘
+```
+
+**Actions**:
+1. Run: `node skills/ui-design/preview/generate.js --data <page-data.json> --output docs/xiaoxiao/plans/ui-design/preview.html`
+2. Open preview file for user
+3. For each screen, ask:
+   - "这个页面的设计是否表达了正确的信息层次？"
+   - "颜色、间距、组件是否合适？"
+   - "有什么需要调整的吗？"
+4. If user requests changes:
+   - Modify the HTML
+   - Regenerate preview
+   - Repeat until satisfied
+5. Confirm each screen before moving on
+**Exit**: All screens approved by user
 
 ---
 
 ### Phase 4: Component Definition
 
-**Entry**: Interactions designed
+**Entry**: All screens approved
 **Actions**:
-1. Define reusable components:
-   - **Atomic**: Button, Input, Badge, Icon
-   - **Molecular**: Form Group, Card, Modal
-   - **Organism**: Navigation, Data Table, Filter Panel
-2. For each component specify:
-   - **Props/Attributes**: What data it accepts
-   - **States**: default, hover, active, disabled, error
-   - **Variants**: primary/secondary, sm/md/lg
-3. Document component composition rules
-**Exit**: Component library defined
+1. Define reusable components used across screens:
+   - Atomic: Button, Input, Badge, Icon
+   - Molecular: Card, Form Group, Modal
+   - Organism: Navigation, Data Table, Filter Panel
+2. Document component states (default, hover, disabled, error)
+3. Reference `GUIDES/component-patterns.md` for best practices
+4. Ask: "组件库定义完成。需要补充哪些组件规格吗？"
+**Exit**: Component library documented
 
-**Component Spec Example**:
-```markdown
-## Component: Button
+---
 
-### Variants
-- **Primary**: Main actions, filled background
-- **Secondary**: Secondary actions, outlined
-- **Ghost**: Tertiary actions, text only
-- **Danger**: Destructive actions, red
+### Phase 5: Final Review
 
-### Sizes
-- **sm**: 32px height, 12px padding
-- **md**: 40px height, 16px padding (default)
-- **lg**: 48px height, 20px padding
+**Entry**: Component library defined
+**Actions**:
+1. Review complete design with user
+2. Check against original requirements:
+   - All P0 features have screens?
+   - Navigation supports user flows?
+   - Component patterns applied consistently?
+3. Ask: "设计整体审批通过了吗？"
+4. If yes, save output and proceed
 
-### States
-| State | Visual Treatment |
-|-------|------------------|
-| Default | Base variant styles |
-| Hover | Darken 10%, cursor pointer |
-| Active | Darken 20%, slight scale down |
-| Disabled | 50% opacity, cursor not-allowed |
-| Loading | Spinner replaces text, disabled |
+**Output Structure**:
+```
+docs/xiaoxiao/plans/ui-design/
+├── preview.html              # 完整预览（多页面）
+├── pages/
+│   ├── dashboard.html        # 各页面单独 HTML
+│   ├── settings.html
+│   └── ...
+├── components/
+│   └── component-spec.md    # 组件规格文档
+└── design-tokens.json        # 设计令牌（颜色、字体、间距）
+```
+
+**Run on completion**:
+```bash
+xiaoxiao complete ui-design docs/xiaoxiao/plans/ui-design/
 ```
 
 ---
 
-### Phase 5: Design Specification
+## Design Preset Reference
 
-**Entry**: Components defined
-**Actions**:
-1. Create design tokens:
-   - **Colors**: Primary, secondary, semantic colors
-   - **Typography**: Font family, sizes, weights
-   - **Spacing**: 4px base unit system
-   - **Shadows**: Elevation levels
-2. Document responsive breakpoints
-3. Specify accessibility requirements
-4. Review complete design with user
+Choose from 5 presets defined in `GUIDES/design-presets.md`:
 
-**Run on completion**:
-```bash
-xiaoxiao complete ui-design docs/xiaoxiao/plans/ui-design-output.md
-```
+| Preset | Key Characteristics |
+|--------|---------------------|
+| **Modern SaaS** | Blue accent, 8px grid, subtle shadows, generous white space |
+| **Apple Minimal** | Near-monochrome, large type hierarchy, 12px rounded corners |
+| **Enterprise** | Information-dense, small radius, borders not shadows |
+| **Creative** | Dark theme, orange accent, asymmetric layouts, bold typography |
+| **Dashboard** | Dark slate background, chart colors, data-optimized spacing |
+
+---
+
+## Component Patterns
+
+Reference `GUIDES/component-patterns.md` for:
+- Button, Input, Card, Modal, Navigation
+- Table, Form, Toast, Alert, Badge
+- Empty State, Loading, Dropdown, Tabs, Drawer, Avatar, Tooltip
+- Layout patterns (single column, two column, grid)
 
 ---
 
@@ -235,110 +232,41 @@ xiaoxiao complete ui-design docs/xiaoxiao/plans/ui-design-output.md
 
 ### MUST DO
 
-- Design for the user's primary task, not edge cases
-- Follow platform conventions (iOS HIG, Material Design, etc.)
-- Design for empty states, loading states, and error states
-- Use consistent component patterns
-- Consider accessibility from the start (WCAG 2.1 AA)
-- Document states explicitly, not just the happy path
+- Generate actual HTML that renders correctly
+- Run preview and let user visually judge each screen
+- Iterate based on user feedback before proceeding
+- Use consistent component patterns across screens
+- Consider responsive behavior (mobile-first)
+- Design for empty states, loading states, error states
 
 ### MUST NOT DO
 
-- Design for the exception, not the rule
-- Skip mobile/responsive design
-- Use jargon or internal names without explanation
-- Design without understanding the user's context
+- Output markdown documents as "design"
+- Skip the preview/iteration step
+- Use purple-on-white gradients or Inter/Roboto defaults
+- Generate generic AI aesthetics
 - Overcomplicate with animations or interactions
 - Skip validation states on forms
 
 ---
 
-## Reference Guide
-
-| Topic | File | Load When |
-|-------|------|-----------|
-| Wireframe Symbols | GUIDES/wireframe-symbols.md | Creating ASCII wireframes |
-| Component States | GUIDES/component-states.md | Documenting all component states |
-| Interaction Patterns | GUIDES/interaction-patterns.md | Common user flow patterns |
-| Accessibility Checklist | GUIDES/accessibility.md | WCAG compliance verification |
-| Design Token Template | OUTPUTS/design-tokens.md | Creating consistent design system |
-
----
-
-## Output: UI Design Document
-
-### Required Sections
-
-1. **Overview** (design goals and principles)
-2. **Information Architecture** (page structure, navigation)
-3. **Screen Wireframes** (ASCII or Mermaid for each screen)
-4. **User Flows** (key interaction paths)
-5. **Component Library** (atomic → organism)
-6. **Design Tokens** (colors, typography, spacing)
-7. **State Specifications** (all component states)
-
-### Example Output
-
-```markdown
-# Login Flow - UI Design
-
-## Overview
-[Design goal: minimize login abandonment, support social login]
-
-## Information Architecture
-[See IA template above]
-
-## Screen: Login Page
-
-```
-+--------------------------------------------------+
-| [Logo]                                           |
-+--------------------------------------------------+
-|                                                  |
-|           Sign in to your account                |
-|                                                  |
-|   +--------------------------------------------+ |
-|   | Email                          | john@...  | |
-|   +--------------------------------------------+ |
-|                                                  |
-|   +--------------------------------------------+ |
-|   | Password                               **** | |
-|   +--------------------------------------------+ |
-|                                                  |
-|   [ ] Remember me        Forgot password?       |
-|                                                  |
-|   +--------------------------------------------+ |
-|   |            Sign In                         | |
-|   +--------------------------------------------+ |
-|                                                  |
-|         or continue with                         |
-|                                                  |
-|   [Google]  [GitHub]  [Microsoft]               |
-|                                                  |
-+--------------------------------------------------+
-```
-
-## Component: Input Field
-
-### States
-| State | Border | Background | Text |
-|-------|--------|------------|------|
-| Default | #ddd | white | black |
-| Focus | #0066cc | white | black |
-| Error | #cc0000 | #fff5f5 | black |
-| Disabled | #eee | #f5f5f5 | #999 |
-
-[Additional components...]
-```
-
----
-
 ## CONFIRM Nodes
 
-| Phase | Confirmation Prompt |
-|-------|---------------------|
-| Phase 1 Complete | "IA: [structure]. Navigation: [model]. Proceed?" |
-| Phase 2 Complete | "Screens: [count] wireframed. Layout approach: [X]. Continue?" |
-| Phase 3 Complete | "Key flows documented. Error handling: [X]. Continue?" |
-| Phase 4 Complete | "Components: [count] defined. Reuse strategy: [X]. Continue?" |
-| Final | "UI Design complete. Proceed to Task Planning?" |
+| Phase | Prompt |
+|-------|--------|
+| Phase 0 | "设计风格: **[X]**。这是你喜欢的方向吗？" |
+| Phase 1 | "IA: [structure]。导航: [model]。继续？" |
+| Phase 2 Screen N | "页面 **[Name]** 完成。预览效果如何？需要调整吗？" |
+| Phase 3 | "所有页面已审批。组件定义完成。继续？" |
+| Final | "UI Design 整体审批通过了吗？确认后进入 Task Planning。" |
+
+---
+
+## Reference Guide
+
+| Topic | File |
+|-------|------|
+| Design Presets (5 styles) | `GUIDES/design-presets.md` |
+| Component Patterns | `GUIDES/component-patterns.md` |
+| Preview Generator | `preview/generate.js` |
+| Design Tokens Template | `OUTPUTS/design-tokens.json` |

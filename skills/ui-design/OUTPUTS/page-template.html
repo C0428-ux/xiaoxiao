@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PAGE_TITLE}} - Preview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Design tokens will be injected here */
+    :root {
+      --color-bg: {{COLOR_BG}};
+      --color-surface: {{COLOR_SURFACE}};
+      --color-border: {{COLOR_BORDER}};
+      --color-text-primary: {{COLOR_TEXT_PRIMARY}};
+      --color-text-secondary: {{COLOR_TEXT_SECONDARY}};
+      --color-accent: {{COLOR_ACCENT}};
+      --radius: {{BORDER_RADIUS}}px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--color-bg);
+      color: var(--color-text-primary);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    .topnav {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo {
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    /* Main layout */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-primary {
+      background: var(--color-accent);
+      color: white;
+    }
+    .btn-primary:hover {
+      filter: brightness(1.1);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-border);
+    }
+
+    /* Forms */
+    .input {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 14px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: var(--color-surface);
+      color: var(--color-text-primary);
+    }
+    .input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 20%, transparent);
+    }
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 9999px;
+      background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+      color: var(--color-accent);
+    }
+
+    /* Grids */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+    @media (max-width: 768px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="topnav">
+  <div class="nav-inner">
+    <div class="nav-logo">{{APP_NAME}}</div>
+    <div style="display: flex; gap: 8px;">
+      {{#each navItems}}
+      <a href="{{url}}" class="px-4 py-2 text-sm rounded-lg {{#if active}}bg-accent text-white{{else}}text-secondary hover:bg-surface{{/if}}">
+        {{label}}
+      </a>
+      {{/each}}
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="main">
+
+  <!-- Page Header -->
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold mb-2">{{PAGE_TITLE}}</h1>
+    <p class="text-secondary">{{PAGE_DESCRIPTION}}</p>
+  </header>
+
+  <!-- Content Sections -->
+
+  {{#each sections}}
+  <section class="mb-12">
+    <h2 class="text-xl font-semibold mb-4">{{title}}</h2>
+    <div class="{{gridClass}}">
+      {{#each items}}
+      <div class="card p-6">
+        {{#if badge}}
+        <span class="badge mb-2">{{badge}}</span>
+        {{/if}}
+        <h3 class="text-lg font-medium mb-1">{{title}}</h3>
+        <p class="text-sm text-secondary">{{description}}</p>
+        {{#if action}}
+        <button class="btn btn-secondary mt-4">{{action}}</button>
+        {{/if}}
+      </div>
+      {{/each}}
+    </div>
+  </section>
+  {{/each}}
+
+  <!-- Form Section -->
+  <section class="mb-12">
+    <div class="card p-6" style="max-width: 480px;">
+      <h2 class="text-lg font-semibold mb-4">{{formTitle}}</h2>
+      <form>
+        {{#each formFields}}
+        <div class="form-group">
+          <label class="form-label" for="{{id}}">{{label}}</label>
+          {{#if type}}
+            {{#if (eq type "textarea")}}
+            <textarea id="{{id}}" class="input" rows="3" placeholder="{{placeholder}}"></textarea>
+            {{else if (eq type "select")}}
+            <select id="{{id}}" class="input">
+              {{#each options}}
+              <option value="{{value}}">{{label}}</option>
+              {{/each}}
+            </select>
+            {{else}}
+            <input id="{{id}}" type="{{type}}" class="input" placeholder="{{placeholder}}">
+            {{/if}}
+          {{/if}}
+        </div>
+        {{/each}}
+        <button type="submit" class="btn btn-primary w-full">{{submitLabel}}</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>
