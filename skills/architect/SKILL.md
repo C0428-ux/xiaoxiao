@@ -194,6 +194,9 @@ Accepted
 ```bash
 xiaoxiao complete architect docs/xiaoxiao/plans/architect-output.md
 ```
+This updates `xiaoxiao-state.json` and records the skill output path.
+
+**IMPORTANT**: Without running `xiaoxiao complete`, the skill is not marked as done and next skills will be blocked.
 
 ---
 

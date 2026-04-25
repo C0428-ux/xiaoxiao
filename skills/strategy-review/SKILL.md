@@ -244,6 +244,9 @@ xiaoxiao save-progress strategy-review phase5
 ```bash
 xiaoxiao complete strategy-review docs/xiaoxiao/plans/strategy-review-output.md
 ```
+This updates `xiaoxiao-state.json` and records the skill output path.
+
+**IMPORTANT**: Without running `xiaoxiao complete`, the skill is not marked as done and next skills will be blocked.
 
 ---
 

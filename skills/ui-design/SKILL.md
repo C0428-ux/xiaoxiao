@@ -201,6 +201,9 @@ docs/xiaoxiao/plans/ui-design/
 ```bash
 xiaoxiao complete ui-design docs/xiaoxiao/plans/ui-design/
 ```
+This updates `xiaoxiao-state.json` and records the skill output path.
+
+**IMPORTANT**: Without running `xiaoxiao complete`, the skill is not marked as done and next skills will be blocked.
 
 ---
 
