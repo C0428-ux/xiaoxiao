@@ -68,9 +68,11 @@ prerequisites:
 ## Step 3: 市场分析
 
 **动作**：
-1. 使用 WebSearch 搜索市场规模数据
-   - 查询："[产品类别] market size 2024 TAM"
-   - 查询："[产品类型] industry growth trend"
+1. 执行搜索命令获取市场规模数据：
+   ```bash
+   node search.js "[产品类别] market size 2024 TAM"
+   node search.js "[产品类型] industry growth trend"
+   ```
 2. 记录发现（来源必须可验证）
 3. 如果搜索失败：
    - 标记为 "Unverified - requires user input"
@@ -85,9 +87,11 @@ prerequisites:
 ## Step 4: 竞品分析
 
 **动作**：
-1. 使用 WebSearch 搜索竞品
-   - 查询："[产品类别] competitors"
-   - 查询："[核心需求] solutions"
+1. 执行搜索命令查找竞品：
+   ```bash
+   node search.js "[产品类别] competitors"
+   node search.js "[核心需求] solutions"
+   ```
 2. 记录竞品信息（名称、功能、定价、来源）
 3. 如果找不到竞品：
    - 标记 "No direct competitors found"
