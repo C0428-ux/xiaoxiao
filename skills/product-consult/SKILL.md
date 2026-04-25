@@ -20,324 +20,151 @@ triggers:
   - 做产品
   - 设计产品
   - 产品设计
-output-format: SPEC.md
+output-format: .SPEC.md
 related-skills:
   - strategy-review
   - architect
+prerequisites: []
 ---
 
 # Product Consult | 产品咨询
 
-## When to Use
+## 强制执行协议
 
-- Starting a new project from scratch
-- Adding a major feature to existing project
-- Pivoting or significantly changing product direction
-- Requirements are vague, conflicting, or missing
-- Team disagrees on priorities or scope
-
-## When NOT to Use
-
-- Bug fixes or technical debt tasks
-- Minor UI tweaks without behavior change
-- Performance optimizations with clear requirements
-- Tasks where you already have a detailed spec
-- Emergency hotfixes with no time for discovery
+**规则**：
+- 必须按顺序执行每个 Step，不得跳过
+- 每个 Step 必须执行验证（检查点）才能进入下一步
+- 使用 `xiaoxiao save-progress <skill> <step>` 标记步骤完成
+- CONFIRM 节点必须等待用户确认，不得自动继续
 
 ---
 
-## EXECUTION PROTOCOL
+## Step 1: 初始化
 
-本 skill 的执行协议在 `PROTOCOL.json` 中定义，框架将验证每步执行。使用 `xiaoxiao continue` 启动交互式引导。
+**动作**：
+1. 执行 `xiaoxiao save-progress product-consult step1-complete`
+2. 向用户提问：
+   - "这是什么类型的产品？"（如：Web应用、移动App、SaaS平台等）
+   - "主要用户是谁？"（如：管理员、最终用户、开发者等）
+3. 确认产品类型
 
-## ENTRY CHECK（必须首先执行）
+**验证**：用户回答了产品类型和用户
 
-1. 运行 `xiaoxiao save-progress product-consult phase1-start`
-2. 才能开始 Phase 1
-
----
-
-## Core Workflow
-
-### Phase 1: Product Type & Core Scenario
-
-**Entry**: User expresses intent to build something or add a feature
-**Actions**:
-1. Ask: "What type of product is this?" (e.g., web app, mobile app, API, SaaS platform, internal tool)
-2. Ask: "Who are the primary users?" (e.g., admins, end users, developers, business users)
-3. Ask: "What is the core user scenario you're solving?" (the main flow users will perform)
-4. Ask: "What's the single most important action users must be able to do?"
-5. Summarize back: "This is a [product type] for [users] to [core action]. Correct?"
-**Exit**: Product type and core scenario confirmed
-
-**Key Questions**:
-- "Is this B2B or B2C?" (helps define complexity)
-- "Is this for internal use or external customers?" (affects security/UX)
-- "What's the first thing a user should see when they open the product?"
+**CONFIRM**："Step 1 完成。产品类型：[类型]，主要用户：[用户]。继续？"
 
 ---
 
-### Phase 2: Feature Design
+## Step 2: 核心场景
 
-**Entry**: Product type confirmed in Phase 1
-**Actions**:
-1. Ask: "What features are essential for the first version?" (P0)
-2. Ask: "What features are important but not critical?" (P1)
-3. Ask: "What features would be nice to have?" (P2)
-4. For each P0 feature, define the primary user flow:
-   - Entry point: How does user start?
-   - Core steps: What must happen?
-   - Exit point: How does user complete?
-5. Ask: "What should this product ABSOLUTELY NOT do?" (explicit out-of-scope)
-**Exit**: Features prioritized and core flows outlined
+**动作**：
+1. 向用户提问：
+   - "用户要解决的核心问题是什么？"
+   - "用户最重要的一个动作是什么？"
+2. 用一句话总结：
+   - "这是一个 [产品类型]，帮助 [用户] 完成 [核心动作]"
+3. 确认总结是否正确
 
-**Feature Template**:
-```markdown
-## Feature: [Name]
+**验证**：核心场景已确认
 
-### Primary User Flow
-1. User [action]
-2. System [response]
-3. User [action]
-4. System [response]
+**CONFIRM**："核心场景：[一句话总结]。正确？"
 
-### Key Data
-- **Input**: [What user provides]
-- **Output**: [What user receives]
-- **Storage**: [What gets saved]
+---
+
+## Step 3: 功能设计
+
+**动作**：
+1. 向用户提问：
+   - "第一个版本必须有哪些功能？"（P0）
+   - "哪些功能重要但不是关键？"（P1）
+   - "哪些功能是锦上添花？"（P2）
+2. 对每个 P0 功能定义用户流程：
+   - 入口：用户如何开始？
+   - 核心步骤：必须发生什么？
+   - 出口：用户如何完成？
+3. 提问："这个产品**绝对不能**做什么？"（明确范围外）
+
+**验证**：P0/P1/P2 功能已定义，范围外已明确
+
+**CONFIRM**："P0: [功能列表]。范围外：[列表]。继续？"
+
+---
+
+## Step 4: UX 结构
+
+**动作**：
+1. 向用户提问：
+   - "用户如何在功能之间导航？"
+   - "主页面/Dashboard 是什么布局？"
+   - "用户如何访问 P0 功能？"
+2. 列出需要的页面：
+   - 主页/仪表盘
+   - P0 功能页面
+   - 设置/个人中心（如需要）
+3. 提问："有不同权限的用户角色吗？"（如：管理员 vs 普通用户）
+
+**验证**：页面列表和导航结构已确认
+
+**CONFIRM**："页面：[列表]。导航：[模型]。继续？"
+
+---
+
+## Step 5: 成功标准
+
+**动作**：
+1. 向用户提问："如何衡量这个产品成功了？"
+2. 定义 3-5 个可衡量的标准（不是技术指标，是业务结果）：
+   - ❌ "快速" → ✅ "<3秒完成主要操作"
+   - ❌ "好用" → ✅ "新用户首次任务 <5分钟"
+   - ❌ "受欢迎" → ✅ "第3个月 50% 周活用户"
+
+**验证**：3-5 个可衡量标准已定义
+
+**CONFIRM**："成功标准：[列表]。同意？"
+
+---
+
+## Step 6: MVP 范围
+
+**动作**：
+1. 向用户提问："发布的绝对最低要求是什么？"
+2. 明确边界：
+   - **In（包含）**：MVP 必须有的
+   - **Out（不包含）**：明确不做
+3. 确认 MVP 范围
+
+**验证**：MVP 边界已明确
+
+**CONFIRM**："MVP：[功能]。范围外：[功能]。继续？"
+
+---
+
+## Step 7: 输出 SPEC.md
+
+**动作**：
+1. 在项目根目录创建 `.SPEC.md`
+2. 包含以下章节：
+   - Product Type & Users
+   - Core Scenario
+   - Features（P0/P1/P2 + 用户流程）
+   - UX Structure（页面 + 导航）
+   - Success Criteria（3-5 个可衡量标准）
+   - MVP Scope（In/Out 列表）
+3. 执行 `xiaoxiao complete product-consult .SPEC.md`
+
+**验证**：.SPEC.md 已创建且包含所有章节
+
+**CONFIRM**："SPEC.md 已完成并保存。确认进入 Strategy Review 阶段？"
+
+---
+
+## 状态更新命令
+
+每个 Step 完成后必须执行：
+```bash
+xiaoxiao save-progress product-consult step[N]-complete
 ```
 
----
-
-### Phase 3: User Experience Outline
-
-**Entry**: Features defined
-**Actions**:
-1. Ask: "How do users navigate between features?" (navigation structure)
-2. Ask: "What's the main dashboard/home screen layout?"
-3. Ask: "How do users access the P0 features you mentioned?"
-4. Outline key screens needed:
-   - Landing/Home screen
-   - Primary feature screens
-   - Settings/Profile (if needed)
-5. Ask: "Are there any user roles with different access?" (admin vs user)
-**Exit**: High-level UX structure documented
-
----
-
-### Phase 4: Success Criteria
-
-**Entry**: UX structure outlined
-**Actions**:
-1. Ask: "How will we know this product is successful?"
-2. Define measurable criteria (not technical, but business outcomes):
-   - ❌ "Fast" → ✅ "<3 seconds for primary action"
-   - ❌ "Easy to use" → ✅ "New user completes first task in <5 minutes"
-   - ❌ "Popular" → ✅ "50% weekly active users by month 3"
-3. Confirm: "Success will be measured by [3-5 metrics]. Agreed?"
-**Exit**: 3-5 measurable success criteria defined
-
-**Template**:
-```markdown
-## Success Criteria
-- [ ] [Metric 1]: [specific, measurable outcome]
-- [ ] [Metric 2]: [specific, measurable outcome]
-- [ ] [Metric 3]: [specific, measurable outcome]
-```
-
----
-
-### Phase 5: MVP Scope
-
-**Entry**: Success criteria confirmed
-**Actions**:
-1. Ask: "What is the absolute minimum for launch?"
-2. Define explicit boundaries:
-   - **P0 (MVP)**: Must have for launch - no more, no less
-   - **P1**: Important, can ship soon after
-   - **P2**: Nice to have, future iteration
-3. Explicitly state what's NOT in scope (prevents creep)
-4. Confirm: "MVP is [X features]. Out of scope: [Y]. Proceed?"
-**Exit**: Clear MVP scope with explicit boundaries
-
----
-
-### Phase 6: Output SPEC.md
-
-**Entry**: All previous phases complete
-**Actions**:
-1. Write the `.SPEC.md` document in the project root (see template below)
-2. Review with user
-3. Confirm: "This defines a [product type] with [N] P0 features. Ready to proceed?"
-4. Run completion command
-
-**Output location**: `./.SPEC.md` (project root)
-
-**Final CONFIRM**: "SPEC.md 已完成并保存。确认进入 Strategy Review 阶段？"
-
-**MUST: Update state after completion**
+最终完成必须执行：
 ```bash
 xiaoxiao complete product-consult .SPEC.md
 ```
-This updates `xiaoxiao-state.json` and records the skill output path.
-
-**IMPORTANT**: Without running `xiaoxiao complete`, the skill is not marked as done and next skills will be blocked.
-
----
-
-## Iteration Management
-
-### New Development Cycle (Adding Features)
-
-When user wants to add new features to existing project:
-
-1. **Check iteration state**: Read `xiaoxiao-state.json` to know current iteration (v1, v2, etc.)
-
-2. **If continuing same project cycle**: Append new features to existing `.SPEC.md`
-   - Add new P0/P1 features under "V[N] Features" section
-   - Do NOT replace existing content
-
-3. **If starting new development cycle**: Create new iteration first
-   ```bash
-   node ~/.claude/skills/xiaoxiao/xiaoxiao.js new-iteration
-   ```
-   Then create `.SPEC.md.v2`, `.SPEC.md.v3`, etc.
-
-4. **SPEC.md versioning**:
-   - First cycle: `.SPEC.md`
-   - Second cycle: `.SPEC.md.v2`
-   - Third cycle: `.SPEC.md.v3`
-
-### MUST DO
-
-- Check current iteration before modifying SPEC.md
-- Append new features instead of replacing existing content
-- Mark each feature with iteration ID (V2, V3, etc.)
-- Track which iteration each feature belongs to
-
-### MUST NOT DO
-
-- Do not create fresh SPEC.md if project already exists
-- Do not overwrite previous iteration's SPEC.md
-- Do not reset project state without user confirmation
-
----
-
-## Constraints
-
-### MUST DO
-
-- Ask "what to build" before "why to build"
-- Define product type, core users, and primary scenarios first
-- Design features with actual user flows, not just feature lists
-- Make success criteria measurable and time-bound
-- Define explicit out-of-scope to prevent creep
-- Document UX structure at high level
-
-### MUST NOT DO
-
-- Spend too much time on user research (product-design focus, not market-research)
-- Accept "make an app like X" without probing what that means
-- Define technical architecture (that's architect's job)
-- Skip the "what" questions and jump to implementation details
-- Allow unlimited P0 features (MVP should be small)
-
----
-
-## Reference Guide
-
-| Topic | File | Load When |
-|-------|------|-----------|
-| Product Type Examples | GUIDES/product-types.md | Unclear what product type fits |
-| Feature Prioritization | GUIDES/prioritization.md | Can't decide P0 vs P1 vs P2 |
-| User Flow Design | GUIDES/user-flows.md | Need help mapping user flows |
-| Success Criteria Templates | GUIDES/success-criteria.md | Criteria are vague or unmeasurable |
-| SPEC.md Template | OUTPUTS/SPEC-template.md | Writing the output document |
-
----
-
-## Output: SPEC.md
-
-### Required Sections
-
-1. **Product Type & Users** (product category, primary users, user roles)
-2. **Core Scenario** (the main problem being solved)
-3. **Features** (P0/P1/P2 with primary user flows)
-4. **UX Structure** (high-level screens and navigation)
-5. **Success Criteria** (3-5 measurable outcomes)
-6. **MVP Scope** (explicit In/Out lists)
-
-### Example Output
-
-```markdown
-# Task Management SaaS
-
-## Product Type & Users
-- **Type**: B2B SaaS Web Application
-- **Primary Users**: Project managers, team leads
-- **User Roles**: Admin (manage team), Member (use tasks)
-
-## Core Scenario
-A project manager creates tasks, assigns them to team members, and tracks progress through to completion.
-
-## Features
-
-### P0 - MVP
-1. **Task Creation**
-   - User clicks "+ New Task"
-   - Fills: title, description, assignee, due date
-   - Task appears in assignee's list
-
-2. **Task List View**
-   - Shows all tasks for current user
-   - Filter by: status, assignee, due date
-   - Sort by: due date, priority, created
-
-3. **Task Status Update**
-   - User drags task between columns: Todo → In Progress → Done
-   - Status updates immediately
-
-### P1
-- Comments on tasks
-- Email notifications
-
-### P2
-- Task dependencies
-- Gantt chart view
-
-## UX Structure
-- **Home**: Dashboard with task counts by status
-- **Task List**: Filterable list of tasks
-- **Task Detail**: Modal or page with task info
-- **Settings**: User profile, team management
-
-## Success Criteria
-- [ ] 80% of tasks created are completed within due date
-- [ ] New user completes first task in <3 minutes
-- [ ] 60% weekly active users within first month
-
-## MVP Scope
-### In
-- Task CRUD
-- Basic task list with filters
-- Kanban-style status board
-
-### Out
-- Comments (P1)
-- Notifications (P1)
-- Mobile app (P2)
-- Advanced analytics (P2)
-```
-
----
-
-## CONFIRM Nodes
-
-| Phase | Confirmation Prompt |
-|-------|---------------------|
-| Phase 1 Complete | "Product type: **[X]**, Core scenario: **[Y]**. Correct?" |
-| Phase 2 Complete | "P0: [A, B, C]. P1: [D, E]. Flows defined. Proceed?" |
-| Phase 3 Complete | "UX Structure: [screens]. Navigation: [model]. Continue?" |
-| Phase 4 Complete | "Success: 1) [X], 2) [Y], 3) [Z]. Agreed?" |
-| Phase 5 Complete | "MVP: [features]. Out of scope: [excluded]. Proceed?" |
-| Final | "SPEC.md 已完成并保存。确认进入 Strategy Review 阶段？" |

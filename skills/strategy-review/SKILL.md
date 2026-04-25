@@ -16,7 +16,7 @@ triggers:
   - 值不值得做
   - 评估方向
   - 投资回报
-output-format: strategy-review.md
+output-format: docs/xiaoxiao/plans/strategy-review-output.md
 related-skills:
   - product-consult
   - architect
@@ -26,315 +26,161 @@ prerequisites:
 
 # Strategy Review | 战略评审
 
-## When to Use
+## 强制执行协议
 
-- After product-consult before architect
-- When deciding whether to build, buy, or partner
-- When validating product-market fit assumptions
-- When resource allocation decisions are being made
-- When pivot vs persist decisions are needed
-
-## When NOT to Use
-
-- Technical architecture decisions (use architect skill)
-- UI/UX design choices (use ui-design skill)
-- Implementation planning (use task-planning skill)
-- When you already have a detailed spec and just need execution
-- Bug fixes or feature additions to validated products
+**规则**：
+- 必须按顺序执行每个 Step，不得跳过
+- 每个 Step 必须执行验证（检查点）才能进入下一步
+- 使用 `xiaoxiao save-progress <skill> <step>` 标记步骤完成
+- CONFIRM 节点必须等待用户确认，不得自动继续
 
 ---
 
-## EXECUTION PROTOCOL
+## Step 1: 初始化
 
-本 skill 的执行协议在 `PROTOCOL.json` 中定义，框架将验证每步执行。使用 `xiaoxiao continue` 启动交互式引导。
+**动作**：
+1. 执行 `xiaoxiao save-progress strategy-review step1-complete`
+2. 读取 `./SPEC.md` 获取产品信息
+3. 确认产品类型、核心场景、P0 功能
 
-## ENTRY CHECK（必须首先执行）
+**验证**：SPEC.md 存在且包含产品信息
 
-1. 运行 `xiaoxiao save-progress strategy-review phase1-start`
-2. 才能开始 Phase 1
+**CONFIRM**："Step 1 完成。产品：[类型]，核心场景：[场景]。继续？"
 
 ---
 
-## Core Workflow
+## Step 2: 方向验证
 
-### Phase 1: Direction Validation
+**动作**：
+1. 向用户提问：
+   - "这个问题现在值得解决吗？"
+   - "做这个会得到什么？不做会失去什么？"
+   - "项目的战略目标是什么？"
+   - "有哪些资源可用？"
+2. 记录方向验证结论
 
-**Entry**: SPEC.md exists from product-consult
-**Prerequisites Check**:
-- If `./SPEC.md` does not exist → **BLOCKED**: "Cannot start strategy-review. Run product-consult first to create SPEC.md."
-**Actions**:
-1. Read `./SPEC.md` - extract product type, core scenario, and P0 features
-2. Ask: "Is this problem worth solving at this time?"
-3. Ask: "What would we gain? What would we lose by not doing this?"
-4. Assess strategic alignment with business goals
-5. Ask: "What resources are available for this project?"
-**Exit**: Clear on strategic intent and resource constraints
+**验证**：用户回答了所有问题
 
-**Save Progress**:
+**CONFIRM**："方向验证完成。战略匹配：[结论]。继续？"
+
+---
+
+## Step 3: 市场分析
+
+**动作**：
+1. 使用 WebSearch 搜索市场规模数据
+   - 查询："[产品类别] market size 2024 TAM"
+   - 查询："[产品类型] industry growth trend"
+2. 记录发现（来源必须可验证）
+3. 如果搜索失败：
+   - 标记为 "Unverified - requires user input"
+   - 询问用户是否有内部数据
+
+**验证**：市场数据已记录（即使标记为 Unverified）
+
+**CONFIRM**："市场分析完成。TAM：[数据]，趋势：[趋势]。继续？"
+
+---
+
+## Step 4: 竞品分析
+
+**动作**：
+1. 使用 WebSearch 搜索竞品
+   - 查询："[产品类别] competitors"
+   - 查询："[核心需求] solutions"
+2. 记录竞品信息（名称、功能、定价、来源）
+3. 如果找不到竞品：
+   - 标记 "No direct competitors found"
+   - 询问用户是否了解竞品
+
+**验证**：竞品信息已记录
+
+**CONFIRM**："竞品分析完成。发现 [N] 个竞品。继续？"
+
+---
+
+## Step 5: 可行性评估
+
+**动作**：
+1. 技术可行性：
+   - 技术是否成熟？
+   - 最大技术风险是什么？
+2. 资源可行性：
+   - 需要什么团队？
+   - 预计时间？
+3. 经济可行性：
+   - 开发成本估算？
+   - ROI 预期？
+
+**验证**：三个维度的评估都已完成
+
+**CONFIRM**："可行性评估完成。最大风险：[风险]。继续？"
+
+---
+
+## Step 6: 风险识别
+
+**动作**：
+1. 识别 3-5 个主要风险
+2. 对每个风险评估：
+   - 概率：高/中/低
+   - 影响：高/中/低
+   - 缓解策略
+3. 向用户确认：
+   - "什么风险可能导致项目失败？"
+   - "什么会让你改变主意？"
+
+**验证**：风险列表已创建并评估
+
+**CONFIRM**："风险识别完成。主要风险：[列表]。继续？"
+
+---
+
+## Step 7: 决策
+
+**动作**：
+1. 综合所有分析，形成建议：
+   - **Go**：全面投入
+   - **Pivot**：调整范围/方向
+   - **No-Go**：终止或重新评估
+2. 如果 Go：说明成功条件
+3. 如果 No-Go：说明需要什么改变
+
+**验证**：决策已形成
+
+**CONFIRM**："建议：[Go/Pivot/No-Go]。确认决策？"
+
+---
+
+## Step 8: 输出文档
+
+**动作**：
+1. 创建 `docs/xiaoxiao/plans/strategy-review-output.md`
+2. 包含以下章节：
+   - Executive Summary
+   - Market Analysis（带来源）
+   - Competitive Landscape（带来源）
+   - Feasibility Summary
+   - Risk Assessment
+   - Recommendation
+   - Conditions for Success
+   - Research Notes
+3. 执行 `xiaoxiao complete strategy-review docs/xiaoxiao/plans/strategy-review-output.md`
+
+**验证**：文档已创建且包含所有章节
+
+**CONFIRM**："Strategy Review 完成。文档已保存。确认进入 Architect 阶段？"
+
+---
+
+## 状态更新命令
+
+每个 Step 完成后必须执行：
 ```bash
-xiaoxiao save-progress strategy-review phase1
+xiaoxiao save-progress strategy-review step[N]-complete
 ```
 
-**Key Questions**:
-- "How does this align with [company/product] strategy?"
-- "What's the opportunity cost of doing this vs other initiatives?"
-- "Who are we betting on being right - users, market, or technology?"
-
----
-
-### Phase 2: Market Analysis
-
-**Entry**: Strategic intent confirmed
-**Actions**:
-1. Search for market size data using search skill:
-   - Query: "[product category] market size 2024 TAM"
-   - Query: "[product type] industry growth trend"
-2. Document findings with sources:
-   - **TAM**: [size] - Source: [URL or report name]
-   - **Trend**: [Growing/Stable/Declining] - Source: [citation]
-   - **Key Drivers**: [1-3 market forces] - Source: [evidence]
-3. If search fails to return useful data:
-   - Report: "Could not find reliable market data for [category]"
-   - Ask user: "Do you have internal estimates for market size?"
-   - Mark TAM as "Unverified - requires user input"
-4. Ask: "Does this market opportunity align with our capabilities?"
-**Exit**: Market opportunity quantified with source citations
-
-**Save Progress**:
-```bash
-xiaoxiao save-progress strategy-review phase2
-```
-
-**IMPORTANT**:
-- ❌ Do NOT fabricate numbers
-- ❌ Do NOT use placeholder values like "[Total Addressable Market]"
-- ✅ Report "Unverified" if data not found
-- ✅ Always cite the source of any data point
-
-**Template**:
-```markdown
-## Market Analysis
-- **TAM**: [Amount] - Source: [URL/Report/Date]
-- **SAM**: [Amount] - Source: [citation]
-- **SOM**: [Amount] - Source: [basis for estimate]
-- **Trend**: [Growing/Stable/Declining] - Source: [citation]
-- **Key Drivers**: [1-3 market forces with citations]
-
-**Research Notes**: [Any gaps or uncertainties found]
-```
-
----
-
-### Phase 3: Competitive Landscape
-
-**Entry**: Market analysis complete
-**Actions**:
-1. Search for competitors using search skill:
-   - Query: "[product category] competitors"
-   - Query: "[core user need] solutions"
-   - Query: "[product type] market leaders"
-2. For each competitor identified, search for:
-   - Pricing model
-   - Key features
-   - Market share (if available)
-   - Strengths and weaknesses
-3. Document findings with sources:
-   - **Competitor Name**: [brief description] - Source: [URL]
-   - **Pricing**: [if found] - Source: [citation]
-4. If unable to find competitors:
-   - Report: "No direct competitors found for [product type]"
-   - Possible reasons: "Niche market", "Emerging category", "New problem space"
-   - Ask user: "Are you aware of any solutions addressing this problem?"
-5. Assess our positioning:
-   - What do we do that competitors don't?
-   - What is our differentiator?
-   - Is this differentiation sustainable?
-**Exit**: Competitive landscape mapped with source citations
-
-**Save Progress**:
-```bash
-xiaoxiao save-progress strategy-review phase3
-```
-
-**IMPORTANT**:
-- ❌ Do NOT invent competitors that don't exist
-- ❌ Do NOT assume we know competitor features without research
-- ✅ Report "Could not verify" if information is uncertain
-- ✅ Distinguish between direct competitors, indirect competitors, and substitutes
-
-**Template**:
-```markdown
-## Competitive Landscape
-
-| Competitor | Type | Key Features | Pricing | Source |
-|------------|------|--------------|---------|--------|
-| [Name]     | [Direct/Indirect] | [X] | [$/month or N/A] | [URL] |
-
-**Our Positioning**: [How we differ and why we can win]
-
-**Research Notes**: [Competitors not found / Information uncertain]
-```
-
----
-
-### Phase 4: Feasibility Assessment
-
-**Entry**: Competitive analysis complete
-**Actions**:
-1. **Technical Feasibility**
-   - Is the technology proven or experimental?
-   - What are the technical risks?
-   - Ask: "What's the biggest technical uncertainty?"
-   - If uncertain, propose a spike or POC
-
-2. **Resource Feasibility**
-   - Do we have/can we acquire the needed skills?
-   - What's the timeline reality?
-   - Ask: "What's the minimum team needed?"
-   - Ask: "What's the estimated development time?"
-
-3. **Economic Feasibility**
-   - What's the estimated development cost?
-   - What's the expected ROI?
-   - Ask: "What does success look like financially?"
-   - If uncertain, provide best-case / worst-case estimates
-
-**Exit**: Feasibility validated with identified risks and uncertainties
-
-**Save Progress**:
-```bash
-xiaoxiao save-progress strategy-review phase4
-```
-
-**IMPORTANT**:
-- ❌ Do not understate risks to please the user
-- ✅ Acknowledge uncertainty explicitly
-- ✅ Provide ranges (e.g., "3-6 months") when exact estimates aren't possible
-
----
-
-### Phase 5: Risk Identification
-
-**Entry**: Feasibility assessment complete
-**Actions**:
-1. Identify top 3-5 risks (market, technical, operational, financial)
-2. Assess each risk:
-   - **Probability**: High/Medium/Low
-   - **Impact**: High/Medium/Low
-   - **Mitigation**: What's the response strategy?
-3. Ask: "What's the biggest risk that could kill this?"
-4. Ask: "What would make you change your mind about pursuing this?"
-**Exit**: Top risks identified with mitigation strategies
-
-**Save Progress**:
-```bash
-xiaoxiao save-progress strategy-review phase5
-```
-
-**IMPORTANT**:
-- ❌ Do not hide risks that are obvious
-- ✅ Be direct about critical risks
-- ✅ Distinguish between risks we can mitigate vs risks we must accept
-
----
-
-### Phase 6: Go/No-Go Decision
-
-**Entry**: All analysis complete
-**Actions**:
-1. Synthesize findings into recommendation
-2. Three possible outcomes:
-   - **Go**: Proceed with full investment
-   - **Pivot**: Modify scope/direction based on findings
-   - **No-Go**: Terminate or re-evaluate later
-3. If recommending Go, state conditions that must be true
-4. If recommending No-Go, explain what would need to change
-5. Confirm decision with user
-
-**Final CONFIRM**: "Strategy Review 完成。文档已输出到 docs/xiaoxiao/plans/strategy-review-output.md。确认进入 Architect 阶段？"
-
-**Run on completion**:
+最终完成必须执行：
 ```bash
 xiaoxiao complete strategy-review docs/xiaoxiao/plans/strategy-review-output.md
 ```
-This updates `xiaoxiao-state.json` and records the skill output path.
-
-**IMPORTANT**: Without running `xiaoxiao complete`, the skill is not marked as done and next skills will be blocked.
-
----
-
-## Constraints
-
-### MUST DO
-
-- Research actual market data, not fabricated numbers
-- Cite sources for all competitive and market information
-- Be honest when data is unavailable or uncertain
-- Challenge assumptions that seem optimistic
-- Consider opportunity cost, not just direct costs
-- Make Go/No-Go decisions based on evidence, not enthusiasm
-
-### MUST NOT DO
-
-- Recommend "Go" just because the problem is interesting
-- Fabricate TAM/SAM/SOM numbers without research
-- Invent competitors or feature claims without verification
-- Ignore competitive moats - being first isn't enough
-- Skip technical feasibility when it's uncertain
-- Recommend proceeding when risks outweigh rewards
-
----
-
-## Reference Guide
-
-| Topic | File | Load When |
-|-------|------|-----------|
-| Market Analysis Methods | GUIDES/market-analysis.md | Need to quantify market opportunity |
-| Competitive Analysis Framework | GUIDES/competitive-analysis.md | Evaluating competitive positioning |
-| Feasibility Assessment Checklist | GUIDES/feasibility.md | Technical/resource uncertainty exists |
-| Risk Assessment Matrix | GUIDES/risk-assessment.md | Need structured risk evaluation |
-| Go/No-Go Template | OUTPUTS/go-no-go-template.md | Making final decision document |
-
----
-
-## Output: Strategy Review Document
-
-### Required Sections
-
-1. **Executive Summary** (3-5 sentences)
-   - Product, opportunity, recommendation
-
-2. **Market Analysis**
-   - Size, trends, key drivers (with source citations)
-
-3. **Competitive Landscape**
-   - Direct/indirect competitors (with source citations)
-   - Our positioning and differentiator
-
-4. **Feasibility Summary**
-   - Technical, resource, economic assessment
-
-5. **Risk Assessment**
-   - Top risks with probability/impact/mitigation
-
-6. **Recommendation**
-   - Go/Pivot/No-Go with reasoning
-
-7. **Conditions for Success**
-   - What must be true for this to work
-
-8. **Research Notes**
-   - Any data gaps, unverified assumptions, or uncertainties
-
----
-
-## CONFIRM Nodes
-
-| Phase | Confirmation Prompt |
-|-------|---------------------|
-| Phase 2 Complete | "Market is [size] with [trend] trend. Sources: [citations]. Continue?" |
-| Phase 3 Complete | "Competitors: [X]. Our advantage: [Y]. Proceed?" |
-| Phase 4 Complete | "Feasibility: [assessment]. Biggest risk: [X]. Continue?" |
-| Phase 5 Complete | "Top risks: [list]. Acceptable?" |
-| Phase 6 Complete | "Recommendation: **[Go/Pivot/No-Go]**. Confirmed?" |
-| Final | "Strategy Review 完成。文档已输出到 docs/xiaoxiao/plans/strategy-review-output.md。确认进入 Architect 阶段？" |
