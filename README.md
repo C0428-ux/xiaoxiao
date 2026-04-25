@@ -14,6 +14,12 @@
 安装到 ~/.claude/skills/xiaoxiao
 ```
 
+或手动安装（在 git bash 或 WSL 中执行）：
+
+```bash
+git clone https://github.com/C0428-ux/xiaoxiao.git ~/.claude/skills/xiaoxiao
+```
+
 ### 开始开发
 
 安装完成后，告诉 Claude：
