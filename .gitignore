@@ -1,0 +1,33 @@
+# Gitignore for XiaoXiao Framework
+
+## Do NOT upload these files to GitHub
+
+# Git repository (this directory is the framework itself)
+# .git/
+
+# User runtime state - each project has its own
+xiaoxiao-state.json
+
+# Claude local configuration
+.claude/
+
+# Demo and temporary projects
+demo/
+*/demo/
+*_demo/
+temp/
+*/temp/
+tmp/
+*/tmp/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencies (if any future npm packages are added)
+node_modules/
+package-lock.json
