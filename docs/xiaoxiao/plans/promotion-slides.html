@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XiaoXiao Framework 宣传资料</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: #1a1a2e;
+      color: #fff;
+    }
+
+    .slide {
+      width: 100%;
+      max-width: 1920px;
+      aspect-ratio: 16/9;
+      margin: 20px auto;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      padding: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+    }
+
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(79, 172, 254, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .slide-number {
+      position: absolute;
+      bottom: 30px;
+      right: 50px;
+      font-size: 18px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    h1 {
+      font-size: 72px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 48px;
+      color: #4facfe;
+      margin-bottom: 50px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      font-size: 36px;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 60px;
+    }
+
+    .tagline {
+      font-size: 28px;
+      color: #00f2fe;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+    }
+
+    /* Slide 1: Title */
+    .slide-1 {
+      text-align: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    }
+
+    .slide-1 h1 {
+      font-size: 120px;
+      margin-bottom: 20px;
+    }
+
+    .slide-1 .logo {
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      border-radius: 30px;
+      margin: 0 auto 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+    }
+
+    /* Slide 2: Problem */
+    .slide-2 .problem-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .problem-item {
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 40px;
+      border-left: 4px solid #ff6b6b;
+    }
+
+    .problem-item h3 {
+      color: #ff6b6b;
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+
+    .problem-item p {
+      color: rgba(255,255,255,0.7);
+      font-size: 22px;
+      line-height: 1.6;
+    }
+
+    /* Slide 3: Solution */
+    .slide-3 .solution-grid {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 60px;
+    }
+
+    .solution-item {
+      text-align: center;
+      width: 250px;
+    }
+
+    .solution-icon {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      border-radius: 25px;
+      margin: 0 auto 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+    }
+
+    .solution-item h3 {
+      font-size: 24px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .solution-item p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* Slide 4: Pipeline */
+    .slide-4 .pipeline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 80px;
+      position: relative;
+    }
+
+    .pipeline::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50px;
+      right: 50px;
+      height: 4px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe, #4facfe);
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .pipeline-step {
+      text-align: center;
+      z-index: 1;
+      background: #1a1a2e;
+      padding: 20px;
+    }
+
+    .step-num {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .pipeline-step h4 {
+      font-size: 16px;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .pipeline-step p {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* Slide 5: Core Principles */
+    .slide-5 .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .principle-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 50px 40px;
+      text-align: center;
+      border: 1px solid rgba(79, 172, 254, 0.2);
+      transition: transform 0.3s;
+    }
+
+    .principle-card:hover {
+      transform: translateY(-10px);
+      border-color: #4facfe;
+    }
+
+    .principle-icon {
+      font-size: 60px;
+      margin-bottom: 25px;
+    }
+
+    .principle-card h3 {
+      font-size: 28px;
+      color: #4facfe;
+      margin-bottom: 15px;
+    }
+
+    .principle-card p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.6;
+    }
+
+    /* Slide 6: Comparison */
+    .slide-6 .comparison {
+      display: flex;
+      gap: 80px;
+      margin-top: 60px;
+    }
+
+    .comparison-col {
+      flex: 1;
+    }
+
+    .comparison-col h3 {
+      font-size: 32px;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 3px solid;
+    }
+
+    .comparison-col.traditional h3 {
+      color: #ff6b6b;
+      border-color: #ff6b6b;
+    }
+
+    .comparison-col.xiaoxiao h3 {
+      color: #00f2fe;
+      border-color: #00f2fe;
+    }
+
+    .comparison-list {
+      list-style: none;
+    }
+
+    .comparison-list li {
+      font-size: 22px;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .comparison-list .icon {
+      font-size: 28px;
+    }
+
+    .comparison-col.traditional .icon { color: #ff6b6b; }
+    .comparison-col.xiaoxiao .icon { color: #00f2fe; }
+
+    /* Slide 7: CTA */
+    .slide-7 {
+      text-align: center;
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    }
+
+    .slide-7 h2 {
+      font-size: 56px;
+      margin-bottom: 40px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .cta-btn {
+      padding: 25px 60px;
+      border-radius: 15px;
+      font-size: 24px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.3s;
+    }
+
+    .cta-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .cta-btn.primary {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #1a1a2e;
+    }
+
+    .cta-btn.secondary {
+      background: transparent;
+      border: 3px solid #4facfe;
+      color: #4facfe;
+    }
+
+    .qr-section {
+      margin-top: 80px;
+      color: rgba(255,255,255,0.6);
+      font-size: 20px;
+    }
+
+    .footer {
+      margin-top: 40px;
+      font-size: 18px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    @media print {
+      .slide {
+        page-break-after: always;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Slide 1: Title -->
+<div class="slide slide-1">
+  <div class="logo">X</div>
+  <h1>XiaoXiao</h1>
+  <p class="subtitle">AI Agent 开发框架</p>
+  <p class="tagline">7 步走完从概念到上线</p>
+  <div class="slide-number">1 / 7</div>
+</div>
+
+<!-- Slide 2: Problem -->
+<div class="slide slide-2">
+  <h2>开发中的困境</h2>
+  <div class="problem-list">
+    <div class="problem-item">
+      <h3>需求不清</h3>
+      <p>做到一半才发现需求有问题，推倒重来</p>
+    </div>
+    <div class="problem-item">
+      <h3>方向迷茫</h3>
+      <p>不知道做的东西有没有市场价值</p>
+    </div>
+    <div class="problem-item">
+      <h3>技术选型难</h3>
+      <p>架构设计拍脑袋，上线后难以扩展</p>
+    </div>
+    <div class="problem-item">
+      <h3>半途而废</h3>
+      <p>功能越做越多，永远发布不了</p>
+    </div>
+  </div>
+  <div class="slide-number">2 / 7</div>
+</div>
+
+<!-- Slide 3: Solution -->
+<div class="slide slide-3">
+  <h2>XiaoXiao 如何解决</h2>
+  <div class="solution-grid">
+    <div class="solution-item">
+      <div class="solution-icon">📋</div>
+      <h3>需求优先</h3>
+      <p>先想清楚做什么<br>再动手实现</p>
+    </div>
+    <div class="solution-item">
+      <div class="solution-icon">🎯</div>
+      <h3>方向验证</h3>
+      <p>市场调研验证<br>避免盲目投入</p>
+    </div>
+    <div class="solution-item">
+      <div class="solution-icon">🏗️</div>
+      <h3>架构先行</h3>
+      <p>技术方案<br>按设计执行</p>
+    </div>
+    <div class="solution-item">
+      <div class="solution-icon">🚀</div>
+      <h3>按时交付</h3>
+      <p>明确的 MVP<br>准时上线</p>
+    </div>
+  </div>
+  <div class="slide-number">3 / 7</div>
+</div>
+
+<!-- Slide 4: Pipeline -->
+<div class="slide slide-4">
+  <h2>7 步硬性流水线</h2>
+  <div class="pipeline">
+    <div class="pipeline-step">
+      <div class="step-num">1</div>
+      <h4>产品咨询</h4>
+      <p>明确需求</p>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">2</div>
+      <h4>战略评审</h4>
+      <p>验证方向</p>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">3</div>
+      <h4>架构设计</h4>
+      <p>技术方案</p>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">4</div>
+      <h4>界面设计</h4>
+      <p>UI/UX</p>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">5</div>
+      <h4>任务规划</h4>
+      <p>拆解任务</p>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">6</div>
+      <h4>TDD开发</h4>
+      <p>测试驱动</p>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">7</div>
+      <h4>发布上线</h4>
+      <p>部署监控</p>
+    </div>
+  </div>
+  <div class="slide-number">4 / 7</div>
+</div>
+
+<!-- Slide 5: Core Principles -->
+<div class="slide slide-5">
+  <h2>核心原则</h2>
+  <div class="principles-grid">
+    <div class="principle-card">
+      <div class="principle-icon">🎯</div>
+      <h3>做少</h3>
+      <p>窄比宽好，YAGNI<br>最小化功能集合</p>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">✅</div>
+      <h3>做精</h3>
+      <p>完整做完<br>RED-GREEN-REFACTOR</p>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">📊</div>
+      <h3>有证据</h3>
+      <p>Interest ≠ Demand<br>用数据说话</p>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">🔧</div>
+      <h3>用系统</h3>
+      <p>系统化调试<br>不靠猜</p>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">🏁</div>
+      <h3>会收尾</h3>
+      <p>No half-done projects<br>善始善终</p>
+    </div>
+    <div class="principle-card">
+      <div class="principle-icon">🤖</div>
+      <h3>AI 驱动</h3>
+      <p>Claude + XiaoXiao<br>人机协作开发</p>
+    </div>
+  </div>
+  <div class="slide-number">5 / 7</div>
+</div>
+
+<!-- Slide 6: Comparison -->
+<div class="slide slide-6">
+  <h2>传统 vs XiaoXiao</h2>
+  <div class="comparison">
+    <div class="comparison-col traditional">
+      <h3>传统开发</h3>
+      <ul class="comparison-list">
+        <li><span class="icon">✗</span> 边做边想需求</li>
+        <li><span class="icon">✗</span> 技术债务堆积</li>
+        <li><span class="icon">✗</span> 上线时间未知</li>
+        <li><span class="icon">✗</span> 测试靠手动</li>
+        <li><span class="icon">✗</span> 发布靠运气</li>
+      </ul>
+    </div>
+    <div class="comparison-col xiaoxiao">
+      <h3>XiaoXiao</h3>
+      <ul class="comparison-list">
+        <li><span class="icon">✓</span> 先定义再实现</li>
+        <li><span class="icon">✓</span> 架构设计先行</li>
+        <li><span class="icon">✓</span> 明确的 MVP</li>
+        <li><span class="icon">✓</span> TDD 测试驱动</li>
+        <li><span class="icon">✓</span> 流程化发布</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-number">6 / 7</div>
+</div>
+
+<!-- Slide 7: CTA -->
+<div class="slide slide-7">
+  <h2>开始你的第一个项目</h2>
+  <p class="subtitle">让 Claude 带你走完完整开发流程</p>
+  <div class="cta-buttons">
+    <a href="#" class="cta-btn primary">立即开始</a>
+    <a href="#" class="cta-btn secondary">查看文档</a>
+  </div>
+  <div class="qr-section">
+    <p>扫码关注获取更新</p>
+  </div>
+  <div class="footer">
+    <p>XiaoXiao Framework | AI Agent 开发框架</p>
+    <p>GitHub: github.com/C0428-ux/xiaoxiao</p>
+  </div>
+  <div class="slide-number">7 / 7</div>
+</div>
+
+</body>
+</html>
