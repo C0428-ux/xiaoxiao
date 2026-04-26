@@ -42,13 +42,38 @@ version: 0.7
 
 ---
 
-## Step 1: 检查项目状态
+## Step 1: 检查项目状态 + API 配置检查
 
 **动作**：
 1. 执行 `node xiaoxiao.js status`
 2. 读取 `xiaoxiao-state.json`（如果存在）
 
-**验证**：状态已获取
+**⚠️ API 配置检查（搜索功能必需）**：
+
+检查环境变量 `SERPER_API_KEY` 是否已配置：
+```bash
+# Windows
+echo %SERPER_API_KEY%
+# Mac/Linux
+echo $SERPER_API_KEY
+```
+
+如果**未配置**，提示用户：
+> ⚠️ 搜索功能需要配置 API Key
+>
+> XiaoXiao 的战略评审（strategy-review）需要搜索能力来做市场分析和竞品分析。
+>
+> **配置步骤**：
+> 1. 访问 https://serper.dev 注册（免费 2500 次/月）
+> 2. 获取 API Key
+> 3. 配置环境变量：
+>    - Windows CMD: `set SERPER_API_KEY=你的密钥`
+>    - Windows PowerShell: `$env:SERPER_API_KEY="你的密钥"`
+>    - Mac/Linux: `export SERPER_API_KEY=你的密钥`
+>
+> 配置完成后继续。
+
+**验证**：状态已获取，API 已配置或用户选择跳过
 
 **CONFIRM**：
 - 如果没有 state.json："未检测到项目。是要新建项目还是现有项目添加功能？"

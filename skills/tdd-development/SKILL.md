@@ -100,27 +100,61 @@ related-skills:
 
 ## Step 5: 任务分发（必须使用 Agent）
 
+**⚠️ 关键：不能自己写代码，必须派遣 agents 执行**
+
 **动作**：
 1. 初始化 Message Bus：
    ```bash
    mkdir -p docs/xiaoxiao/plans/tdd/.message-bus/events
    ```
-2. 使用 **parallel-dispatcher** 分发 workers：
-   - 从 task-planning output 读取任务依赖
-   - 识别第一个并行组
-   - **必须使用 Agent 工具生成 task-worker agents**
-   - **不能自己直接实现代码**
-   - Backend workers 接收 API/DB 任务
-   - Frontend workers 接收组件任务 + UI 设计路径
-3. 最多 5 个并发 workers
-4. 通过 Message Bus 监控：
-   - `worker-status.json` - worker 心跳
-   - `events/TASK_COMPLETE_*.event` - 完成事件
-   - `events/TASK_FAILED_*.event` - 失败事件
+2. 读取 agent 定义文件：
+   - 读取 `skills/tdd-development/agents/task-worker.md` 获取 worker prompt 模板
+3. 从 `docs/xiaoxiao/plans/task-planning-output.md` 读取任务列表
+4. 分析 DAG 依赖，确定第一个并行组（无依赖的任务）
+5. **派遣 agents 执行每个任务**：
+   ```javascript
+   // 示例：用 Agent 工具派遣 task-worker
+   const workers = await Promise.all(
+     readyTasks.slice(0, 5).map(task => {
+       const taskType = task.type === 'frontend' ? 'frontend' : 'backend';
 
-**验证**：Workers 已分发
+       return Agent({
+         subagent_type: 'general-purpose',
+         description: `Task Worker: ${task.name}`,
+         prompt: `你是 Task Worker Agent。执行以下任务：
 
-**CONFIRM**："Workers 已分发：[N] 个并行任务。监控中..."
+任务 ID: ${task.id}
+任务名称: ${task.name}
+任务类型: ${taskType}
+需要创建的文件: ${task.files.join(', ')}
+验收标准: ${task.acceptance}
+UI 设计路径: docs/xiaoxiao/plans/ui-design/
+Message Bus: docs/xiaoxiao/plans/tdd/.message-bus/
+Worker ID: worker-${task.id}-${Date.now()}
+
+请严格按照 TDD RED-GREEN-REFACTOR 流程执行：
+1. 先写失败的测试
+2. 运行测试验证 RED
+3. 写最小实现通过测试
+4. 运行测试验证 GREEN
+5. 重构优化代码
+6. 通过 Message Bus 报告完成或失败`,
+         run_in_background: true
+       });
+     })
+   );
+   ```
+6. **Backend workers**：处理 API、数据库、认证等服务端任务
+7. **Frontend workers**：处理 UI 组件、页面等前端任务（需读取 UI 设计文件）
+8. 最多 5 个并发 workers
+9. 通过 Message Bus 监控：
+   - `docs/xiaoxiao/plans/tdd/.message-bus/worker-status.json` - worker 心跳
+   - `docs/xiaoxiao/plans/tdd/.message-bus/events/TASK_COMPLETE_*.event` - 完成事件
+   - `docs/xiaoxiao/plans/tdd/.message-bus/events/TASK_FAILED_*.event` - 失败事件
+
+**验证**：Workers 已分发（你不能自己写代码，必须派遣 agents）
+
+**CONFIRM**："Workers 已分发：[N] 个并行任务。等待完成..."
 
 ---
 
