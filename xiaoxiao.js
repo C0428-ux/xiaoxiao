@@ -177,6 +177,22 @@ const COMMANDS = {
     const projectName = args[0] || path.basename(PROJECT_ROOT);
     const plansDir = path.join(PROJECT_ROOT, 'docs', 'xiaoxiao', 'plans');
 
+    // 保护：禁止在框架目录内初始化项目
+    const frameworkDirs = ['skills', 'docs', 'skills']; // 框架特征目录
+    const isFrameworkDir = frameworkDirs.some(dir =>
+      fs.existsSync(path.join(PROJECT_ROOT, dir))
+    );
+    const hasFrameworkMarkers = fs.existsSync(path.join(PROJECT_ROOT, 'FRAMEWORK.md')) &&
+                                fs.existsSync(path.join(PROJECT_ROOT, 'SKILL.md'));
+
+    if (isFrameworkDir && hasFrameworkMarkers) {
+      console.log(`❌ 错误：不能在框架目录内初始化项目`);
+      console.log(`   当前目录 (${PROJECT_ROOT}) 似乎是 XiaoXiao 框架目录`);
+      console.log(`\n请切换到项目目录后再运行 xiaoxiao init-project`);
+      console.log(`   例如：cd ~/my-project && xiaoxiao init-project`);
+      return;
+    }
+
     // 创建项目结构
     if (!fs.existsSync(plansDir)) {
       fs.mkdirSync(plansDir, { recursive: true });

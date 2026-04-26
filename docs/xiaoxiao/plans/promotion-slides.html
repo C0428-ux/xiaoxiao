@@ -8,351 +8,329 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-      background: #1a1a2e;
-      color: #fff;
+      font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
+      background: #0d1117;
+      color: #e6edf3;
     }
 
     .slide {
       width: 100%;
       max-width: 1920px;
       aspect-ratio: 16/9;
-      margin: 20px auto;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      padding: 80px;
+      margin: 30px auto;
+      background: #161b22;
+      padding: 100px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       position: relative;
-      overflow: hidden;
       page-break-after: always;
-    }
-
-    .slide::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -20%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(79, 172, 254, 0.1) 0%, transparent 70%);
-      pointer-events: none;
     }
 
     .slide-number {
       position: absolute;
-      bottom: 30px;
-      right: 50px;
-      font-size: 18px;
-      color: rgba(255,255,255,0.4);
+      bottom: 40px;
+      right: 60px;
+      font-size: 16px;
+      color: #484f58;
     }
 
     h1 {
-      font-size: 72px;
+      font-size: 84px;
       font-weight: 700;
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #e6edf3;
       margin-bottom: 30px;
+      letter-spacing: -2px;
     }
 
     h2 {
-      font-size: 48px;
-      color: #4facfe;
-      margin-bottom: 50px;
+      font-size: 56px;
+      color: #e6edf3;
+      margin-bottom: 60px;
       font-weight: 600;
     }
 
-    .subtitle {
+    h3 {
       font-size: 36px;
-      color: rgba(255,255,255,0.8);
-      margin-bottom: 60px;
+      color: #58a6ff;
+      margin-bottom: 30px;
     }
 
-    .tagline {
+    p {
       font-size: 28px;
-      color: #00f2fe;
-      letter-spacing: 8px;
-      text-transform: uppercase;
+      color: #8b949e;
+      line-height: 1.8;
+    }
+
+    .subtitle {
+      font-size: 32px;
+      color: #8b949e;
+      margin-bottom: 50px;
     }
 
     /* Slide 1: Title */
     .slide-1 {
-      text-align: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      background: #0d1117;
+      text-align: left;
+      padding-left: 150px;
+    }
+
+    .slide-1 .brand {
+      font-size: 28px;
+      color: #58a6ff;
+      letter-spacing: 4px;
+      margin-bottom: 40px;
+      font-weight: 500;
     }
 
     .slide-1 h1 {
-      font-size: 120px;
-      margin-bottom: 20px;
+      font-size: 100px;
+      margin-bottom: 30px;
     }
 
-    .slide-1 .logo {
-      width: 150px;
-      height: 150px;
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      border-radius: 30px;
-      margin: 0 auto 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 80px;
+    .slide-1 .desc {
+      font-size: 26px;
+      color: #8b949e;
+      max-width: 700px;
+      line-height: 1.8;
     }
 
-    /* Slide 2: Problem */
-    .slide-2 .problem-list {
+    /* Slide 2: Problems */
+    .slide-2 {
+      background: #0d1117;
+    }
+
+    .problems {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 40px;
-      margin-top: 40px;
+      max-width: 1400px;
     }
 
-    .problem-item {
-      background: rgba(255,255,255,0.05);
-      border-radius: 20px;
-      padding: 40px;
-      border-left: 4px solid #ff6b6b;
+    .problem {
+      padding: 50px;
+      background: #161b22;
+      border-radius: 16px;
+      border: 1px solid #30363d;
     }
 
-    .problem-item h3 {
-      color: #ff6b6b;
-      font-size: 28px;
-      margin-bottom: 15px;
+    .problem h3 {
+      font-size: 32px;
+      color: #f85149;
+      margin-bottom: 20px;
     }
 
-    .problem-item p {
-      color: rgba(255,255,255,0.7);
-      font-size: 22px;
+    .problem p {
+      font-size: 24px;
+      color: #8b949e;
       line-height: 1.6;
     }
 
-    /* Slide 3: Solution */
-    .slide-3 .solution-grid {
+    /* Slide 3: What is */
+    .slide-3 {
+      background: #0d1117;
+    }
+
+    .slide-3 .content {
+      max-width: 1200px;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #1a2f1a 0%, #161b22 100%);
+      border-left: 4px solid #3fb950;
+      padding: 50px 60px;
+      margin: 50px 0;
+      border-radius: 0 16px 16px 0;
+    }
+
+    .highlight-box p {
+      font-size: 32px;
+      color: #e6edf3;
+      line-height: 1.8;
+    }
+
+    .flow-list {
       display: flex;
-      justify-content: space-around;
+      gap: 30px;
       margin-top: 60px;
-    }
-
-    .solution-item {
-      text-align: center;
-      width: 250px;
-    }
-
-    .solution-icon {
-      width: 100px;
-      height: 100px;
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      border-radius: 25px;
-      margin: 0 auto 25px;
-      display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 50px;
     }
 
-    .solution-item h3 {
-      font-size: 24px;
-      color: #fff;
-      margin-bottom: 10px;
+    .flow-item {
+      padding: 25px 40px;
+      background: #21262d;
+      border-radius: 12px;
+      font-size: 22px;
+      color: #e6edf3;
     }
 
-    .solution-item p {
-      font-size: 18px;
-      color: rgba(255,255,255,0.6);
+    .flow-arrow {
+      font-size: 28px;
+      color: #484f58;
     }
 
     /* Slide 4: Pipeline */
-    .slide-4 .pipeline {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 80px;
-      position: relative;
+    .slide-4 {
+      background: #0d1117;
     }
 
-    .pipeline::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50px;
-      right: 50px;
-      height: 4px;
-      background: linear-gradient(90deg, #4facfe, #00f2fe, #4facfe);
-      transform: translateY(-50%);
-      z-index: 0;
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      margin-top: 60px;
     }
 
     .pipeline-step {
+      padding: 40px 30px;
+      background: #161b22;
+      border-radius: 16px;
+      border: 1px solid #30363d;
       text-align: center;
-      z-index: 1;
-      background: #1a1a2e;
-      padding: 20px;
     }
 
-    .step-num {
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      border-radius: 50%;
-      margin: 0 auto 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
+    .pipeline-step .num {
+      font-size: 48px;
       font-weight: 700;
-    }
-
-    .pipeline-step h4 {
-      font-size: 16px;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
-    .pipeline-step p {
-      font-size: 13px;
-      color: rgba(255,255,255,0.5);
-    }
-
-    /* Slide 5: Core Principles */
-    .slide-5 .principles-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 40px;
-      margin-top: 60px;
-    }
-
-    .principle-card {
-      background: rgba(255,255,255,0.05);
-      border-radius: 20px;
-      padding: 50px 40px;
-      text-align: center;
-      border: 1px solid rgba(79, 172, 254, 0.2);
-      transition: transform 0.3s;
-    }
-
-    .principle-card:hover {
-      transform: translateY(-10px);
-      border-color: #4facfe;
-    }
-
-    .principle-icon {
-      font-size: 60px;
-      margin-bottom: 25px;
-    }
-
-    .principle-card h3 {
-      font-size: 28px;
-      color: #4facfe;
+      color: #58a6ff;
       margin-bottom: 15px;
     }
 
-    .principle-card p {
+    .pipeline-step h4 {
+      font-size: 24px;
+      color: #e6edf3;
+      margin-bottom: 10px;
+    }
+
+    .pipeline-step p {
       font-size: 18px;
-      color: rgba(255,255,255,0.7);
-      line-height: 1.6;
+      color: #8b949e;
     }
 
-    /* Slide 6: Comparison */
-    .slide-6 .comparison {
-      display: flex;
-      gap: 80px;
+    .second-row {
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 30px;
+      max-width: 900px;
+    }
+
+    /* Slide 5: Principles */
+    .slide-5 {
+      background: #0d1117;
+    }
+
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 35px;
+      margin-top: 50px;
+    }
+
+    .principle {
+      padding: 45px 35px;
+      background: #161b22;
+      border-radius: 16px;
+      border: 1px solid #30363d;
+    }
+
+    .principle h3 {
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+
+    .principle p {
+      font-size: 20px;
+      line-height: 1.7;
+    }
+
+    .principle .key {
+      color: #58a6ff;
+      font-weight: 600;
+    }
+
+    /* Slide 6: Who is this for */
+    .slide-6 {
+      background: #0d1117;
+    }
+
+    .users-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
       margin-top: 60px;
+      max-width: 1200px;
     }
 
-    .comparison-col {
-      flex: 1;
+    .user-type {
+      padding: 45px;
+      background: #161b22;
+      border-radius: 16px;
+      border: 1px solid #30363d;
     }
 
-    .comparison-col h3 {
-      font-size: 32px;
-      margin-bottom: 40px;
-      padding-bottom: 20px;
-      border-bottom: 3px solid;
-    }
-
-    .comparison-col.traditional h3 {
-      color: #ff6b6b;
-      border-color: #ff6b6b;
-    }
-
-    .comparison-col.xiaoxiao h3 {
-      color: #00f2fe;
-      border-color: #00f2fe;
-    }
-
-    .comparison-list {
-      list-style: none;
-    }
-
-    .comparison-list li {
-      font-size: 22px;
-      padding: 20px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .comparison-list .icon {
+    .user-type h3 {
       font-size: 28px;
+      margin-bottom: 20px;
     }
 
-    .comparison-col.traditional .icon { color: #ff6b6b; }
-    .comparison-col.xiaoxiao .icon { color: #00f2fe; }
+    .user-type p {
+      font-size: 22px;
+    }
 
     /* Slide 7: CTA */
     .slide-7 {
+      background: #0d1117;
       text-align: center;
-      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      padding: 120px;
     }
 
     .slide-7 h2 {
-      font-size: 56px;
+      font-size: 64px;
       margin-bottom: 40px;
     }
 
-    .cta-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin-top: 60px;
+    .slide-7 .desc {
+      font-size: 28px;
+      color: #8b949e;
+      margin-bottom: 60px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .cta-btn {
-      padding: 25px 60px;
-      border-radius: 15px;
-      font-size: 24px;
+    .cta-group {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .cta {
+      padding: 22px 50px;
+      border-radius: 10px;
+      font-size: 22px;
       font-weight: 600;
       text-decoration: none;
-      transition: transform 0.3s;
     }
 
-    .cta-btn:hover {
-      transform: scale(1.05);
+    .cta.primary {
+      background: #238636;
+      color: #fff;
     }
 
-    .cta-btn.primary {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-      color: #1a1a2e;
+    .cta.secondary {
+      background: #21262d;
+      color: #e6edf3;
+      border: 1px solid #30363d;
     }
 
-    .cta-btn.secondary {
-      background: transparent;
-      border: 3px solid #4facfe;
-      color: #4facfe;
-    }
-
-    .qr-section {
-      margin-top: 80px;
-      color: rgba(255,255,255,0.6);
+    .footer-info {
+      margin-top: 100px;
       font-size: 20px;
+      color: #484f58;
     }
 
-    .footer {
-      margin-top: 40px;
-      font-size: 18px;
-      color: rgba(255,255,255,0.4);
+    .footer-info a {
+      color: #58a6ff;
+      text-decoration: none;
     }
 
     @media print {
@@ -367,60 +345,57 @@
 
 <!-- Slide 1: Title -->
 <div class="slide slide-1">
-  <div class="logo">X</div>
-  <h1>XiaoXiao</h1>
-  <p class="subtitle">AI Agent 开发框架</p>
-  <p class="tagline">7 步走完从概念到上线</p>
+  <div class="brand">XIAOXIAO</div>
+  <h1>做产品<br>不再半途而废</h1>
+  <p class="desc">一个让 AI 带你走完从想法到上线的开发框架。<br>7 个步骤，每一步都有明确的目标和产出。</p>
   <div class="slide-number">1 / 7</div>
 </div>
 
-<!-- Slide 2: Problem -->
+<!-- Slide 2: Problems -->
 <div class="slide slide-2">
-  <h2>开发中的困境</h2>
-  <div class="problem-list">
-    <div class="problem-item">
-      <h3>需求不清</h3>
-      <p>做到一半才发现需求有问题，推倒重来</p>
+  <h2>做产品的人都在烦恼什么</h2>
+  <div class="problems">
+    <div class="problem">
+      <h3>需求做到一半变了</h3>
+      <p>花了两个月做的功能，用户说不是他们想要的</p>
     </div>
-    <div class="problem-item">
-      <h3>方向迷茫</h3>
-      <p>不知道做的东西有没有市场价值</p>
+    <div class="problem">
+      <h3>不知道做的东西有没有人用</h3>
+      <p>凭感觉判断市场，等上线才发现没需求</p>
     </div>
-    <div class="problem-item">
-      <h3>技术选型难</h3>
-      <p>架构设计拍脑袋，上线后难以扩展</p>
+    <div class="problem">
+      <h3>技术方案选错了</h3>
+      <p>上线后才发现架构撑不住，只能推倒重来</p>
     </div>
-    <div class="problem-item">
-      <h3>半途而废</h3>
-      <p>功能越做越多，永远发布不了</p>
+    <div class="problem">
+      <h3>永远在开发，永远不发布</h3>
+      <p>功能越加越多，上线日期一拖再拖</p>
     </div>
   </div>
   <div class="slide-number">2 / 7</div>
 </div>
 
-<!-- Slide 3: Solution -->
+<!-- Slide 3: What is -->
 <div class="slide slide-3">
-  <h2>XiaoXiao 如何解决</h2>
-  <div class="solution-grid">
-    <div class="solution-item">
-      <div class="solution-icon">📋</div>
-      <h3>需求优先</h3>
-      <p>先想清楚做什么<br>再动手实现</p>
+  <h2>XiaoXiao 是什么</h2>
+  <div class="content">
+    <div class="highlight-box">
+      <p>一个把做产品拆成 7 个明确步骤的框架。<br>每一步做什么、产出什么、怎么算完成，都定好了。</p>
     </div>
-    <div class="solution-item">
-      <div class="solution-icon">🎯</div>
-      <h3>方向验证</h3>
-      <p>市场调研验证<br>避免盲目投入</p>
-    </div>
-    <div class="solution-item">
-      <div class="solution-icon">🏗️</div>
-      <h3>架构先行</h3>
-      <p>技术方案<br>按设计执行</p>
-    </div>
-    <div class="solution-item">
-      <div class="solution-icon">🚀</div>
-      <h3>按时交付</h3>
-      <p>明确的 MVP<br>准时上线</p>
+    <div class="flow-list">
+      <span class="flow-item">需求定义</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-item">方向验证</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-item">技术方案</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-item">界面设计</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-item">任务拆解</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-item">开发</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-item">上线</span>
     </div>
   </div>
   <div class="slide-number">3 / 7</div>
@@ -428,108 +403,100 @@
 
 <!-- Slide 4: Pipeline -->
 <div class="slide slide-4">
-  <h2>7 步硬性流水线</h2>
-  <div class="pipeline">
+  <h2>7 步，每一步都有产出</h2>
+  <div class="pipeline-grid">
     <div class="pipeline-step">
-      <div class="step-num">1</div>
+      <div class="num">1</div>
       <h4>产品咨询</h4>
-      <p>明确需求</p>
+      <p>明确做什么、不做什么</p>
     </div>
     <div class="pipeline-step">
-      <div class="step-num">2</div>
+      <div class="num">2</div>
       <h4>战略评审</h4>
-      <p>验证方向</p>
+      <p>验证值不值得做</p>
     </div>
     <div class="pipeline-step">
-      <div class="step-num">3</div>
+      <div class="num">3</div>
       <h4>架构设计</h4>
-      <p>技术方案</p>
+      <p>定好技术方案</p>
     </div>
     <div class="pipeline-step">
-      <div class="step-num">4</div>
+      <div class="num">4</div>
       <h4>界面设计</h4>
-      <p>UI/UX</p>
+      <p>设计用户界面</p>
     </div>
+  </div>
+  <div class="pipeline-grid second-row">
     <div class="pipeline-step">
-      <div class="step-num">5</div>
+      <div class="num">5</div>
       <h4>任务规划</h4>
-      <p>拆解任务</p>
+      <p>拆解成可执行的任务</p>
     </div>
     <div class="pipeline-step">
-      <div class="step-num">6</div>
-      <h4>TDD开发</h4>
-      <p>测试驱动</p>
+      <div class="num">6</div>
+      <h4>TDD 开发</h4>
+      <p>测试驱动开发</p>
     </div>
     <div class="pipeline-step">
-      <div class="step-num">7</div>
+      <div class="num">7</div>
       <h4>发布上线</h4>
-      <p>部署监控</p>
+      <p>部署并监控</p>
     </div>
   </div>
   <div class="slide-number">4 / 7</div>
 </div>
 
-<!-- Slide 5: Core Principles -->
+<!-- Slide 5: Principles -->
 <div class="slide slide-5">
   <h2>核心原则</h2>
-  <div class="principles-grid">
-    <div class="principle-card">
-      <div class="principle-icon">🎯</div>
+  <div class="principles">
+    <div class="principle">
       <h3>做少</h3>
-      <p>窄比宽好，YAGNI<br>最小化功能集合</p>
+      <p>最小功能集合上线。<br>先把 <span class="key">最核心的</span> 做出来，其他以后再说。</p>
     </div>
-    <div class="principle-card">
-      <div class="principle-icon">✅</div>
+    <div class="principle">
       <h3>做精</h3>
-      <p>完整做完<br>RED-GREEN-REFACTOR</p>
+      <p>每个功能要做完整。<br>写代码、写测试、跑通流程，<span class="key">不能半吊子</span>。</p>
     </div>
-    <div class="principle-card">
-      <div class="principle-icon">📊</div>
+    <div class="principle">
       <h3>有证据</h3>
-      <p>Interest ≠ Demand<br>用数据说话</p>
+      <p>不说"我觉得用户会喜欢"。<br>要问用户、要搜数据、要<span class="key">用证据说话</span>。</p>
     </div>
-    <div class="principle-card">
-      <div class="principle-icon">🔧</div>
+    <div class="principle">
       <h3>用系统</h3>
-      <p>系统化调试<br>不靠猜</p>
+      <p>遇到问题不靠猜。<br><span class="key">系统化调试</span>，找到根因再修。</p>
     </div>
-    <div class="principle-card">
-      <div class="principle-icon">🏁</div>
+    <div class="principle">
       <h3>会收尾</h3>
-      <p>No half-done projects<br>善始善终</p>
+      <p>不堆功能、不拖上线。<br><span class="key">做完一个版本</span>，再开下一个。</p>
     </div>
-    <div class="principle-card">
-      <div class="principle-icon">🤖</div>
-      <h3>AI 驱动</h3>
-      <p>Claude + XiaoXiao<br>人机协作开发</p>
+    <div class="principle">
+      <h3>善用 AI</h3>
+      <p>让 AI 帮你做执行。<br>你定方向，<span class="key">AI 做实现</span>。</p>
     </div>
   </div>
   <div class="slide-number">5 / 7</div>
 </div>
 
-<!-- Slide 6: Comparison -->
+<!-- Slide 6: Who -->
 <div class="slide slide-6">
-  <h2>传统 vs XiaoXiao</h2>
-  <div class="comparison">
-    <div class="comparison-col traditional">
-      <h3>传统开发</h3>
-      <ul class="comparison-list">
-        <li><span class="icon">✗</span> 边做边想需求</li>
-        <li><span class="icon">✗</span> 技术债务堆积</li>
-        <li><span class="icon">✗</span> 上线时间未知</li>
-        <li><span class="icon">✗</span> 测试靠手动</li>
-        <li><span class="icon">✗</span> 发布靠运气</li>
-      </ul>
+  <h2>谁适合用 XiaoXiao</h2>
+  <div class="users-grid">
+    <div class="user-type">
+      <h3>独立开发者</h3>
+      <p>一个人做产品，不知道从哪开始。XiaoXiao 给你一张路线图。</p>
     </div>
-    <div class="comparison-col xiaoxiao">
-      <h3>XiaoXiao</h3>
-      <ul class="comparison-list">
-        <li><span class="icon">✓</span> 先定义再实现</li>
-        <li><span class="icon">✓</span> 架构设计先行</li>
-        <li><span class="icon">✓</span> 明确的 MVP</li>
-        <li><span class="icon">✓</span> TDD 测试驱动</li>
-        <li><span class="icon">✓</span> 流程化发布</li>
-      </ul>
+    <div class="user-type">
+      <h3>产品经理</h3>
+      <p>有想法但不懂技术。XiaoXiao 让 AI 帮你落地实现。</p>
+    </div>
+    <div class="user-type">
+      <h3>创业团队</h3>
+      <p>资源有限，必须快速验证。XiaoXiao 帮你用最小成本试错。</p>
+    </div>
+    <div class="user-type">
+      <h3>AI 开发者</h3>
+      <p>用 AI Agent 写代码。XiaoXiao 让 AI 的工作更有条理。</p>
     </div>
   </div>
   <div class="slide-number">6 / 7</div>
@@ -537,18 +504,14 @@
 
 <!-- Slide 7: CTA -->
 <div class="slide slide-7">
-  <h2>开始你的第一个项目</h2>
-  <p class="subtitle">让 Claude 带你走完完整开发流程</p>
-  <div class="cta-buttons">
-    <a href="#" class="cta-btn primary">立即开始</a>
-    <a href="#" class="cta-btn secondary">查看文档</a>
+  <h2>想试试吗</h2>
+  <p class="desc">把你的想法告诉 XiaoXiao，它会带你一步一步把它做出来。</p>
+  <div class="cta-group">
+    <a href="#" class="cta primary">开始第一个项目</a>
+    <a href="#" class="cta secondary">了解更多</a>
   </div>
-  <div class="qr-section">
-    <p>扫码关注获取更新</p>
-  </div>
-  <div class="footer">
-    <p>XiaoXiao Framework | AI Agent 开发框架</p>
-    <p>GitHub: github.com/C0428-ux/xiaoxiao</p>
+  <div class="footer-info">
+    <p>开源项目 | github.com/C0428-ux/xiaoxiao</p>
   </div>
   <div class="slide-number">7 / 7</div>
 </div>
