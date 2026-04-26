@@ -22,21 +22,31 @@ const { URL } = require('url');
 const ENGINES = {
   duckduckgo: {
     name: 'DuckDuckGo',
-    description: '免费，隐私友好，无需 API key',
+    description: '免费，隐私友好，无需 API key（国内可能无法访问）',
     requiredEnv: [],
-    free: true
+    free: true,
+   chinaAccessible: false
   },
   bing: {
     name: 'Bing',
-    description: '免费，使用 RSS 接口',
+    description: '免费，使用 RSS 接口（国内可能无法访问）',
     requiredEnv: [],
-    free: true
+    free: true,
+    chinaAccessible: false
   },
   google: {
     name: 'Google Custom Search',
     description: '需要 GOOGLE_API_KEY 和 GOOGLE_CSE_ID',
     requiredEnv: ['GOOGLE_API_KEY', 'GOOGLE_CSE_ID'],
-    free: false
+    free: false,
+    chinaAccessible: false
+  },
+  serper: {
+    name: 'Serper.dev',
+    description: '免费额度 2500 次/月，支持国内访问',
+    requiredEnv: ['SERPER_API_KEY'],
+    free: true,
+    chinaAccessible: true
   }
 };
 
@@ -47,9 +57,9 @@ const ENGINES = {
  */
 async function search(query, options = {}) {
   const {
-    engine = 'duckduckgo',
+    engine = 'serper',  // 默认使用 serper（中国可访问）
     maxResults = 10,
-    timeout = 15000
+    timeout = 30000  // 默认30秒超时，适应慢速网络
   } = options;
 
   const results = {
@@ -79,35 +89,57 @@ async function search(query, options = {}) {
     return results;
   }
 
-  // 执行搜索
-  try {
-    switch (engine) {
-      case 'duckduckgo':
-        results.results = await searchDuckDuckGoHTML(query, maxResults, timeout);
-        break;
-      case 'bing':
-        results.results = await searchBingRSS(query, maxResults, timeout);
-        break;
-      case 'google':
-        results.results = await searchGoogleCSE(query, maxResults, timeout);
-        break;
-      default:
-        results.results = await searchDuckDuckGoHTML(query, maxResults, timeout);
-    }
-    results.success = true;
-  } catch (error) {
-    results.errors.push(error.message);
-    results.success = false;
+  // 执行搜索（带自动回退）
+  const enginesToTry = [engine];
 
-    // 自动尝试备用引擎
-    if (engine !== 'duckduckgo') {
-      try {
-        results.results = await searchDuckDuckGoHTML(query, maxResults, timeout);
-        results.errors.push(`Primary engine failed, used fallback: duckduckgo`);
-        results.success = true;
-      } catch (e) {
-        results.errors.push(`Fallback also failed: ${e.message}`);
+  // 非中国友好引擎失败后，尝试中国可访问的引擎
+  const chinaFallback = ['bing', 'duckduckgo', 'google'].includes(engine) ? ['serper'] : [];
+
+  // 添加回退引擎
+  if (engine === 'duckduckgo') {
+    enginesToTry.push('bing', ...chinaFallback);
+  } else if (engine === 'bing') {
+    enginesToTry.push('duckduckgo', ...chinaFallback);
+  } else {
+    // 其他引擎失败后尝试所有可用的
+    enginesToTry.push(...Object.keys(ENGINES).filter(e => e !== engine));
+  }
+
+  for (const tryEngine of enginesToTry) {
+    // 跳过没有配置必要环境变量的引擎
+    const tryConfig = ENGINES[tryEngine];
+    const missingEnv = tryConfig.requiredEnv.filter(e => !process.env[e]);
+    if (missingEnv.length > 0 && !tryConfig.free) {
+      continue;
+    }
+
+    try {
+      switch (tryEngine) {
+        case 'duckduckgo':
+          results.results = await searchDuckDuckGoHTML(query, maxResults, timeout);
+          break;
+        case 'bing':
+          results.results = await searchBingRSS(query, maxResults, timeout);
+          break;
+        case 'google':
+          results.results = await searchGoogleCSE(query, maxResults, timeout);
+          break;
+        case 'serper':
+          results.results = await searchSerper(query, maxResults, timeout);
+          break;
+        default:
+          results.results = await searchDuckDuckGoHTML(query, maxResults, timeout);
       }
+      results.engine = tryEngine;
+      results.success = true;
+      if (tryEngine !== engine) {
+        results.errors.push(`Primary engine (${engine}) failed, used fallback: ${tryEngine}`);
+      }
+      break;  // 成功，退出重试循环
+    } catch (error) {
+      results.errors.push(`${tryEngine}: ${error.message}`);
+      results.success = false;
+      // 继续尝试下一个引擎
     }
   }
 
@@ -117,7 +149,7 @@ async function search(query, options = {}) {
 /**
  * DuckDuckGo HTML 搜索（免费，无需 API key）
  */
-async function searchDuckDuckGoHTML(query, maxResults = 10, timeout = 15000) {
+async function searchDuckDuckGoHTML(query, maxResults = 10, timeout = 30000) {
   const encodedQuery = encodeURIComponent(query);
   const url = `https://html.duckduckgo.com/html/?q=${encodedQuery}&kl=wt-wt`;
 
@@ -169,7 +201,7 @@ function parseDuckDuckGoHTML(html, maxResults) {
 /**
  * Bing RSS 搜索（免费，无需 API key）
  */
-async function searchBingRSS(query, maxResults = 10, timeout = 15000) {
+async function searchBingRSS(query, maxResults = 10, timeout = 30000) {
   const encodedQuery = encodeURIComponent(query);
   const url = `https://www.bing.com/rss?q=${encodedQuery}`;
 
@@ -210,7 +242,7 @@ function parseBingRSS(xml, maxResults) {
 /**
  * Google Custom Search API（需要 API key）
  */
-async function searchGoogleCSE(query, maxResults = 10, timeout = 15000) {
+async function searchGoogleCSE(query, maxResults = 10, timeout = 30000) {
   if (!process.env.GOOGLE_API_KEY || !process.env.GOOGLE_CSE_ID) {
     throw new Error('GOOGLE_API_KEY and GOOGLE_CSE_ID required');
   }
@@ -237,25 +269,62 @@ async function searchGoogleCSE(query, maxResults = 10, timeout = 15000) {
   }));
 }
 
+/**
+ * Serper.dev API（支持国内访问，免费额度 2500/月）
+ */
+async function searchSerper(query, maxResults = 10, timeout = 30000) {
+  const apiKey = process.env.SERPER_API_KEY;
+  if (!apiKey) {
+    throw new Error('SERPER_API_KEY environment variable required');
+  }
+
+  const params = new URLSearchParams({
+    q: query,
+    num: String(Math.min(maxResults, 10))
+  });
+
+  const url = `https://google.serper.dev/search?${params.toString()}`;
+  const data = await fetchURL(url, timeout, true, {
+    'X-API-KEY': apiKey,
+    'Content-Type': 'application/json'
+  });
+
+  if (!data.items) {
+    return [];
+  }
+
+  return data.items.map(item => ({
+    title: item.title || 'No title',
+    url: item.link || '',
+    snippet: item.snippet || '',
+    engine: 'serper'
+  }));
+}
+
 // ========== 工具函数 ==========
 
 /**
  * 获取 URL 内容
+ * @param {string} url - URL
+ * @param {number} timeout - 超时(ms)
+ * @param {boolean} asJSON - 是否解析JSON
+ * @param {Object} extraHeaders - 额外的请求头
  */
-function fetchURL(url, timeout = 15000, asJSON = false) {
+function fetchURL(url, timeout = 30000, asJSON = false, extraHeaders = {}) {
   return new Promise((resolve, reject) => {
     const protocol = url.startsWith('https') ? https : http;
     const timeoutId = setTimeout(() => reject(new Error(`Timeout after ${timeout}ms`)), timeout);
 
     const req = protocol.get(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        ...extraHeaders
       }
     }, (res) => {
       // 处理重定向
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
         clearTimeout(timeoutId);
-        fetchURL(res.headers.location, timeout, asJSON).then(resolve).catch(reject);
+        fetchURL(res.headers.location, timeout, asJSON, extraHeaders).then(resolve).catch(reject);
         return;
       }
 
@@ -323,19 +392,20 @@ Usage:
   node search.js "<query>" [options]
 
 Options:
-  --engine <name>    Search engine: duckduckgo (default), bing, google
+  --engine <name>    Search engine: serper (default for CN), duckduckgo, bing, google
   --max <n>          Max results (default: 10)
-  --timeout <ms>     Timeout in ms (default: 15000)
+  --timeout <ms>     Timeout in ms (default: 30000)
   --list             List available engines
 
 Examples:
   node search.js "market size SaaS 2024"
-  node search.js "competitors for project management" --engine bing
+  node search.js "competitors for project management" --engine serper
   node search.js "industry trends 2024" --max 5
 
-Environment Variables (optional):
-  GOOGLE_API_KEY     For Google Custom Search
-  GOOGLE_CSE_ID      For Google Custom Search
+Environment Variables:
+  SERPER_API_KEY     Serper.dev API key (recommended for CN) - get at https://serper.dev
+  GOOGLE_API_KEY     Google Custom Search API key
+  GOOGLE_CSE_ID      Google Custom Search Engine ID
 `);
     return;
   }
@@ -344,14 +414,15 @@ Environment Variables (optional):
     console.log('Available search engines:\n');
     for (const [key, eng] of Object.entries(ENGINES)) {
       const status = eng.free ? 'FREE' : 'REQUIRES_API_KEY';
-      console.log(`  ${key.padEnd(12)} - ${eng.name} (${status})`);
+      const cnAccess = eng.chinaAccessible ? ' [CN OK]' : '';
+      console.log(`  ${key.padEnd(12)} - ${eng.name} (${status})${cnAccess}`);
       console.log(`             ${eng.description}\n`);
     }
     return;
   }
 
   const query = args[0];
-  let engine = 'duckduckgo';
+  let engine = 'serper';  // 默认使用 serper（中国可访问）
   let maxResults = 10;
 
   for (let i = 1; i < args.length; i++) {
@@ -370,6 +441,16 @@ Environment Variables (optional):
     .then(results => {
       if (!results.success && results.errors.length > 0) {
         console.log('Errors:', results.errors.join('; '));
+
+        // 提供明确的 API 配置提示
+        if (results.errors.some(e => e.includes('SERPER_API_KEY') || e.includes('serper'))) {
+          console.log('\n⚠️  搜索 API 未配置或配置失效');
+          console.log('请配置 Serper API Key（支持国内访问，免费 2500 次/月）：');
+          console.log('1. 访问 https://serper.dev 注册并获取 API Key');
+          console.log('2. 设置环境变量：');
+          console.log('   Windows: set SERPER_API_KEY=你的密钥');
+          console.log('   Mac/Linux: export SERPER_API_KEY=你的密钥');
+        }
       }
 
       if (results.results.length === 0) {

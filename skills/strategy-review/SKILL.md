@@ -36,6 +36,31 @@ prerequisites:
 
 ---
 
+## ⚠️ API 配置检查（首次使用必须执行）
+
+**在执行此 Skill 之前，必须配置搜索 API**：
+
+1. 访问 https://serper.dev 注册账户（免费 2500 次/月）
+2. 获取 API Key
+3. 配置环境变量：
+   ```bash
+   # Windows (CMD)
+   set SERPER_API_KEY=你的API密钥
+
+   # Windows (PowerShell)
+   $env:SERPER_API_KEY="你的API密钥"
+
+   # Mac/Linux
+   export SERPER_API_KEY=你的API密钥
+   ```
+4. 配置完成后，继续执行 Step 1
+
+**重要提示**：
+- 如果不配置 API Key，Step 3（市场分析）和 Step 4（竞品分析）将无法使用搜索功能
+- 配置一次即可，后续使用无需重复配置
+
+---
+
 ## Step 1: 初始化
 
 **动作**：
@@ -67,11 +92,16 @@ prerequisites:
 
 ## Step 3: 市场分析
 
+**前置条件**：需要设置 `SERPER_API_KEY` 环境变量（用于国内搜索）
+- 访问 https://serper.dev 免费注册获取 API Key
+- Windows: `set SERPER_API_KEY=your_key`
+- Mac/Linux: `export SERPER_API_KEY=your_key`
+
 **动作**：
 1. 执行搜索命令获取市场规模数据：
    ```bash
-   node search.js "[产品类别] market size 2024 TAM"
-   node search.js "[产品类型] industry growth trend"
+   node search.js "[产品类别] market size 2024 TAM" --engine serper
+   node search.js "[产品类型] industry growth trend" --engine serper
    ```
 2. 记录发现（来源必须可验证）
 3. 如果搜索失败：
@@ -89,8 +119,8 @@ prerequisites:
 **动作**：
 1. 执行搜索命令查找竞品：
    ```bash
-   node search.js "[产品类别] competitors"
-   node search.js "[核心需求] solutions"
+   node search.js "[产品类别] competitors" --engine serper
+   node search.js "[核心需求] solutions" --engine serper
    ```
 2. 记录竞品信息（名称、功能、定价、来源）
 3. 如果找不到竞品：
