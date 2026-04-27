@@ -289,11 +289,11 @@ async function searchSerper(query, maxResults = 10, timeout = 30000) {
     'Content-Type': 'application/json'
   });
 
-  if (!data.items) {
+  if (!data.organic) {
     return [];
   }
 
-  return data.items.map(item => ({
+  return data.organic.map(item => ({
     title: item.title || 'No title',
     url: item.link || '',
     snippet: item.snippet || '',
