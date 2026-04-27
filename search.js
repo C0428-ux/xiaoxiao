@@ -25,7 +25,7 @@ const ENGINES = {
     description: '免费，隐私友好，无需 API key（国内可能无法访问）',
     requiredEnv: [],
     free: true,
-   chinaAccessible: false
+    chinaAccessible: false
   },
   bing: {
     name: 'Bing',
@@ -93,13 +93,9 @@ async function search(query, options = {}) {
   const enginesToTry = [engine];
 
   // 非中国友好引擎失败后，尝试中国可访问的引擎
-  const chinaFallback = ['bing', 'duckduckgo', 'google'].includes(engine) ? ['serper'] : [];
-
-  // 添加回退引擎
-  if (engine === 'duckduckgo') {
-    enginesToTry.push('bing', ...chinaFallback);
-  } else if (engine === 'bing') {
-    enginesToTry.push('duckduckgo', ...chinaFallback);
+  const chinaAccessible = ['serper'];
+  if (['bing', 'duckduckgo', 'google'].includes(engine)) {
+    enginesToTry.push(...chinaAccessible.filter(e => e !== engine));
   } else {
     // 其他引擎失败后尝试所有可用的
     enginesToTry.push(...Object.keys(ENGINES).filter(e => e !== engine));

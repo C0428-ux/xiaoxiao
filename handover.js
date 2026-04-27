@@ -1,5 +1,14 @@
 const { StateManager, SKILLS } = require('./state-manager');
-const { SkillLoader } = require('./skill-loader');
+
+// 依赖链定义（唯一来源，与 state-manager.js 保持一致）
+const PREREQ_MAP = {
+  'strategy-review': ['product-consult'],
+  'architect': ['strategy-review'],
+  'ui-design': ['architect'],
+  'task-planning': ['ui-design'],
+  'tdd-development': ['task-planning'],
+  'ship': ['tdd-development']
+};
 
 /**
  * Handover 模块：负责 Skill 之间的交接、依赖链检测、状态转移
@@ -7,7 +16,6 @@ const { SkillLoader } = require('./skill-loader');
 class Handover {
   constructor(projectRoot, frameworkRoot = null) {
     this.stateManager = new StateManager(projectRoot, frameworkRoot);
-    this.skillLoader = new SkillLoader(projectRoot, frameworkRoot);
   }
 
   /**
@@ -63,17 +71,8 @@ class Handover {
    * 获取依赖链信息
    */
   getDependencyChain(skillName) {
-    const prereqMap = {
-      'strategy-review': ['product-consult'],
-      'architect': ['strategy-review'],
-      'ui-design': ['architect'],
-      'task-planning': ['ui-design'],
-      'tdd-development': ['task-planning'],
-      'ship': ['tdd-development']
-    };
-
     const state = this.stateManager.read();
-    const prereqs = prereqMap[skillName] || [];
+    const prereqs = PREREQ_MAP[skillName] || [];
 
     return prereqs.map(name => ({
       skill: name,
@@ -95,24 +94,6 @@ class Handover {
       blockedBy: blockers,
       resolution: `需要先完成: ${blockers.map(b => b.skill).join(' → ')}`
     };
-  }
-
-  /**
-   * 检测是否有循环依赖
-   */
-  detectCircularDeps() {
-    const prereqMap = {
-      'strategy-review': ['product-consult'],
-      'architect': ['strategy-review'],
-      'ui-design': ['architect'],
-      'task-planning': ['ui-design'],
-      'tdd-development': ['task-planning'],
-      'ship': ['tdd-development']
-    };
-
-    // 线性链式结构，不可能存在循环依赖
-    // 这里预留扩展接口
-    return null;
   }
 
   /**
