@@ -71,8 +71,8 @@ class UpdateChecker {
               sha: release.target_commitish,
               date: release.published_at,
               name: release.name,
-              zipball: release.zipball_url,
-              tarball: release.tarball_url
+              zipball_url: release.zipball_url,
+              tarball_url: release.tarball_url
             });
           } catch (e) {
             reject(new Error('Failed to parse GitHub response'));
@@ -86,15 +86,56 @@ class UpdateChecker {
     });
   }
 
+  async getRemoteTagSha() {
+    // 获取 tag 对应的实际 commit SHA
+    return new Promise((resolve, reject) => {
+      this.getRemoteVersion().then(remote => {
+        const options = {
+          hostname: 'api.github.com',
+          path: `/repos/${GITHUB_REPO}/git/refs/tags/${remote.tag}`,
+          method: 'GET',
+          headers: {
+            'User-Agent': 'xiaoxiao-update-checker',
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        };
+
+        const req = https.request(options, (res) => {
+          let data = '';
+          res.on('data', chunk => data += chunk);
+          res.on('end', () => {
+            try {
+              if (res.statusCode !== 200) {
+                // 如果获取 tag ref 失败，回退到 target_commitish
+                resolve(remote.sha);
+                return;
+              }
+              const ref = JSON.parse(data);
+              // 可能是 tag 或 annotated tag
+              const sha = ref.object?.sha || remote.sha;
+              resolve(sha);
+            } catch (e) {
+              resolve(remote.sha);
+            }
+          });
+        });
+
+        req.on('error', () => resolve(remote.sha));
+        req.setTimeout(5000, () => resolve(remote.sha));
+        req.end();
+      }).catch(reject);
+    });
+  }
+
   async check() {
     try {
       const local = this.getLocalVersion();
-      const remote = await this.getRemoteVersion();
+      const remoteSha = await this.getRemoteTagSha();
 
       return {
-        hasUpdate: !local.sha || local.sha !== remote.sha,
+        hasUpdate: local.sha && local.sha !== remoteSha,
         local,
-        remote
+        remote: { sha: remoteSha }
       };
     } catch (err) {
       return {
@@ -110,7 +151,7 @@ class UpdateChecker {
       console.log(`📥 正在下载 ${remote.version}...`);
 
       const zipPath = path.join(this.frameworkDir, 'xiaoxiao-update.zip');
-      await this._downloadFile(remote.zipball, zipPath);
+      await this._downloadFile(remote.zipball_url, zipPath);
 
       await this._extractAndReplace(zipPath);
 
@@ -152,12 +193,29 @@ class UpdateChecker {
     const extractDir = path.join(this.frameworkDir, 'xiaoxiao-update-temp');
     const { execSync } = require('child_process');
 
+    // 清理旧目录
+    if (fs.existsSync(extractDir)) {
+      fs.rmSync(extractDir, { recursive: true, force: true });
+    }
+
+    // 解压
     execSync(`powershell -Command "Expand-Archive -Path '${zipPath}' -DestinationPath '${extractDir}' -Force"`, {
       stdio: 'pipe'
     });
 
+    // 验证解压结果
     const entries = fs.readdirSync(extractDir);
+    if (!entries || entries.length === 0) {
+      throw new Error('解压失败：目标目录为空');
+    }
+
+    // GitHub zipball 格式：C0428-ux-xiaoxiao-{ref}/
     const extractedDir = path.join(extractDir, entries[0]);
+
+    // 验证解压的目录存在
+    if (!fs.existsSync(extractedDir)) {
+      throw new Error(`解压失败：目录 ${entries[0]} 不存在`);
+    }
 
     this._copyRecursive(extractedDir, this.frameworkDir);
 
