@@ -1,14 +1,5 @@
 const { StateManager, SKILLS } = require('./state-manager');
-
-// 依赖链定义（唯一来源，与 state-manager.js 保持一致）
-const PREREQ_MAP = {
-  'strategy-review': ['product-consult'],
-  'architect': ['strategy-review'],
-  'ui-design': ['architect'],
-  'task-planning': ['ui-design'],
-  'tdd-development': ['task-planning'],
-  'ship': ['tdd-development']
-};
+const { PREREQ_MAP } = require('./constants');
 
 /**
  * Handover 模块：负责 Skill 之间的交接、依赖链检测、状态转移

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { SKILLS } = require('./state-manager');
+const { SKILLS } = require('./constants');
 
 class SkillLoader {
   constructor(projectRoot, frameworkRoot = null) {

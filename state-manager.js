@@ -1,15 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-
-const SKILLS = [
-  'product-consult',
-  'strategy-review',
-  'architect',
-  'ui-design',
-  'task-planning',
-  'tdd-development',
-  'ship'
-];
+const { SKILLS, PREREQ_MAP, OUTPUT_MAP } = require('./constants');
 
 class StateManager {
   constructor(projectRoot, frameworkRoot = null) {
@@ -441,16 +432,7 @@ class StateManager {
     }
 
     // 检查前置 Skill 是否完成
-    const prereqMap = {
-      'strategy-review': ['product-consult'],
-      'architect': ['strategy-review'],
-      'ui-design': ['architect'],
-      'task-planning': ['ui-design'],
-      'tdd-development': ['task-planning'],
-      'ship': ['tdd-development']
-    };
-
-    const prereqs = prereqMap[skillName] || [];
+    const prereqs = PREREQ_MAP[skillName] || [];
     for (const prereq of prereqs) {
       if (state.skills[prereq].status !== 'completed') {
         return {
@@ -531,21 +513,10 @@ class StateManager {
       return { exists: false, skills: [] };
     }
 
-    // skill 输出文件映射
-    const outputMap = {
-      'product-consult': '.SPEC.md',
-      'strategy-review': 'docs/xiaoxiao/plans/strategy-review-output.md',
-      'architect': 'docs/xiaoxiao/plans/architect-output.md',
-      'ui-design': 'docs/xiaoxiao/plans/ui-design/',
-      'task-planning': 'docs/xiaoxiao/plans/task-planning-output.md',
-      'tdd-development': 'docs/xiaoxiao/plans/tdd/',
-      'ship': 'docs/xiaoxiao/plans/ship-output.md'
-    };
-
     const results = [];
     for (const skillName of SKILLS) {
       const skillState = state.skills[skillName];
-      const expectedOutput = outputMap[skillName];
+      const expectedOutput = OUTPUT_MAP[skillName];
       let outputExists = false;
 
       if (expectedOutput) {
@@ -586,18 +557,7 @@ class StateManager {
       return { error: `Unknown skill: ${skillName}` };
     }
 
-    // 输出文件映射
-    const outputMap = {
-      'product-consult': '.SPEC.md',
-      'strategy-review': 'docs/xiaoxiao/plans/strategy-review-output.md',
-      'architect': 'docs/xiaoxiao/plans/architect-output.md',
-      'ui-design': 'docs/xiaoxiao/plans/ui-design/',
-      'task-planning': 'docs/xiaoxiao/plans/task-planning-output.md',
-      'tdd-development': 'docs/xiaoxiao/plans/tdd/',
-      'ship': 'docs/xiaoxiao/plans/ship-output.md'
-    };
-
-    const expectedOutput = outputMap[skillName];
+    const expectedOutput = OUTPUT_MAP[skillName];
     const fullPath = path.join(this.projectRoot, expectedOutput);
     const outputExists = fs.existsSync(fullPath);
 
