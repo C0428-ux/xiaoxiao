@@ -2,6 +2,9 @@
 
 ## Do NOT upload these files to GitHub
 
+# Development documentation (internal use only)
+CLAUDE.md
+
 # Git repository (this directory is the framework itself)
 # .git/
 

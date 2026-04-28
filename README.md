@@ -2,9 +2,13 @@
 
 > AI Agent 开发框架：通过 7 个有序的 Skill 引导完成项目从概念到上线的完整流程。
 
-## 快速开始
+[English](README-en.md) | 简体中文
 
-### 让 Claude 下载框架
+---
+
+## 安装配置
+
+### 第一步：让 Claude 下载框架
 
 在 Claude Code 中直接说：
 
@@ -14,13 +18,40 @@
 安装到 ~/.claude/skills/xiaoxiao
 ```
 
-或手动安装（在 git bash 或 WSL 中执行）：
+### 或手动安装
+
+在终端（git bash / WSL / Mac/Linux）执行：
 
 ```bash
 git clone https://github.com/C0428-ux/xiaoxiao.git ~/.claude/skills/xiaoxiao
 ```
 
-### 开始开发
+### 安装目录结构
+
+```
+~/.claude/skills/xiaoxiao/
+├── xiaoxiao.js              # CLI 入口
+├── update-checker.js        # 更新检查
+├── state-manager.js         # 状态管理
+├── skill-loader.js          # Skill 加载
+├── handover.js             # 交接协议
+├── constants.js            # 共享常量
+├── SKILL.md                # 框架入口（给 Claude 看）
+├── FRAMEWORK.md            # 框架规格
+├── README.md               # 本文件
+└── skills/                 # 7 个 Skill 定义
+    ├── product-consult/
+    ├── strategy-review/
+    ├── architect/
+    ├── ui-design/
+    ├── task-planning/
+    ├── tdd-development/
+    └── ship/
+```
+
+---
+
+## 快速开始
 
 安装完成后，告诉 Claude：
 
@@ -65,24 +96,82 @@ Claude 会自动加载产品咨询流程，引导你完成整个开发。
 
 ## 常用命令
 
+在项目目录（不是框架目录）执行：
+
 ```bash
-xiaoxiao status        # 查看当前状态
-xiaoxiao update-check  # 检查框架更新
-xiaoxiao update        # 下载最新版本
-xiaoxiao version       # 查看版本
-xiaoxiao save-progress # 保存当前进度
-xiaoxiao resume        # 恢复中断的任务
+# 初始化项目
+xiaoxiao init-project [项目名]
+
+# 查看状态
+xiaoxiao status
+
+# 检查框架更新
+xiaoxiao update-check
+
+# 更新框架
+xiaoxiao update
+
+# 跳过更新检查（永久）
+xiaoxiao skip-update
+
+# 查看版本
+xiaoxiao version
+
+# 保存进度
+xiaoxiao save-progress <skill> <phase>
+
+# 继续开发
+xiaoxiao continue
+
+# 恢复中断
+xiaoxiao resume
+
+# 标记完成
+xiaoxiao complete <skill> [输出文件路径]
 ```
 
 ---
 
-## 核心理念
+## 核心原则
 
 - **做少**：窄比宽好，YAGNI
 - **做精**：完整做完，RED-GREEN-REFACTOR
 - **有证据**：interest ≠ demand
 - **用系统**：系统化调试
 - **会收尾**：no half-done projects
+
+---
+
+## 状态管理
+
+每个项目独立的状态文件 `xiaoxiao-state.json`：
+
+- 追踪所有 Skill 的完成状态
+- 支持中断和恢复
+- 支持多轮迭代
+
+---
+
+## 迭代管理
+
+每次开发周期是一个**迭代（Iteration）**：
+
+- 迭代命名：`v1`, `v2`, `v3` ...
+- 新迭代自动重置所有 Skill 状态
+- 产出物路径固定，不覆盖旧版本
+
+---
+
+## 更新框架
+
+XiaoXiao 会自动检查更新，也支持手动更新：
+
+```bash
+xiaoxiao update-check   # 检查更新
+xiaoxiao update         # 下载最新版本
+xiaoxiao skip-update    # 永久跳过更新检查
+xiaoxiao unskip-update  # 恢复更新检查
+```
 
 ---
 
