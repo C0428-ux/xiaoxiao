@@ -8,7 +8,7 @@
 
 ## 安装配置
 
-### 第一步：让 Claude 下载框架
+### 让 Claude 下载框架
 
 在 Claude Code 中直接说：
 

@@ -1,210 +1,210 @@
 ---
 name: xiaoxiao
 description: |
-  XiaoXiao 是一个 AI Agent 开发框架，通过 7 个有序的 Skill 引导完成项目从概念到上线的完整流程。
-  产品咨询 → 战略评审 → 架构师 → 界面设计 → 任务规划 → TDD开发 → 发布上线。
-when_to_use: 用户说"/xiaoxiao"、"/xiao"、或"开始开发流程"、"走一遍xiao"
+  XiaoXiao is an AI Agent development framework that guides projects from concept to launch through 7 ordered Skills.
+  Flow: product-consult → strategy-review → architect → ui-design → task-planning → tdd-development → ship.
+when_to_use: User says "/xiaoxiao", "/xiao", "start development flow", or "go through xiao"
 version: 0.7
 ---
 
-# XiaoXiao | AI 开发流程框架
+# XiaoXiao | AI Development Flow Framework
 
-## 强制执行协议
+## Mandatory Execution Protocol
 
-**规则**：
-- 必须按顺序执行每个 Step，不得跳过
-- 每个 Step 必须执行验证（检查点）才能进入下一步
-- 使用 `xiaoxiao save-progress xiaoxiao <step>` 标记步骤完成
-- CONFIRM 节点必须等待用户确认，不得自动继续
-
----
-
-## Step 0: 检查更新
-
-**动作**：
-1. 执行 `node xiaoxiao.js update-check`
-
-**验证**：根据输出决定下一步
-
-| 输出包含 | 含义 | 操作 |
-|---------|------|------|
-| `STATUS: UP_TO_DATE` | 无新版本 | 直接继续 Step 1 |
-| `STATUS: UPDATE_AVAILABLE` | 有新版本 | 询问用户是否更新 |
-| `STATUS: SKIP_FOREVER` | 已永久跳过 | 直接继续 Step 1 |
-
-**询问用户**（当发现新版本时）：
-> 检测到新版本！是否下载更新？
-> - 是：运行 `node xiaoxiao.js update`
-> - 否：继续 Step 1
-> - 永久跳过：运行 `node xiaoxiao.js skip-update`
-
-**CONFIRM**："版本检查完成。继续？"
+**Rules**:
+- MUST execute each Step in order, no skipping
+- MUST verify each Step (checkpoint) before proceeding to next
+- MUST use `xiaoxiao save-progress xiaoxiao <step>` to mark step completion
+- CONFIRM nodes MUST wait for user confirmation, never auto-continue
 
 ---
 
-## Step 1: 检查项目状态 + API 配置检查
+## Step 0: Check for Updates
 
-**动作**：
-1. 执行 `node xiaoxiao.js status`
-2. 读取 `xiaoxiao-state.json`（如果存在）
+**Action**:
+1. Execute `node xiaoxiao.js update-check`
 
-**⚠️ API 配置检查（搜索功能必需）**：
+**Verification**: Based on output, decide next step
 
-检查环境变量 `SERPER_API_KEY` 是否已配置：
+| Output contains | Meaning | Action |
+|-----------------|---------|--------|
+| `STATUS: UP_TO_DATE` | No new version | Proceed to Step 1 |
+| `STATUS: UPDATE_AVAILABLE` | New version available | Ask user |
+| `STATUS: SKIP_FOREVER` | Skipped permanently | Proceed to Step 1 |
+
+**Ask user** (when update available):
+> New version detected! Download update?
+> - Yes: Run `node xiaoxiao.js update`
+> - No: Continue to Step 1
+> - Skip forever: Run `node xiaoxiao.js skip-update`
+
+**CONFIRM**: "Update check complete. Continue?"
+
+---
+
+## Step 1: Check Project Status + API Configuration
+
+**Action**:
+1. Execute `node xiaoxiao.js status`
+2. Read `xiaoxiao-state.json` (if exists)
+
+**⚠️ API Configuration Check (Required for search)**:
+
+Check if `SERPER_API_KEY` is configured:
 ```bash
-# Windows
+# Windows CMD
 echo %SERPER_API_KEY%
 # Mac/Linux
 echo $SERPER_API_KEY
 ```
 
-如果**未配置**，提示用户：
-> ⚠️ 搜索功能需要配置 API Key
+If NOT configured, prompt user:
+> ⚠️ Search functionality requires API Key configuration
 >
-> XiaoXiao 的战略评审（strategy-review）需要搜索能力来做市场分析和竞品分析。
+> XiaoXiao's strategy-review needs search capability for market and competitive analysis.
 >
-> **配置步骤**：
-> 1. 访问 https://serper.dev 注册（免费 2500 次/月）
-> 2. 获取 API Key
-> 3. 配置环境变量：
->    - Windows CMD: `set SERPER_API_KEY=你的密钥`
->    - Windows PowerShell: `$env:SERPER_API_KEY="你的密钥"`
->    - Mac/Linux: `export SERPER_API_KEY=你的密钥`
+> **Configuration steps**:
+> 1. Visit https://serper.dev to register (free 2500/month)
+> 2. Get your API Key
+> 3. Configure environment variable:
+>    - Windows CMD: `set SERPER_API_KEY=your_key`
+>    - Windows PowerShell: `$env:SERPER_API_KEY="your_key"`
+>    - Mac/Linux: `export SERPER_API_KEY=your_key`
 >
-> 配置完成后继续。
+> Continue after configuration.
 
-**验证**：状态已获取，API 已配置或用户选择跳过
+**Verification**: Status retrieved, API configured or user chose to skip
 
-**CONFIRM**：
-- 如果没有 state.json："未检测到项目。是要新建项目还是现有项目添加功能？"
-- 如果有 state.json："检测到已有项目：[项目名]。从当前阶段继续还是重新开始？"
+**CONFIRM**:
+- If no state.json: "No project detected. Create new project or add features to existing?"
+- If state.json exists: "Existing project detected: [name]. Continue from current phase or restart?"
 
 ---
 
-## Step 2: 项目初始化
+## Step 2: Project Initialization
 
-**根据用户回答执行**：
+**Based on user response**:
 
-### 情况 A：新建项目
+### Case A: New Project
 
-**动作**：
-1. 执行 `node xiaoxiao.js init-project [项目名]`
-2. 向用户询问项目名称（如果未提供）
-3. 创建项目目录和初始状态
+**Action**:
+1. Execute `node xiaoxiao.js init-project [project-name]`
+2. Ask user for project name (if not provided)
+3. Create project directory and initial state
 
-**验证**：项目已初始化
+**Verification**: Project initialized
 
-**CONFIRM**："项目 [名称] 已创建。继续进入产品咨询阶段？"
+**CONFIRM**: "Project [name] created. Continue to product consultation?"
 
-### 情况 B：现有项目添加功能
+### Case B: Add Features to Existing
 
-**动作**：
-1. 读取项目结构（package.json, README, 主要源码文件）
-2. 询问用户要添加什么功能
-3. 基于现有代码开始 product-consult
-4. 执行 `node xiaoxiao.js init-project` 初始化状态（如尚未初始化）
+**Action**:
+1. Read project structure (package.json, README, main source files)
+2. Ask user what features to add
+3. Start product-consult based on existing code
+4. Execute `node xiaoxiao.js init-project` if not initialized
 
-**验证**：现有项目已理解，功能需求已明确
+**Verification**: Existing project understood, feature requirements clear
 
-**CONFIRM**："现有项目：[项目名]。要添加：[功能]。继续进入产品咨询？"
-
----
-
-## Step 3: 读取并执行 product-consult
-
-**动作**：
-1. 读取 `skills/product-consult/SKILL.md`
-2. **同时读取** `skills/product-consult/PROTOCOL.json`（机器可读协议，供框架验证执行）
-3. 执行 product-consult skill（按 SKILL.md 的 Step 顺序）
-
-**验证**：product-consult 阶段完成
-
-**CONFIRM**："product-consult 完成。确认进入战略评审阶段？"
+**CONFIRM**: "Existing project: [name]. Feature to add: [feature]. Continue to product consultation?"
 
 ---
 
-## Step 4: 自动进入下一个 Skill
+## Step 3: Read and Execute product-consult
 
-**每个 Skill 完成后**：
-1. 读取下一个 Skill 的 `SKILL.md`
-2. **同时读取**对应的 `PROTOCOL.json`
-3. 按 Step 顺序执行
+**Action**:
+1. Read `skills/product-consult/SKILL.md`
+2. **Also read** `skills/product-consult/PROTOCOL.json` (machine-readable protocol)
+3. Execute product-consult skill (following SKILL.md Steps in order)
 
-| 完成 | 读取 |
-|------|------|
+**Verification**: product-consult phase complete
+
+**CONFIRM**: "product-consult complete. Confirm entry to strategy-review?"
+
+---
+
+## Step 4: Auto-transition to Next Skill
+
+**After each Skill completes**:
+1. Read next Skill's `SKILL.md`
+2. **Also read** corresponding `PROTOCOL.json`
+3. Execute Steps in order
+
+| Completed | Read |
+|-----------|------|
 | product-consult | `skills/strategy-review/SKILL.md` + `PROTOCOL.json` |
 | strategy-review | `skills/architect/SKILL.md` + `PROTOCOL.json` |
 | architect | `skills/ui-design/SKILL.md` + `PROTOCOL.json` |
 | ui-design | `skills/task-planning/SKILL.md` + `PROTOCOL.json` |
 | task-planning | `skills/tdd-development/SKILL.md` + `PROTOCOL.json` |
 | tdd-development | `skills/ship/SKILL.md` + `PROTOCOL.json` |
-| ship | 完成 |
+| ship | Complete |
 
-**CONFIRM**：每个阶段完成后询问确认才能进入下一个
+**CONFIRM**: Ask for confirmation after each phase before proceeding to next
 
 ---
 
-## 状态更新命令
+## State Update Commands
 
-每个 Step 完成后必须执行：
+After each Step completes, MUST execute:
 ```bash
 node xiaoxiao.js save-progress xiaoxiao step[N]-complete
 ```
 
 ---
 
-## 渐进式披露说明
+## Progressive Disclosure
 
-**三层结构**：
+**Three-layer structure**:
 
-1. **入口层**（本文件）：框架入口，硬性执行脚本
-2. **Skill 层**（`skills/*/SKILL.md` + `PROTOCOL.json`）：执行脚本 + 机器可读协议
-3. **参考层**（`skills/*/GUIDES/*`）：详细文档，按需读取
+1. **Entry Layer** (this file): Framework entry, mandatory execution script
+2. **Skill Layer** (`skills/*/SKILL.md` + `PROTOCOL.json`): Execution script + machine-readable protocol
+3. **Reference Layer** (`skills/*/GUIDES/*`): Detailed docs, read as needed
 
-**读取顺序**：
+**Reading order**:
 ```
-用户触发 → 读取根 SKILL.md → 执行 Step → 读取 skill SKILL.md + PROTOCOL.json → 执行 → 下一个 skill
+User triggers → Read root SKILL.md → Execute Steps → Read skill SKILL.md + PROTOCOL.json → Execute → Next skill
 ```
 
-**PROTOCOL.json 作用**：
-- 供 `xiaoxiao.js continue` 命令读取并逐步引导执行
-- 框架验证每个 Step 是否按顺序执行
-- 每个 Phase 的 entry/exit 命令由框架自动执行
+**PROTOCOL.json purpose**:
+- Read by `xiaoxiao.js continue` command for step-by-step guidance
+- Framework verifies each Step executed in order
+- Entry/exit commands for each Phase auto-executed by framework
 
 ---
 
-## 架构
+## Architecture
 
 ```
 D:\XiaoXiao\
-├── SKILL.md                  ← 入口文件（本文件）
+├── SKILL.md                  ← Entry file (this file)
 ├── xiaoxiao.js               ← CLI
-├── state-manager.js          ← 状态管理
-├── skill-loader.js           ← Skill 加载
-├── handover.js               ← 交接协议
-├── skills/                   ← 7 个阶段
+├── state-manager.js          ← State management
+├── skill-loader.js           ← Skill loading
+├── handover.js              ← Handover protocol
+├── skills/                   ← 7 phases
 │   ├── product-consult/
-│   │   ├── SKILL.md         ← 执行脚本
-│   │   ├── PROTOCOL.json    ← 机器可读协议
-│   │   └── GUIDES/          ← 参考文档
+│   │   ├── SKILL.md         ← Execution script
+│   │   ├── PROTOCOL.json   ← Machine-readable protocol
+│   │   └── GUIDES/         ← Reference docs
 │   ├── strategy-review/
 │   ├── architect/
 │   ├── ui-design/
 │   ├── task-planning/
 │   ├── tdd-development/
 │   ├── ship/
-│   └── search/              ← 内置搜索工具
-└── docs/xiaoxiao/plans/     ← 阶段输出目录
+│   └── search/              ← Built-in search tool
+└── docs/xiaoxiao/plans/     ← Phase output directory
 ```
 
 ---
 
-## 核心原则
+## Core Principles
 
-- **做少**：窄比宽好，YAGNI
-- **做精**：完整做完，RED-GREEN-REFACTOR
-- **有证据**：interest ≠ demand
-- **用系统**：系统化调试
-- **会收尾**：no half-done projects
+- **Do Less**: Narrow is better than wide, YAGNI
+- **Do It Right**: Complete what you start, RED-GREEN-REFACTOR
+- **Evidence**: Interest ≠ demand
+- **Use Systems**: Systematic debugging
+- **Finish**: No half-done projects
 
-**关键**：每个 CONFIRM 节点必须等待用户确认，不得自动继续。
+**Key**: Every CONFIRM node MUST wait for user confirmation, never auto-continue.

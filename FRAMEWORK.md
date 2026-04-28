@@ -1,151 +1,152 @@
-# XiaoXiao Framework | 框架规格
+# XiaoXiao Framework | Framework Specification
 
-> **给 Claude 看**：这是框架的执行规格，不是说明文档。
-> 所有内容必须是强制执行的指令。
-
----
-
-## 核心原则（MUST FOLLOW）
-
-1. **做少**：窄比宽好，YAGNI
-2. **做精**：完整做完，RED-GREEN-REFACTOR
-3. **有证据**：interest ≠ demand
-4. **用系统**：系统化调试
-5. **会收尾**：no half-done projects
+> **For Claude**: This is the framework's execution specification, not documentation.
+> All content MUST be mandatory execution directives.
 
 ---
 
-## 架构
+## Core Principles (MUST FOLLOW)
+
+1. **Do Less**: Narrow is better than wide, YAGNI
+2. **Do It Right**: Complete what you start, RED-GREEN-REFACTOR
+3. **Evidence**: Interest ≠ demand
+4. **Use Systems**: Systematic debugging
+5. **Finish**: No half-done projects
+
+---
+
+## Architecture
 
 ```
-全局框架（~/.claude/skills/xiaoxiao/） + 项目本地（每个项目独立）
+Global Framework (~/.claude/skills/xiaoxiao/) + Project Local (each project independent)
 ```
 
-| 层级 | 位置 | 说明 |
-|------|------|------|
-| 全局框架 | `~/.claude/skills/xiaoxiao/` | 框架代码，一次安装 |
-| 项目本地 | `./xiaoxiao-state.json` | 状态文件 |
-| 项目本地 | `./.SPEC.md` | 产品规格 |
-| 项目本地 | `./docs/xiaoxiao/plans/` | 阶段输出 |
+| Layer | Location | Description |
+|-------|----------|-------------|
+| Global Framework | `~/.claude/skills/xiaoxiao/` | Framework code, install once |
+| Project Local | `./xiaoxiao-state.json` | State file |
+| Project Local | `./.SPEC.md` | Product specification |
+| Project Local | `./docs/xiaoxiao/plans/` | Phase outputs |
 
 ---
 
-## 流程（MUST EXECUTE IN ORDER）
+## Flow (MUST EXECUTE IN ORDER)
 
 ```
 product-consult → strategy-review → architect → ui-design → task-planning → tdd-development → ship
 ```
 
-### Skill 依赖链（MUST RESPECT）
+### Skill Dependency Chain (MUST RESPECT)
 
-| Skill | 前置要求 |
-|-------|---------|
-| product-consult | 无 |
-| strategy-review | product-consult 完成 |
-| architect | strategy-review 完成 |
-| ui-design | architect 完成 |
-| task-planning | ui-design 完成 |
-| tdd-development | task-planning 完成 |
-| ship | tdd-development 完成 |
-
----
-
-## Skill 状态（MUST TRACK）
-
-| 状态 | 含义 | 操作 |
-|------|------|------|
-| `pending` | 待执行 | 等待激活 |
-| `ready` | 可执行 | 前置已完成 |
-| `active` | 执行中 | 正在执行 |
-| `completed` | 已完成 | 输出已生成 |
-| `blocked` | 被阻塞 | 前置未完成 |
+| Skill | Prerequisites |
+|-------|---------------|
+| product-consult | None |
+| strategy-review | product-consult completed |
+| architect | strategy-review completed |
+| ui-design | architect completed |
+| task-planning | ui-design completed |
+| tdd-development | task-planning completed |
+| ship | tdd-development completed |
 
 ---
 
-## 状态管理命令
+## Skill States (MUST TRACK)
+
+| State | Meaning | Action |
+|-------|---------|--------|
+| `pending` | Not executed | Wait for activation |
+| `ready` | Can execute | Prerequisites met |
+| `active` | In progress | Currently executing |
+| `completed` | Done | Output generated |
+| `blocked` | Blocked | Prerequisites not met |
+
+---
+
+## State Management Commands
 
 ```bash
-xiaoxiao init-project [name]    # 初始化项目
-xiaoxiao status                  # 显示状态
-xiaoxiao save-progress <skill> <phase>  # 保存进度
-xiaoxiao complete <skill>        # 标记完成
-xiaoxiao goto <skill>            # 跳转
-xiaoxiao interrupt [note]        # 中断
-xiaoxiao resume                  # 恢复
-xiaoxiao continue                # 继续
+xiaoxiao init-project [name]           # Initialize project
+xiaoxiao status                         # Show status
+xiaoxiao save-progress <skill> <phase>  # Save progress
+xiaoxiao complete <skill>               # Mark complete
+xiaoxiao goto <skill>                   # Jump to skill
+xiaoxiao interrupt [note]               # Interrupt
+xiaoxiao resume                         # Resume
+xiaoxiao continue                       # Continue
 ```
 
 ---
 
-## 更新系统（MUST CHECK）
+## Update System (MUST CHECK)
 
-每次执行框架时：
-1. 执行 `node xiaoxiao.js update-check`
-2. 根据输出处理：
+Every time framework executes:
+1. Execute `node xiaoxiao.js update-check`
+2. Handle based on output:
 
-| 输出 | 含义 | 操作 |
-|------|------|------|
-| `STATUS: UP_TO_DATE` | 无新版本 | 继续 |
-| `STATUS: UPDATE_AVAILABLE` | 有新版本 | 询问用户 |
-| `STATUS: SKIP_FOREVER` | 已跳过 | 继续 |
-
----
-
-## 渐进式披露（PROGRESSION）
-
-每个 Skill 分三层：
-
-1. **Layer 1（SKILL.md）**：触发词 + 前置 + 核心步骤
-2. **Layer 2（GUIDES/）**：详细流程 + 判断标准
-3. **Layer 3（OUTPUTS/）**：模板 + 示例
+| Output | Meaning | Action |
+|--------|---------|--------|
+| `STATUS: UP_TO_DATE` | No new version | Continue |
+| `STATUS: UPDATE_AVAILABLE` | New version | Ask user |
+| `STATUS: SKIP_FOREVER` | Skipped | Continue |
 
 ---
 
-## 交接协议（HANDOVER MUST FOLLOW）
+## Progressive Disclosure (PROGRESSION)
 
-Skill 完成后：
-1. 更新当前 Skill 状态为 `completed`
-2. 设置下一个 Skill 状态为 `ready`
-3. 记录 `handover` 上下文
-4. 激活下一个 Skill
+Each Skill has three layers:
+
+1. **Layer 1 (SKILL.md)**: Triggers + Prerequisites + Core Steps
+2. **Layer 2 (GUIDES/)**: Detailed flow + judgment criteria
+3. **Layer 3 (OUTPUTS/)**: Templates + examples
 
 ---
 
-## 文件结构
+## Handover Protocol (HANDOVER MUST FOLLOW)
 
-### 全局（安装一次）
+After Skill completes:
+1. Update current Skill state to `completed`
+2. Set next Skill state to `ready`
+3. Record `handover` context
+4. Activate next Skill
+
+---
+
+## File Structure
+
+### Global (Install Once)
 
 ```
 ~/.claude/skills/xiaoxiao/
-├── xiaoxiao.js             # CLI 入口
-├── update-checker.js       # 更新检查
-├── state-manager.js        # 状态管理
-├── skill-loader.js         # Skill 加载
-├── handover.js            # 交接协议
-├── constants.js           # 单一真实来源
-├── SKILL.md               # 框架入口
-├── FRAMEWORK.md           # 本文件
-├── README.md              # 用户手册
-└── skills/                # 7 个 Skill
+├── xiaoxiao.js             # CLI entry
+├── update-checker.js       # Update check
+├── state-manager.js        # State management
+├── skill-loader.js         # Skill loading
+├── handover.js            # Handover protocol
+├── constants.js           # Single source of truth
+├── SKILL.md               # Framework entry
+├── FRAMEWORK.md           # This file
+├── README.md              # User manual
+├── README-en.md           # English manual
+└── skills/                # 7 Skills
     └── {skill}/
-        ├── SKILL.md       # 执行脚本
-        ├── PROTOCOL.json  # 机器可读协议
-        ├── GUIDES/        # 参考文档
-        └── OUTPUTS/       # 输出模板
+        ├── SKILL.md       # Execution script
+        ├── PROTOCOL.json  # Machine-readable protocol
+        ├── GUIDES/        # Reference docs
+        └── OUTPUTS/       # Output templates
 ```
 
-### 项目本地
+### Project Local
 
 ```
-项目根/
-├── xiaoxiao-state.json     # 状态
-├── .SPEC.md                # 产品规格
-└── docs/xiaoxiao/plans/    # 阶段输出
+Project Root/
+├── xiaoxiao-state.json     # State
+├── .SPEC.md                # Product specification
+└── docs/xiaoxiao/plans/    # Phase outputs
 ```
 
 ---
 
-## 安装指令
+## Installation
 
 ```bash
 mkdir -p ~/.claude/skills/xiaoxiao
