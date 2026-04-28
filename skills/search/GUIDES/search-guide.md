@@ -1,32 +1,33 @@
-# 搜索最佳实践
+# Search Best Practices
 
-## 查询优化
+## Query Optimization
 
-### 关键词选择
-- 使用具体的产品类别而非通用词
-- 添加年份获取最新数据
-- 使用行业术语提高精度
+### Keyword Selection
 
-### 查询示例
+- Use specific product categories rather than generic terms
+- Add year for latest data
+- Use industry terminology to improve precision
 
-| 目标 | 查询模板 |
-|------|----------|
-| 市场规模 | "project management software market size 2024" |
-| 竞品 | "best task tracking tools 2024" |
-| 趋势 | "remote team collaboration market trend" |
-| 定价 | "SaaS pricing models 2024" |
+### Query Examples
 
-## 信息验证
+| Goal | Query Template |
+|------|-----------------|
+| Market Size | "project management software market size 2024" |
+| Competitors | "best task tracking tools 2024" |
+| Trends | "remote team collaboration market trend" |
+| Pricing | "SaaS pricing models 2024" |
 
-1. **一手来源优先**: 官方网站、行业报告、权威媒体
-2. **多源验证**: 单一来源需注明"未找到官方原文，存在转述误差可能"
-3. **时效性**: 优先选择最近1-2年的数据
+## Information Verification
 
-## 搜索失败处理
+1. **Prioritize primary sources**: Official websites, industry reports, authoritative media
+2. **Cross-verify multiple sources**: Single sources should note "official original not found, there may be paraphrasing errors"
+3. **Timeliness**: Prioritize data from the past 1-2 years
 
-| 失败原因 | 处理方式 |
-|----------|----------|
-| 无结果 | 尝试更通用的查询 |
-| 结果不相关 | 调整关键词 |
-| 无法访问 | 尝试 WebFetch 直接访问 |
-| 需要登录 | 询问用户是否有内部数据 |
+## Search Failure Handling
+
+| Failure Reason | Handling |
+|-----------------|----------|
+| No results | Try more general queries |
+| Irrelevant results | Adjust keywords |
+| Cannot access | Try WebFetch for direct access |
+| Requires login | Ask user if they have internal data |

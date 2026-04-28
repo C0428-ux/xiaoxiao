@@ -1,158 +1,158 @@
-# 事件响应指南 | Incident Response
+# Incident Response Guide | Incident Response
 
-## 核心目标
+## Core Objective
 
-快速响应和处理生产环境事件，减少影响范围和时间。
+Respond to and handle production incidents quickly to minimize impact scope and duration.
 
-## 事件等级
+## Incident Levels
 
-| 等级 | 定义 | 响应时间 | 示例 |
-|------|------|----------|------|
-| **P0** | 核心功能不可用 | 即时 | 网站完全无法访问 |
-| **P1** | 重要功能受影响 | 15 分钟 | 支付功能不可用 |
-| **P2** | 次要功能异常 | 1 小时 | 通知发送延迟 |
-| **P3** | 轻微问题 | 4 小时 | UI 显示小问题 |
+| Level | Definition | Response Time | Example |
+|-------|------------|---------------|---------|
+| **P0** | Core functionality unavailable | Immediate | Website completely inaccessible |
+| **P1** | Important functionality affected | 15 minutes | Payment functionality unavailable |
+| **P2** | Secondary functionality abnormal | 1 hour | Notification sending delayed |
+| **P3** | Minor issue | 4 hours | Small UI display problem |
 
-## 事件响应流程
+## Incident Response Process
 
-### 1. 检测与确认
+### 1. Detection and Confirmation
 
 ```markdown
-问题报告
+Problem reported
    ↓
-确认问题存在（不是误报）
+Confirm problem exists (not false alarm)
    ↓
-评估影响范围
+Assess impact scope
    ↓
-确定事件等级
+Determine incident level
 ```
 
-### 2. 通知
+### 2. Notification
 
 ```markdown
-P0/P1: 立即通知值班 + 相关团队
-P2: 30 分钟内通知
-P3: 下一个工作日
+P0/P1: Immediately notify on-call + relevant teams
+P2: Notify within 30 minutes
+P3: Next business day
 ```
 
-### 3. 调查
+### 3. Investigation
 
 ```markdown
-收集信息：
-- 什么时候开始的？
-- 有什么变化？（部署、配置、流量）
-- 影响多少用户？
-- 相关的日志/指标？
+Collect information:
+- When did it start?
+- What changed? (deployments, configuration, traffic)
+- How many users affected?
+- Related logs/metrics?
 
-定位根因
+Locate root cause
 ```
 
-### 4. 止血
+### 4. Stop the Bleeding
 
 ```markdown
-立即止血（不让问题扩大）
-- 回滚到上一版本？
-- 关闭问题功能？
-- 切换到备用方案？
+Stop the bleeding immediately (prevent problem from spreading)
+- Rollback to previous version?
+- Disable problem feature?
+- Switch to backup solution?
 ```
 
-### 5. 修复
+### 5. Fix
 
 ```markdown
-开发修复
-测试验证
-部署修复
+Develop fix
+Test and verify
+Deploy fix
 ```
 
-### 6. 恢复
+### 6. Recovery
 
 ```markdown
-确认服务正常
-通知用户恢复
-持续监控
+Confirm service is normal
+Notify users of recovery
+Continuous monitoring
 ```
 
-## 事件沟通
+## Incident Communication
 
-### 内部沟通
+### Internal Communication
 
 ```markdown
-## 事件频道：#incident-YYYY-MM-DD
+## Incident Channel: #incident-YYYY-MM-DD
 
-格式：
-[时间] [状态] [更新]
+Format:
+[Time] [Status] [Update]
 
-示例：
-10:30 发现问题
-10:31 确认为 P0
-10:32 通知团队
-10:35 开始回滚
-10:40 回滚完成
-10:45 服务恢复
-10:50 事件关闭
+Example:
+10:30 Problem discovered
+10:31 Confirmed as P0
+10:32 Notified team
+10:35 Started rollback
+10:40 Rollback complete
+10:45 Service recovered
+10:50 Incident closed
 ```
 
-### 外部沟通
+### External Communication
 
 ```markdown
-## 用户通知（如需要）
+## User Notification (if needed)
 
-标题：关于 [问题] 的说明
+Title: Notice Regarding [Issue]
 
-尊敬的用户：
+Dear users:
 
-我们发现 [问题描述]，正在紧急处理中。
-预计恢复时间：[时间]
+We have discovered [problem description] and are urgently addressing it.
+Estimated recovery time: [time]
 
-对此造成的不便，我们深表歉意。
+We sincerely apologize for any inconvenience caused.
 ```
 
-## 事件工具箱
+## Incident Toolkit
 
-| 工具 | 用途 |
-|------|------|
-| 日志查询 | 查错误日志 |
-| Metrics | 看趋势变化 |
-| Trace | 追踪请求链路 |
-| 数据库 | 查数据状态 |
-| 监控仪表盘 | 全局视图 |
+| Tool | Purpose |
+|------|---------|
+| Log query | Search error logs |
+| Metrics | View trend changes |
+| Trace | Track request chains |
+| Database | Check data state |
+| Monitoring dashboard | Global view |
 
-## 事件复盘
+## Incident Postmortem
 
-### 复盘模板
+### Postmortem Template
 
 ```markdown
-## 事件复盘报告
+## Incident Postmortem Report
 
-### 基本信息
-- 日期：
-- 影响：
-- 持续时间：
-- 等级：
+### Basic Information
+- Date:
+- Impact:
+- Duration:
+- Level:
 
-### 时间线
-- 发现时间：
-- 通知时间：
-- 止血时间：
-- 恢复时间：
+### Timeline
+- Discovery time:
+- Notification time:
+- Bleeding stopped time:
+- Recovery time:
 
-### 根因分析
-[为什么会发生？]
+### Root Cause Analysis
+[Why did this happen?]
 
-### 改进措施
-1. [措施1]
-2. [措施2]
+### Improvement Measures
+1. [Measure 1]
+2. [Measure 2]
 
-### 行动项
-| 行动 | 负责人 | 完成日期 |
-|------|--------|----------|
+### Action Items
+| Action | Owner | Due Date |
+|--------|-------|----------|
 |      |        |          |
 ```
 
-## 何时退出
+## When to Exit
 
-- 服务恢复正常
-- 用户影响已消除
-- 根因已定位
-- 改进措施已制定
-- 复盘已完成
+- Service恢复正常
+- User impact eliminated
+- Root cause located
+- Improvement measures established
+- Postmortem completed

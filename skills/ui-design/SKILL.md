@@ -10,10 +10,10 @@ domain: design
 role: designer
 triggers:
   - /ui-design
-  - 界面设计
-  - UI设计
-  - 画原型
-  - 交互设计
+  - UI design
+  - interface design
+  - wireframe
+  - interaction design
 prerequisites:
   - architect
 output-format: HTML preview files in docs/xiaoxiao/plans/ui-design/
@@ -22,181 +22,181 @@ related-skills:
   - task-planning
 ---
 
-# UI Design | 界面设计
+# UI Design | Interface Design
 
-## 强制执行协议
+## Mandatory Execution Protocol
 
-**规则**：
-- 必须按顺序执行每个 Step，不得跳过
-- 每个 Step 必须执行验证（检查点）才能进入下一步
-- 使用 `xiaoxiao save-progress <skill> <step>` 标记步骤完成
-- CONFIRM 节点必须等待用户确认，不得自动继续
-
----
-
-## Step 1: 初始化
-
-**动作**：
-1. 执行 `xiaoxiao save-progress ui-design step1-complete`
-2. 检查 `docs/xiaoxiao/plans/architect-output.md` 是否存在
-3. 检查 `./SPEC.md` 是否存在
-
-**验证**：两个文件都存在
-
-**CONFIRM**："Step 1 完成。架构文档和 SPEC.md 都存在。继续？"
+**Rules**:
+- MUST execute each Step in order, no skipping
+- MUST verify each Step (checkpoint) before proceeding to next
+- MUST use `xiaoxiao save-progress <skill> <step>` to mark step completion
+- CONFIRM nodes MUST wait for user confirmation, never auto-continue
 
 ---
 
-## Step 2: 设计风格选择
+## Step 1: Initialization
 
-**动作**：
-1. 读取 `docs/xiaoxiao/plans/architect-output.md` - 了解子系统边界
-2. 读取 `./SPEC.md` - 提取 P0 功能
-3. 向用户展示 5 种设计风格预设：
+**Action**:
+1. Execute `xiaoxiao save-progress ui-design step1-complete`
+2. Check if `docs/xiaoxiao/plans/architect-output.md` exists
+3. Check if `./SPEC.md` exists
+
+**Verification**: Both files exist
+
+**CONFIRM**: "Step 1 complete. Both architect document and SPEC.md exist. Continue?"
+
+---
+
+## Step 2: Design Style Selection
+
+**Action**:
+1. Read `docs/xiaoxiao/plans/architect-output.md` - understand subsystem boundaries
+2. Read `./SPEC.md` - extract P0 features
+3. Present 5 design style presets to user:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  设计风格选择                                            │
+│  Design Style Selection                                  │
 ├─────────────────────────────────────────────────────────┤
-│  [1] Modern SaaS      - B2B 产品、后台管理               │
-│  [2] Apple Minimal    - 消费级 App、工具                │
-│  [3] Enterprise       - 企业内部系统                    │
-│  [4] Creative         - 作品集、创意网站                 │
-│  [5] Dashboard        - 数据平台、Analytics              │
+│  [1] Modern SaaS      - B2B products, admin dashboards  │
+│  [2] Apple Minimal    - Consumer apps, tools             │
+│  [3] Enterprise      - Enterprise internal systems      │
+│  [4] Creative         - Portfolios, creative websites    │
+│  [5] Dashboard       - Data platforms, Analytics         │
 └─────────────────────────────────────────────────────────┘
 ```
 
-4. 询问用户："哪个设计风格最符合你的产品气质？"
-5. 加载选中预设（从 `GUIDES/design-presets.md`）
+4. Ask user: "Which design style best matches your product?"
+5. Load selected preset (from `GUIDES/design-presets.md`)
 
-**验证**：设计预设已确认
+**Verification**: Design preset confirmed
 
-**CONFIRM**："设计风格：[风格]。这是你喜欢的方向吗？"
-
----
-
-## Step 3: 信息架构
-
-**动作**：
-1. 定义页面层级结构：
-   - Primary：最常用页面（Dashboard、首页）
-   - Secondary：支持页面（设置、个人中心）
-   - Utility：很少访问的页面
-2. 设计导航模型：
-   - 顶部导航（适合 3-5 项）
-   - 侧边栏（适合 5+ 项）
-   - 标签页（适合同页面面板切换）
-3. 识别每个 P0 功能的用户接触点
-4. 询问用户："导航结构：[top nav/sidebar]。这是你熟悉的方式吗？"
-
-**验证**：IA 确认
-
-**CONFIRM**："IA：[结构]。导航：[模型]。继续？"
+**CONFIRM**: "Design style: [style]. Is this the direction you like?"
 
 ---
 
-## Step 4: 页面设计
+## Step 3: Information Architecture
 
-**动作**：
-1. 对每个页面：
-   - 定义内容结构
-   - 从模式库选择适当组件
-   - 使用 Tailwind CSS 类编写 HTML
-2. 使用 Tailwind CDN 预览（无需构建步骤）
-3. 生成预览：`node skills/ui-design/preview/generate.js --data <page-data.json> --output docs/xiaoxiao/plans/ui-design/preview.html`
-4. 询问用户："页面 [X] 设计完成。预览效果如何？需要调整吗？"
+**Action**:
+1. Define page hierarchy:
+   - Primary: Most used pages (Dashboard, Home)
+   - Secondary: Supporting pages (Settings, Profile)
+   - Utility: Rarely accessed pages
+2. Design navigation model:
+   - Top navigation (suitable for 3-5 items)
+   - Sidebar (suitable for 5+ items)
+   - Tabs (suitable for same-page panel switching)
+3. Identify user touchpoints for each P0 feature
+4. Ask user: "Navigation structure: [top nav/sidebar]. Is this familiar to you?"
 
-**验证**：所有页面设计完成
+**Verification**: IA confirmed
 
-**CONFIRM**："页面设计完成。共 [N] 个页面。继续？"
-
----
-
-## Step 5: 预览与迭代
-
-**动作**：
-1. 运行预览生成
-2. 打开预览文件给用户
-3. 对每个页面询问：
-   - "这个页面的设计是否表达了正确的信息层次？"
-   - "颜色、间距、组件是否合适？"
-   - "有什么需要调整的吗？"
-4. 如果用户要求修改：
-   - 修改 HTML
-   - 重新生成预览
-   - 重复直到满意
-5. 确认每个页面后再继续下一个
-
-**验证**：所有页面用户已审批
-
-**CONFIRM**："所有页面已审批。继续？"
+**CONFIRM**: "IA: [structure]. Navigation: [model]. Continue?"
 
 ---
 
-## Step 6: 组件定义
+## Step 4: Page Design
 
-**动作**：
-1. 定义跨页面可复用组件：
-   - Atomic：Button、Input、Badge、Icon
-   - Molecular：Card、Form Group、Modal
-   - Organism：Navigation、Data Table、Filter Panel
-2. 记录组件状态（默认、悬停、禁用、错误）
-3. 参考 `GUIDES/component-patterns.md`
-4. 询问用户："组件库定义完成。需要补充哪些组件规格吗？"
+**Action**:
+1. For each page:
+   - Define content structure
+   - Select appropriate components from pattern library
+   - Write HTML using Tailwind CSS classes
+2. Use Tailwind CDN for preview (no build step required)
+3. Generate preview: `node skills/ui-design/preview/generate.js --data <page-data.json> --output docs/xiaoxiao/plans/ui-design/preview.html`
+4. Ask user: "Page [X] design complete. How does the preview look? Any adjustments needed?"
 
-**验证**：组件库已定义
+**Verification**: All pages designed
 
-**CONFIRM**："组件库定义完成。继续？"
-
----
-
-## Step 7: 最终审查
-
-**动作**：
-1. 与用户一起审查完整设计
-2. 对照原始需求检查：
-   - 所有 P0 功能有页面？
-   - 导航支持用户流程？
-   - 组件模式应用一致？
-3. 询问用户："设计整体审批通过了吗？"
-
-**验证**：设计整体审批通过
-
-**CONFIRM**："UI Design 整体审批通过了吗？确认后进入 Task Planning。"
+**CONFIRM**: "Page design complete. Total: [N] pages. Continue?"
 
 ---
 
-## Step 8: 输出文件
+## Step 5: Preview & Iteration
 
-**动作**：
-1. 创建输出目录结构：
+**Action**:
+1. Run preview generation
+2. Open preview file for user
+3. For each page, ask:
+   - "Does this page's design convey the right information hierarchy?"
+   - "Are colors, spacing, and components appropriate?"
+   - "What needs adjustment?"
+4. If user requests changes:
+   - Modify HTML
+   - Regenerate preview
+   - Repeat until satisfied
+5. Confirm each page before proceeding to next
+
+**Verification**: All pages approved by user
+
+**CONFIRM**: "All pages approved. Continue?"
+
+---
+
+## Step 6: Component Definition
+
+**Action**:
+1. Define cross-page reusable components:
+   - Atomic: Button, Input, Badge, Icon
+   - Molecular: Card, Form Group, Modal
+   - Organism: Navigation, Data Table, Filter Panel
+2. Record component states (default, hover, disabled, error)
+3. Reference `GUIDES/component-patterns.md`
+4. Ask user: "Component library defined. Any component specs to add?"
+
+**Verification**: Component library defined
+
+**CONFIRM**: "Component library complete. Continue?"
+
+---
+
+## Step 7: Final Review
+
+**Action**:
+1. Review complete design with user
+2. Check against original requirements:
+   - All P0 features have pages?
+   - Navigation supports user flows?
+   - Component patterns applied consistently?
+3. Ask user: "Is the overall design approved?"
+
+**Verification**: Overall design approved
+
+**CONFIRM**: "Is UI Design overall approved? Confirm to proceed to Task Planning."
+
+---
+
+## Step 8: Output Files
+
+**Action**:
+1. Create output directory structure:
 ```
 docs/xiaoxiao/plans/ui-design/
-├── preview.html              # 完整预览
+├── preview.html              # Full preview
 ├── pages/
 │   ├── dashboard.html
 │   ├── settings.html
 │   └── ...
 ├── components/
-│   └── component-spec.md    # 组件规格
-└── design-tokens.json        # 设计令牌
+│   └── component-spec.md    # Component specs
+└── design-tokens.json        # Design tokens
 ```
-2. 执行 `xiaoxiao complete ui-design docs/xiaoxiao/plans/ui-design/`
+2. Execute `xiaoxiao complete ui-design docs/xiaoxiao/plans/ui-design/`
 
-**验证**：所有文件已创建
+**Verification**: All files created
 
-**CONFIRM**："UI Design 完成。文件已保存。确认进入 Task Planning 阶段？"
+**CONFIRM**: "UI Design complete. Files saved. Confirm entry to Task Planning?"
 
 ---
 
-## 状态更新命令
+## State Update Commands
 
-每个 Step 完成后必须执行：
+After each Step, MUST execute:
 ```bash
 xiaoxiao save-progress ui-design step[N]-complete
 ```
 
-最终完成必须执行：
+For final completion, MUST execute:
 ```bash
 xiaoxiao complete ui-design docs/xiaoxiao/plans/ui-design/
 ```

@@ -1,201 +1,202 @@
-# 交互模式指南 | Interaction Patterns
+# Interaction Patterns Guide | Interaction Patterns
 
-## 核心目标
+## Core Objective
 
-提供常见的用户交互模式，确保一致性和易用性。
+Provide common user interaction patterns to ensure consistency and usability.
 
-## 表单交互
+## Form Interactions
 
-### 实时验证
+### Real-time Validation
 
 ```markdown
-1. 用户输入 → 即时验证 → 显示结果
-   ✓ 格式正确 / ✗ 格式错误
+1. User input → Instant validation → Show result
+   ✓ Format correct / ✗ Format error
 
-2. 错误提示在输入框下方
-3. 第一个错误时即提示，不等提交
+2. Error message below input
+3. Prompt on first error, don't wait for submit
 ```
 
-### 必填标记
+### Required Markers
 
 ```markdown
-✓ 必填项：标签后加 *
-✓ 选填项：标签后加（选填）
+✓ Required: Add * after label
+✓ Optional: Add (optional) after label
 ```
 
-### 提交状态
+### Submit States
 
 ```markdown
-点击前：[提交按钮]
-点击中：[提交中...]
-点击后：[提交成功 ✓] → 跳转
+Before click: [Submit button]
+During click: [Submitting...]
+After click: [Submit successful ✓] → Redirect
 
-错误时：[保持原位，显示错误信息]
+On error: [Stay in place, show error message]
 ```
 
-## 导航交互
+## Navigation Interactions
 
-### 页面跳转
+### Page Navigation
 
 ```markdown
-点击链接 → 跳转前页面加载 → 新页面加载完成
+Click link → Previous page loads → New page loads
          ↓
-    加载状态显示
+    Show loading state
 ```
 
-### Tab 切换
+### Tab Switching
 
 ```markdown
 [Tab1] [Tab2] [Tab3]
 ───────────────────
-内容区域1
+Content area 1
 ```
 
-### 下拉菜单
+### Dropdown Menu
 
 ```markdown
-点击触发 → 显示菜单 → 选择 → 关闭菜单
+Click trigger → Show menu → Select → Close menu
                     ↓
-              点击外部也关闭
+              Click outside also closes
 ```
 
-## 列表交互
+## List Interactions
 
-### 加载更多
+### Load More
 
 ```markdown
-列表内容...
-列表内容...
-列表内容...
-      ↓ 滚动到底部
-[加载更多...]
+List content...
+List content...
+List content...
+      ↓ Scroll to bottom
+[Load more...]
 ```
 
-### 下拉刷新
+### Pull to Refresh
 
 ```markdown
-↓ 继续下拉刷新...
+↓ Continue pulling to refresh...
 ↓
-[释放以刷新...]
+[Release to refresh...]
 ↓
-[刷新中...]
+[Refreshing...]
 ↓
-✓ 刷新完成
+✓ Refresh complete
 ```
 
-### 批量操作
+### Batch Operations
 
 ```markdown
-☐ 选择1
-☐ 选择2
-☐ 选择3
+☐ Select 1
+☐ Select 2
+☐ Select 3
 ──────────
-[批量删除] [批量移动]
-（选中项>0时显示）
+[Batch delete] [Batch move]
+(shown when selected items > 0)
 ```
 
-## 反馈交互
+## Feedback Interactions
 
-### Toast 提示
+### Toast Notifications
 
-| 类型 | 用途 | 显示时长 |
-|------|------|----------|
-| 成功 | 操作成功 | 2秒 |
-| 错误 | 操作失败 | 5秒 |
-| 警告 | 需要注意 | 3秒 |
-| 加载 | 异步操作中 | 直到完成 |
+| Type | Purpose | Display Duration |
+|------|---------|------------------|
+| Success | Operation successful | 2 seconds |
+| Error | Operation failed | 5 seconds |
+| Warning | Needs attention | 3 seconds |
+| Loading | Async operation in progress | Until complete |
 
-### Modal 弹窗
+### Modal Dialog
 
 ```markdown
-显示弹窗 → 用户操作 → 关闭弹窗
+Show modal → User action → Close modal
               ↓
-         确认/取消
+         Confirm/Cancel
 ```
 
-### 确认对话框
+### Confirmation Dialog
 
 ```markdown
 ┌─────────────────────────────┐
-│ 确认删除？                   │
+│ Confirm deletion?           │
 │                             │
-│ 删除后无法恢复              │
+│ Cannot recover after        │
+│ deletion                    │
 │                             │
-│    [取消]      [删除]       │
+│    [Cancel]      [Delete]   │
 └─────────────────────────────┘
 ```
 
-## 手势交互
+## Gesture Interactions
 
-| 手势 | 操作 | 场景 |
-|------|------|------|
-| 点击 | 选择/触发 | 主要操作 |
-| 长按 | 显示更多 | 右键菜单 |
-| 滑动 | 快速操作 | 列表项操作 |
-| 拖拽 | 移动排序 | 拖放排序 |
-| 捏合 | 缩放 | 图片/地图 |
+| Gesture | Action | Scenario |
+|---------|--------|----------|
+| Tap | Select/trigger | Primary action |
+| Long press | Show more | Context menu |
+| Swipe | Quick action | List item actions |
+| Drag | Move/sort | Drag to reorder |
+| Pinch | Zoom | Images/maps |
 
-## 键盘交互
+## Keyboard Interactions
 
-### 快捷键
+### Keyboard Shortcuts
 
-| 快捷键 | 操作 |
-|--------|------|
-| Enter | 确认/提交 |
-| Escape | 取消/关闭 |
-| Tab | 下一个输入框 |
-| Shift+Tab | 上一个输入框 |
+| Shortcut | Action |
+|----------|--------|
+| Enter | Confirm/submit |
+| Escape | Cancel/close |
+| Tab | Next input field |
+| Shift+Tab | Previous input field |
 
-### 焦点管理
+### Focus Management
 
 ```markdown
-打开弹窗 → 焦点移到弹窗内
-关闭弹窗 → 焦点回到触发元素
+Open modal → Focus moves into modal
+Close modal → Focus returns to trigger element
 ```
 
-## 加载状态
+## Loading States
 
-### 全局加载
+### Global Loading
 
 ```markdown
-[请求时显示loading遮罩]
+[Show loading overlay on request]
 
-透明遮罩 + 中心spinner
-点击无效
+Transparent overlay + centered spinner
+Clicks disabled
 ```
 
-### 局部加载
+### Local Loading
 
 ```markdown
-[按钮内spinner]
-[区域占位+spinner]
-[内容区域骨架屏]
+[Button spinner]
+[Area placeholder + spinner]
+[Content area skeleton]
 ```
 
-## 错误处理
+## Error Handling
 
-### 表单错误
+### Form Errors
 
 ```markdown
-1. 输入时实时验证
-2. 提交时检查全部
-3. 错误信息在字段下方
-4. 第一个错误字段获得焦点
+1. Validate in real-time as user types
+2. Check all fields on submit
+3. Error message below field
+4. First error field gets focus
 ```
 
-### 网络错误
+### Network Errors
 
 ```markdown
-请求失败
+Request failed
    ↓
-显示错误提示 + 重试按钮
+Show error message + retry button
    ↓
-用户可选择重试或取消
+User can choose to retry or cancel
 ```
 
-## 何时退出
+## When to Exit
 
-- 所有核心交互已定义
-- 异常情况已处理
-- 用户体验流程顺畅
-- 开发可照图实现
+- All core interactions defined
+- Edge cases handled
+- User experience flow is smooth
+- Development can implement from documentation

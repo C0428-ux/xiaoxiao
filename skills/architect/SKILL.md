@@ -10,13 +10,13 @@ domain: architecture
 role: architect
 triggers:
   - /architect
-  - 架构设计
-  - 设计架构
-  - 技术方案
-  - 系统设计
-  - 优化架构
-  - 重构
-  - 调整架构
+  - architecture design
+  - design architecture
+  - tech stack
+  - system design
+  - optimize architecture
+  - refactor
+  - adjust architecture
 prerequisites:
   - strategy-review
 output-format: docs/xiaoxiao/plans/architect-output.md
@@ -26,158 +26,158 @@ related-skills:
   - task-planning
 ---
 
-# Architect | 架构师
+# Architect | Architecture Design
 
-## 强制执行协议
+## Mandatory Execution Protocol
 
-**规则**：
-- 必须按顺序执行每个 Step，不得跳过
-- 每个 Step 必须执行验证（检查点）才能进入下一步
-- 使用 `xiaoxiao save-progress <skill> <step>` 标记步骤完成
-- CONFIRM 节点必须等待用户确认，不得自动继续
-
----
-
-## Step 1: 初始化
-
-**动作**：
-1. 执行 `xiaoxiao save-progress architect step1-complete`
-2. 检查 `./SPEC.md` 是否存在
-3. 检查 `docs/xiaoxiao/plans/strategy-review-output.md` 是否存在
-
-**验证**：两个文件都存在
-
-**CONFIRM**："Step 1 完成。SPEC.md 和 strategy-review-output.md 都存在。继续？"
+**Rules**:
+- MUST execute each Step in order, no skipping
+- MUST verify each Step (checkpoint) before proceeding to next
+- MUST use `xiaoxiao save-progress <skill> <step>` to mark step completion
+- CONFIRM nodes MUST wait for user confirmation, never auto-continue
 
 ---
 
-## Step 2: 需求提取
+## Step 1: Initialization
 
-**动作**：
-1. 读取 `./SPEC.md` - 提取功能需求
-2. 读取 `docs/xiaoxiao/plans/strategy-review-output.md` - 记录约束和决策
-3. 识别非功能需求：
-   - 性能：延迟、吞吐量、扩展性
-   - 可靠性：正常运行时间、恢复、冗余
-   - 安全性：认证、授权、数据保护
-   - 可观测性：日志、指标、追踪
+**Action**:
+1. Execute `xiaoxiao save-progress architect step1-complete`
+2. Check if `./SPEC.md` exists
+3. Check if `docs/xiaoxiao/plans/strategy-review-output.md` exists
 
-**验证**：需求已按类别组织
+**Verification**: Both files exist
 
-**CONFIRM**："需求提取完成。识别到 [N] 个功能需求，[N] 个非功能约束。继续？"
+**CONFIRM**: "Step 1 complete. Both SPEC.md and strategy-review-output.md exist. Continue?"
 
 ---
 
-## Step 3: 架构模式选择
+## Step 2: Requirements Extraction
 
-**动作**：
-1. 向用户提问："团队规模多大？"（<10人 / 10-50人 / 50+人）
-2. 向用户提问："最看重什么？"（快速迭代 / 稳定性 / 扩展性 / 成本）
-3. 根据回答推荐架构模式：
-   - <10人 + 快速迭代 → Monolith 或 Modular Monolith
-   - 10-50人 + 扩展性 → Modular Monolith 或 Microservices
-   - 50+人 + 独立部署 → Microservices
-4. 记录选择的模式和理由
+**Action**:
+1. Read `./SPEC.md` - extract functional requirements
+2. Read `docs/xiaoxiao/plans/strategy-review-output.md` - record constraints and decisions
+3. Identify non-functional requirements:
+   - Performance: latency, throughput, scalability
+   - Reliability: uptime, recovery, redundancy
+   - Security: authentication, authorization, data protection
+   - Observability: logging, metrics, tracing
 
-**验证**：架构模式已选择并记录理由
+**Verification**: Requirements organized by category
 
-**CONFIRM**："架构模式：[模式]。理由：[理由]。继续？"
-
----
-
-## Step 4: 子系统分解
-
-**动作**：
-1. 识别bounded contexts / 主要领域
-2. 定义子系统，每个子系统有单一职责
-3. 为每个子系统命名（统一语言）
-4. 记录子系统职责
-5. 识别横切关注点（认证、日志、配置）
-
-**验证**：子系统列表已创建
-
-**CONFIRM**："子系统：[列表]。共 [N] 个。继续？"
+**CONFIRM**: "Requirements extraction complete. Found [N] functional requirements, [N] non-functional constraints. Continue?"
 
 ---
 
-## Step 5: 接口与数据流设计
+## Step 3: Architecture Pattern Selection
 
-**动作**：
-1. 定义子系统之间的接口
-2. 明确：
-   - API 契约（请求/响应格式）
-   - 事件模式（异步通信）
-   - 数据所有权（谁是数据源）
-3. 设计数据流：同步 vs 异步路径
-4. 记录错误处理和回退路径
+**Action**:
+1. Ask user: "How large is your team?" (<10 / 10-50 / 50+)
+2. Ask user: "What matters most?" (fast iteration / stability / scalability / cost)
+3. Based on answers, recommend architecture pattern:
+   - <10 people + fast iteration → Monolith or Modular Monolith
+   - 10-50 people + scalability → Modular Monolith or Microservices
+   - 50+ people + independent deployment → Microservices
+4. Record selected pattern and rationale
 
-**验证**：关键接口已定义
+**Verification**: Architecture pattern selected with rationale recorded
 
-**CONFIRM**："接口设计完成。定义了 [N] 个 API。继续？"
-
----
-
-## Step 6: 技术决策
-
-**动作**：
-1. 为每个子系统做出关键技术选择：
-   - 语言/框架
-   - 数据库（SQL vs NoSQL，具体技术）
-   - 基础设施（云、容器、serverless）
-2. 为每个重大决策创建 ADR（架构决策记录）
-3. 向用户确认："有什么技术是你已有 expertise 想继续用的？"
-
-**验证**：技术栈已定义，每个重大决策有 ADR
-
-**CONFIRM**："技术栈：[栈]。ADR：[N] 个。继续？"
+**CONFIRM**: "Architecture pattern: [pattern]. Rationale: [reason]. Continue?"
 
 ---
 
-## Step 7: 风险与缓解
+## Step 4: Subsystem Decomposition
 
-**动作**：
-1. 识别 3-5 个主要技术风险
-2. 对每个风险评估：
-   - 概率：高/中/低
-   - 影响：高/中/低
-   - 缓解策略
-3. 向用户确认："有什么风险会导致架构失败？"
+**Action**:
+1. Identify bounded contexts / major domains
+2. Define subsystems, each with single responsibility
+3. Name each subsystem (ubiquitous language)
+4. Record subsystem responsibilities
+5. Identify cross-cutting concerns (authentication, logging, config)
 
-**验证**：风险列表已创建
+**Verification**: Subsystem list created
 
-**CONFIRM**："主要风险：[列表]。继续？"
-
----
-
-## Step 8: 输出文档
-
-**动作**：
-1. 创建 `docs/xiaoxiao/plans/architect-output.md`
-2. 包含以下章节：
-   - Overview（系统目的和范围）
-   - Architecture Pattern（选择的模式及理由）
-   - Subsystem Decomposition（子系统及职责）
-   - Interface Design（关键 API 和数据流）
-   - Technology Stack（每个子系统的技术选择及理由）
-   - ADRs（重大决策记录）
-   - Architecture Diagram（Mermaid 图）
-   - Cross-Cutting Concerns（认证、日志、配置）
-3. 执行 `xiaoxiao complete architect docs/xiaoxiao/plans/architect-output.md`
-
-**验证**：文档已创建且包含所有章节
-
-**CONFIRM**："Architect 完成。文档已保存。确认进入 UI Design 阶段？"
+**CONFIRM**: "Subsystems: [list]. Total: [N]. Continue?"
 
 ---
 
-## 状态更新命令
+## Step 5: Interface & Data Flow Design
 
-每个 Step 完成后必须执行：
+**Action**:
+1. Define interfaces between subsystems
+2. Clarify:
+   - API contracts (request/response format)
+   - Event patterns (async communication)
+   - Data ownership (who is source of truth)
+3. Design data flows: sync vs async paths
+4. Record error handling and fallback paths
+
+**Verification**: Key interfaces defined
+
+**CONFIRM**: "Interface design complete. Defined [N] APIs. Continue?"
+
+---
+
+## Step 6: Technology Decisions
+
+**Action**:
+1. Make key technology choices for each subsystem:
+   - Language/framework
+   - Database (SQL vs NoSQL, specific technology)
+   - Infrastructure (cloud, containers, serverless)
+2. Create ADR (Architecture Decision Record) for each major decision
+3. Ask user: "Are there technologies you have existing expertise with that you want to continue using?"
+
+**Verification**: Tech stack defined, each major decision has ADR
+
+**CONFIRM**: "Tech stack: [stack]. ADRs: [N]. Continue?"
+
+---
+
+## Step 7: Risks & Mitigation
+
+**Action**:
+1. Identify 3-5 major technical risks
+2. For each risk, assess:
+   - Probability: High/Medium/Low
+   - Impact: High/Medium/Low
+   - Mitigation strategy
+3. Ask user: "What risk could cause the architecture to fail?"
+
+**Verification**: Risk list created
+
+**CONFIRM**: "Major risks: [list]. Continue?"
+
+---
+
+## Step 8: Output Document
+
+**Action**:
+1. Create `docs/xiaoxiao/plans/architect-output.md`
+2. Include these sections:
+   - Overview (system purpose and scope)
+   - Architecture Pattern (selected pattern with rationale)
+   - Subsystem Decomposition (subsystems and responsibilities)
+   - Interface Design (key APIs and data flows)
+   - Technology Stack (technology choices per subsystem with rationale)
+   - ADRs (major decision records)
+   - Architecture Diagram (Mermaid diagram)
+   - Cross-Cutting Concerns (authentication, logging, config)
+3. Execute `xiaoxiao complete architect docs/xiaoxiao/plans/architect-output.md`
+
+**Verification**: Document created with all sections
+
+**CONFIRM**: "Architect complete. Document saved. Confirm entry to UI Design?"
+
+---
+
+## State Update Commands
+
+After each Step, MUST execute:
 ```bash
 xiaoxiao save-progress architect step[N]-complete
 ```
 
-最终完成必须执行：
+For final completion, MUST execute:
 ```bash
 xiaoxiao complete architect docs/xiaoxiao/plans/architect-output.md
 ```

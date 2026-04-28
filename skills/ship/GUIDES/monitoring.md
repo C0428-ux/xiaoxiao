@@ -1,63 +1,63 @@
-# 监控设置指南 | Monitoring Setup
+# Monitoring Setup Guide | Monitoring Setup
 
-## 核心目标
+## Core Objective
 
-建立完整的监控体系，确保问题早发现、早处理。
+Establish a complete monitoring system to ensure problems are discovered early and handled promptly.
 
-## 监控四大支柱
+## Four Pillars of Monitoring
 
-| 类型 | 作用 | 示例 |
-|------|------|------|
-| **Metrics** | 量化系统状态 | CPU、内存、请求数 |
-| **Logs** | 记录事件详情 | 错误日志、访问日志 |
-| **Traces** | 追踪请求链路 | 端到端调用链 |
-| **Alerts** | 通知异常 | 邮件、短信、Slack |
+| Type | Purpose | Examples |
+|------|---------|---------|
+| **Metrics** | Quantify system state | CPU, memory, request count |
+| **Logs** | Record event details | Error logs, access logs |
+| **Traces** | Track request chains | End-to-end call chains |
+| **Alerts** | Notify anomalies | Email, SMS, Slack |
 
-## 关键指标
+## Key Metrics
 
-### 应用指标
+### Application Metrics
 
-| 指标 | 告警阈值 | 说明 |
-|------|----------|------|
-| Error Rate | > 1% | 5分钟内平均 |
-| Response Time (p95) | > 500ms | 95分位 |
-| Response Time (p99) | > 1s | 99分位 |
-| Request Rate | < 正常 - 50% | 异常下降 |
+| Metric | Alert Threshold | Description |
+|--------|-----------------|-------------|
+| Error Rate | > 1% | 5-minute average |
+| Response Time (p95) | > 500ms | 95th percentile |
+| Response Time (p99) | > 1s | 99th percentile |
+| Request Rate | < normal - 50% | Abnormal decline |
 
-### 系统指标
+### System Metrics
 
-| 指标 | 告警阈值 | 说明 |
-|------|----------|------|
-| CPU | > 80% | 5分钟内平均 |
-| Memory | > 85% | 持续 5 分钟 |
+| Metric | Alert Threshold | Description |
+|--------|-----------------|-------------|
+| CPU | > 80% | 5-minute average |
+| Memory | > 85% | Sustained 5 minutes |
 | Disk | > 80% | - |
-| Process Restart | > 3次/小时 | 异常重启 |
+| Process Restart | > 3 times/hour | Abnormal restart |
 
-### 业务指标
+### Business Metrics
 
-| 指标 | 告警阈值 | 说明 |
-|------|----------|------|
-| 订单数 | < 正常 - 50% | 异常下降 |
-| 转化率 | < 正常 - 30% | 异常下降 |
-| 活跃用户 | < 正常 - 40% | 异常下降 |
+| Metric | Alert Threshold | Description |
+|--------|-----------------|-------------|
+| Order Count | < normal - 50% | Abnormal decline |
+| Conversion Rate | < normal - 30% | Abnormal decline |
+| Active Users | < normal - 40% | Abnormal decline |
 
-## 监控仪表盘
+## Monitoring Dashboard
 
-### 1. 概览仪表盘
+### 1. Overview Dashboard
 
 ```
 ┌─────────────────────────────────────────────────┐
-│  系统状态：正常  运行时间：15天                   │
+│  System Status: Normal  Uptime: 15 days         │
 ├─────────────────────────────────────────────────┤
-│  请求量    │  错误率   │ 响应时间  │   CPU     │
-│  1,234/s  │  0.1%    │  45ms     │   35%     │
+│  Requests   │  Error Rate │ Response Time │ CPU │
+│  1,234/s    │  0.1%       │  45ms         │ 35% │
 └─────────────────────────────────────────────────┘
 ```
 
-### 2. 趋势图表
+### 2. Trend Charts
 
 ```
-错误率趋势 (24h)
+Error Rate Trend (24h)
 ─────────────────
 5% │        ╭─╮
    │    ╭──╯  ╰──╮
@@ -65,18 +65,18 @@
    00:00  06:00  12:00  18:00
 ```
 
-## 日志监控
+## Log Monitoring
 
-### 日志级别
+### Log Levels
 
-| 级别 | 用途 | 示例 |
-|------|------|------|
-| ERROR | 错误 | 数据库连接失败 |
-| WARN | 警告 | 重试 3 次后成功 |
-| INFO | 信息 | 请求成功 |
-| DEBUG | 调试 | 详细执行流程 |
+| Level | Purpose | Example |
+|-------|---------|---------|
+| ERROR | Errors | Database connection failed |
+| WARN | Warnings | Succeeded after 3 retries |
+| INFO | Information | Request succeeded |
+| DEBUG | Debugging | Detailed execution flow |
 
-### 日志格式
+### Log Format
 
 ```json
 {
@@ -92,9 +92,9 @@
 }
 ```
 
-## 告警配置
+## Alert Configuration
 
-### 告警规则示例
+### Alert Rule Examples
 
 ```yaml
 # Prometheus Alert Rules
@@ -116,31 +116,31 @@ groups:
       severity: warning
 ```
 
-### 告警通知
+### Alert Notifications
 
 ```markdown
-## 告警通知
+## Alert Notification
 
-主题：[严重] 高错误率告警
+Subject: [Critical] High Error Rate Alert
 
-正文：
-时间：2024-01-15 10:30:00
-服务：api-gateway
-环境：production
-错误率：5.2%（阈值：1%）
+Body:
+Time: 2024-01-15 10:30:00
+Service: api-gateway
+Environment: production
+Error Rate: 5.2% (Threshold: 1%)
 
-建议操作：
-1. 检查日志
-2. 查看 Metrics
-3. 如需要回滚
+Recommended Actions:
+1. Check logs
+2. Review Metrics
+3. Rollback if needed
 ```
 
-## 健康检查
+## Health Checks
 
-### 端点
+### Endpoints
 
 ```bash
-# 健康检查
+# Health Check
 GET /health
 
 Response:
@@ -156,16 +156,16 @@ Response:
 }
 ```
 
-### 检查清单
+### Checklist
 
-- [ ] 健康检查端点正常
-- [ ] 告警规则已配置
-- [ ] 告警通知可达
-- [ ] Dashboard 可访问
-- [ ] 日志正常采集
+- [ ] Health check endpoint is working
+- [ ] Alert rules configured
+- [ ] Alert notifications reachable
+- [ ] Dashboard accessible
+- [ ] Logs being collected
 
-## 何时退出
+## When to Exit
 
-- 所有关键指标有监控
-- 告警规则配置完成
-- 告警通知正常
+- All key metrics are monitored
+- Alert rules configured
+- Alert notifications working

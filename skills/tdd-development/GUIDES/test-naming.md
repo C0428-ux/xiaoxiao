@@ -1,31 +1,31 @@
-# 测试命名指南 | Test Naming
+# Test Naming Guide | Test Naming
 
-## 核心目标
+## Core Objective
 
-写出清晰、可读的测试名称，让人一眼就知道测试在验证什么。
+Write clear, readable test names so that anyone can immediately understand what the test is verifying.
 
-## 命名结构
+## Naming Structure
 
-### 描述行为，不描述实现
+### Describe Behavior, Not Implementation
 
 ```javascript
-// ❌ 不好 - 描述实现
+// Bad - describes implementation
 test('UserService.createUser returns user object')
 
-// ✅ 好 - 描述行为
+// Good - describes behavior
 test('should create user with valid email')
 test('creates a new user record in database')
 ```
 
-### 格式模板
+### Format Template
 
 ```markdown
-[测试对象] [条件/场景] [预期行为]
+[Test Subject] [Condition/Scenario] [Expected Behavior]
 ```
 
-## 常用模式
+## Common Patterns
 
-### Given-When-Then 风格
+### Given-When-Then Style
 
 ```javascript
 describe('UserService', () => {
@@ -37,7 +37,7 @@ describe('UserService', () => {
 })
 ```
 
-### Should 风格
+### Should Style
 
 ```javascript
 it('should return 201 when resource is created')
@@ -45,7 +45,7 @@ it('should throw ValidationError when email is invalid')
 it('should update user profile successfully')
 ```
 
-### Behavior 风格
+### Behavior Style
 
 ```javascript
 it('creates a new session when user logs in')
@@ -53,23 +53,23 @@ it('returns empty list when no results found')
 it('sends confirmation email after registration')
 ```
 
-## 测试名称示例
+## Test Name Examples
 
-| 场景 | ❌ 不好 | ✅ 好 |
-|------|---------|------|
-| 登录成功 | test('login success') | it('should redirect to dashboard on successful login') |
-| 登录失败 | test('login fail') | it('should show error message when password is incorrect') |
-| 创建订单 | test('create order') | it('should create order with pending status and return order id') |
-| 删除用户 | test('delete user') | it('should soft delete user and revoke all active sessions') |
+| Scenario | Bad | Good |
+|----------|-----|------|
+| Login success | test('login success') | it('should redirect to dashboard on successful login') |
+| Login failure | test('login fail') | it('should show error message when password is incorrect') |
+| Create order | test('create order') | it('should create order with pending status and return order id') |
+| Delete user | test('delete user') | it('should soft delete user and revoke all active sessions') |
 
-## 分层命名
+## Hierarchical Naming
 
 ```javascript
-// 描述类/模块
+// Describe class/module
 describe('ShoppingCart', () => {
-  // 描述方法
+  // Describe method
   describe('addItem', () => {
-    // 描述场景
+    // Describe scenario
     it('should increase item quantity when same item added again')
 
     it('should add new item when cart is empty')
@@ -83,17 +83,17 @@ describe('ShoppingCart', () => {
 })
 ```
 
-## 常见前缀
+## Common Prefixes
 
-| 前缀 | 用途 | 示例 |
-|------|------|------|
-| should | 期望行为 | it('should return 404 when not found') |
-| given | 条件设置 | it('given valid token, should allow access') |
-| when | 触发动作 | it('when user clicks submit, should validate form') |
-| expect | 期望结果 | it('expect to receive confirmation email') |
+| Prefix | Purpose | Example |
+|--------|---------|---------|
+| should | Expected behavior | it('should return 404 when not found') |
+| given | Condition setup | it('given valid token, should allow access') |
+| when | Trigger action | it('when user clicks submit, should validate form') |
+| expect | Expected result | it('expect to receive confirmation email') |
 
-## 何时退出
+## When to Stop
 
-- 所有测试名称清晰描述行为
-- 测试失败时，名称能帮助定位问题
-- 团队对命名风格有共识
+- All test names clearly describe behavior
+- When tests fail, names help locate the problem
+- Team has consensus on naming style

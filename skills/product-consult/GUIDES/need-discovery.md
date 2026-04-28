@@ -1,100 +1,103 @@
-# 需求发现技巧 | Need Discovery
+# Need Discovery Techniques | Need Discovery
 
-## 核心目标
+## Core Objective
 
-区分用户**说的需求**（通常指解决方案）和**真正的需求**（背后的问题和动机）。
+Distinguish between what users **say they want** (usually refers to solutions) and their **real needs** (underlying problems and motivations).
 
-## 功能性需求 vs 体验性需求 vs 情感性需求
+## Functional Needs vs. Experience Needs vs. Emotional Needs
 
-| 类型 | 定义 | 示例 |
-|------|------|------|
-| 功能性 | 系统必须完成的工作 | "用户可以登录"、"可以导出 PDF" |
-| 体验性 | 使用起来的感觉 | "操作简单"、"响应快速"、"界面美观" |
-| 情感性 | 使用后的心理感受 | "放心"、"有面子"、"省心" |
+| Type | Definition | Examples |
+|------|------------|----------|
+| Functional | Work the system must accomplish | "Users can log in", "Can export PDF" |
+| Experience | How it feels to use | "Simple operation", "Fast response", "Beautiful interface" |
+| Emotional | Psychological feelings after using | "Reassured", "Impressive", "Effortless" |
 
-## 追问技巧
+## Probing Techniques
 
-### 1. 从现有解决方案入手
+### 1. Start from Existing Solutions
 
 ```
-"你目前怎么解决这个问题的？"
+"How do you currently solve this problem?"
   ↓
-"现有方案哪里不满意？"
+"What are you dissatisfied with in the current solution?"
   ↓
-"理想状态是什么样的？"
+"What would the ideal state look like?"
 ```
 
-### 2. 区分"要什么"和"为什么"
+### 2. Distinguish "What" from "Why"
 
-| 用户说要 | 正确追问 | 背后真正需求 |
-|----------|----------|--------------|
-| "要推送通知" | "推送通知解决什么问题？" | "不想错过重要信息" |
-| "要社交功能" | "社交功能帮你达成什么？" | "和朋友分享有成就感" |
-| "要自动化" | "哪些操作想自动化？" | "不想做重复工作" |
+| User says | Right follow-up question | Underlying real need |
+|-----------|-------------------------|---------------------|
+| "I want push notifications" | "What problem do push notifications solve?" | "Don't want to miss important information" |
+| "I want social features" | "What does social functionality help you achieve?" | "Sharing with friends feels rewarding" |
+| "I want automation" | "Which operations do you want to automate?" | "Don't want to do repetitive work" |
 
-### 3. 5 Why 追问法
+### 3. 5 Whys Probing Method
 
 ```
-用户："我想加个数据导出功能"
-追问1：导出数据用来做什么？→ "给领导做汇报"
-追问2：汇报需要什么格式？→ "Excel，方便我做分析"
-追问3：分析哪些指标？→ "用户增长、留存、收入"
-追问4：现在汇报有什么问题？→ "数据分散，要手动整合"
-追问5：整合一次要多长时间？→ "大概2-3小时"
-结论：真正需要的是"减少汇报准备时间"
+User: "I want to add a data export feature"
+Follow-up 1: What do you use the exported data for? → "Make reports for my manager"
+Follow-up 2: What format do you need for the report? → "Excel, so I can analyze it"
+Follow-up 3: What metrics do you analyze? → "User growth, retention, revenue"
+Follow-up 4: What's wrong with current reports? → "Data is scattered, needs manual integration"
+Follow-up 5: How long does integration take? → "About 2-3 hours"
+Conclusion: The real need is "reduce report preparation time"
 ```
 
-## 需求层次验证
+## Need Level Verification
 
-### 冰山模型
+### Iceberg Model
 
 ```
           ┌─────────────┐
-          │   说出的话   │  ← 表层（解决方案）
-          │  "做个App"  │
+          │  What was   │  ← Surface layer (solution)
+          │   said      │
+          │  "Build an  │
+          │    App"     │
           └─────────────┘
                 ↓
           ┌─────────────┐
-          │  真正的需求  │  ← 中层（问题）
-          │  "要更快"   │
+          │  Real need  │  ← Middle layer (problem)
+          │   "Faster"  │
           └─────────────┘
                 ↓
           ┌─────────────┐
-          │   背后动机   │  ← 深层（情感/价值）
-          │  "更省心"   │
+          │Underlying   │  ← Deep layer (emotion/value)
+          │ motivation  │
+          │ "Easier"    │
           └─────────────┘
 ```
 
-## 需求验证问题
+## Need Verification Questions
 
-确认需求层次后，用这些问题验证：
+After confirming the need level, verify with these questions:
 
-- "如果这个功能实现了，你会有什么感觉？"
-- "这个功能解决了你什么问题？"
-- "如果没有这个功能，会怎样？"
-- "你之前尝试过什么解决方案？"
+- "If this feature is implemented, how will you feel?"
+- "What problem does this feature solve for you?"
+- "What happens without this feature?"
+- "What solutions have you tried before?"
 
-## 需求优先级
+## Need Prioritization
 
-当有多个需求时：
+When there are multiple needs:
 
 ```
-重要 = 对业务目标影响大
-紧急 = 时间敏感度高
-优先满足：重要 + 紧急的需求
+Important = High impact on business goals
+Urgent = High time sensitivity
+Prioritize: Important + Urgent needs
 ```
 
-## 需求冲突处理
+## Handling Need Conflicts
 
-当用户说"既要...又要..."时：
+When users say "I want both... and...":
 
-1. 识别冲突点
-2. 问"哪个更重要？"
-3. 问"在什么情况下可以牺牲一个？"
-4. 寻找可以同时满足的第三方方案
+1. Identify the conflict point
+2. Ask "Which is more important?"
+3. Ask "Under what circumstances can we sacrifice one?"
+4. Look for third-party solutions that can satisfy both
 
-## 何时退出
+## When to Exit
 
-- 用户能清楚说出功能/体验/情感三个层次的需求
-- 没有更多隐藏的"为什么"可追问
-- 需求优先级已初步确定
+- User can clearly state needs at all three levels: functional/experience/emotional
+- No more hidden "whys" to probe
+- Need priorities have been tentatively determined

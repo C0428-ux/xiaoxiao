@@ -1,111 +1,111 @@
-# Component Patterns | 组件模式库
+# Component Patterns | Component Patterns
 
-20+ 核心组件的最佳实践。参考 [component.gallery](https://component.gallery) 和行业标准。
-
----
-
-## Button | 按钮
-
-**何时使用**: 触发操作的主入口
-
-**最佳实践**:
-- 标签用动词开头：「Save changes」而非「Submit」
-- 每个区域只用一个主要按钮（Primary）
-- 同一行按钮不超过 3 个
-- 图标按钮需有 tooltip 说明
-
-**状态**:
-| State | 样式 |
-|-------|------|
-| Default | 基础色 |
-| Hover | 加深 10% |
-| Active | 加深 20%，轻微缩小 |
-| Disabled | 50% 透明度 |
-| Loading | 文字替换为 spinner |
-
-**变体**:
-- **Primary**: 填充背景，主色调
-- **Secondary**: 边框，背景透明
-- **Ghost**: 仅文字，无边框
-- **Danger**: 红色，用于删除等危险操作
-
-**反模式**:
-- 「Click here」或「Submit」作为标签
-- 同一行 4+ 个按钮
-- 多个 Primary 按钮
+20+ best practices for core components. Reference [component.gallery](https://component.gallery) and industry standards.
 
 ---
 
-## Input | 输入框
+## Button | Button
 
-**何时使用**: 收集用户文本输入
+**When to use**: Primary entry point for triggering actions
 
-**最佳实践**:
-- 标签在输入框上方（垂直表单更快扫描）
-- 占位符仅作为格式提示，不替代标签
-- 实时验证（on blur），不要逐字验证
-- 必填标记用 asterisk (*) 而非「Required」
+**Best practices**:
+- Labels start with verbs: "Save changes" not "Submit"
+- Only one primary button per section
+- No more than 3 buttons on the same row
+- Icon buttons need tooltip explanation
 
-**状态**:
-| State | 样式 |
-|-------|------|
-| Default | 灰色边框 |
-| Focus | 强调色边框，ring |
-| Error | 红色边框 + 错误消息 |
-| Disabled | 灰色背景 |
+**States**:
+| State | Style |
+|-------|-------|
+| Default | Base color |
+| Hover | 10% darker |
+| Active | 20% darker, slight shrink |
+| Disabled | 50% opacity |
+| Loading | Text replaced with spinner |
 
-**变体**:
-- Text input（单行）
-- Textarea（多行）
-- Search input（带搜索图标）
-- Password（带显示/隐藏切换）
+**Variants**:
+- **Primary**: Filled background, primary color
+- **Secondary**: Border, transparent background
+- **Ghost**: Text only, no border
+- **Danger**: Red, for delete and other dangerous operations
 
-**反模式**:
-- 占位符替代标签
-- 边框颜色与背景无对比
-- 标签在输入框右侧（移动端）
+**Anti-patterns**:
+- "Click here" or "Submit" as labels
+- 4+ buttons on the same row
+- Multiple primary buttons
 
 ---
 
-## Card | 卡片
+## Input | Input
 
-**何时使用**: 展示独立的实体内容块
+**When to use**: Collecting user text input
 
-**最佳实践**:
-- 内容层次: Media → Title → Meta → Action
-- 卡片有边框 OR 阴影，不要同时有
-- 卡片之间保持一致间距
-- 点击区域要明确（整个卡片可点击？还是有明确 CTA？）
+**Best practices**:
+- Labels above input (vertical forms scan faster)
+- Placeholder only as format hint, not replacement for labels
+- Real-time validation (on blur), not character-by-character
+- Required indicator uses asterisk (*) not "Required"
 
-**结构**:
+**States**:
+| State | Style |
+|-------|-------|
+| Default | Gray border |
+| Focus | Accent color border, ring |
+| Error | Red border + error message |
+| Disabled | Gray background |
+
+**Variants**:
+- Text input (single line)
+- Textarea (multi-line)
+- Search input (with search icon)
+- Password (with show/hide toggle)
+
+**Anti-patterns**:
+- Placeholder replacing labels
+- Border color has no contrast with background
+- Labels on the right of input (mobile)
+
+---
+
+## Card | Card
+
+**When to use**: Displaying independent content blocks
+
+**Best practices**:
+- Content hierarchy: Media → Title → Meta → Action
+- Cards have border OR shadow, not both
+- Consistent spacing between cards
+- Click areas must be clear (entire card clickable? Or explicit CTA?)
+
+**Structure**:
 ```html
 <article class="card">
-  <img src="..." alt="..." />  <!-- 可选 -->
+  <img src="..." alt="..." />  <!-- optional -->
   <h3>Title</h3>
-  <p class="meta">2 hours ago</p>  <!-- 可选 -->
+  <p class="meta">2 hours ago</p>  <!-- optional -->
   <button>Action</button>
 </article>
 ```
 
-**反模式**:
-- 多个 Primary 按钮
-- 边框和阴影同时使用
-- 卡片内容不对齐
+**Anti-patterns**:
+- Multiple primary buttons
+- Using both border and shadow
+- Card content misaligned
 
 ---
 
-## Modal | 模态框
+## Modal | Modal
 
-**何时使用**: 需要用户专注处理一件事
+**When to use**: When user needs to focus on one thing
 
-**最佳实践**:
-- 右上角 X 关闭
-- 提供 Cancel 按钮
-- 支持 Escape 键关闭
-- 打开时 trap focus，关闭时恢复 focus
-- 点击遮罩层可关闭（可选）
+**Best practices**:
+- X close button in top right
+- Provide Cancel button
+- Support Escape key to close
+- Trap focus when open, restore focus on close
+- Click on overlay to close (optional)
 
-**结构**:
+**Structure**:
 ```html
 <div class="modal-overlay">
   <div class="modal" role="dialog">
@@ -114,7 +114,7 @@
       <button aria-label="Close">×</button>
     </header>
     <div class="modal-body">
-      <!-- 内容 -->
+      <!-- content -->
     </div>
     <footer>
       <button>Cancel</button>
@@ -124,48 +124,48 @@
 </div>
 ```
 
-**反模式**:
-- Modal 嵌套（用 Drawer 替代）
-- 没有关闭方式
-- 阻塞用户但不提供信息
+**Anti-patterns**:
+- Nested modals (use Drawer instead)
+- No way to close
+- Blocks user without providing information
 
 ---
 
-## Navigation | 导航
+## Navigation | Navigation
 
-**何时使用**: 页面间或区域间切换
+**When to use**: Switching between pages or areas
 
-**最佳实践**:
-- 最多 5-7 个主要项目
-- 当前页面/区域要有 active 状态
-- Logo 链接到首页
-- 移动端用汉堡菜单或底部 Tab
+**Best practices**:
+- Maximum 5-7 main items
+- Current page/area needs active state
+- Logo links to homepage
+- Mobile uses hamburger menu or bottom tabs
 
-**变体**:
-- Top nav（适合 3-5 项）
-- Sidebar（适合 5+ 项）
-- Tabs（适合同页面不同面板）
-- Breadcrumbs（适合层级深的页面）
+**Variants**:
+- Top nav (suitable for 3-5 items)
+- Sidebar (suitable for 5+ items)
+- Tabs (suitable for different panels on same page)
+- Breadcrumbs (suitable for deep hierarchy pages)
 
-**反模式**:
-- 桌面端用汉堡菜单
-- 导航项超过 7 个无组织
-- 无 active 状态指示
+**Anti-patterns**:
+- Desktop uses hamburger menu
+- More than 7 navigation items without organization
+- No active state indicator
 
 ---
 
-## Table | 表格
+## Table | Table
 
-**何时使用**: 展示结构化数据，需要比较和排序
+**When to use**: Displaying structured data, needing comparison and sorting
 
-**最佳实践**:
-- 表头固定（sticky）
-- 数字右对齐
-- 支持排序列
-- 每行 hover 高亮
-- 可选: 分页或无限滚动
+**Best practices**:
+- Sticky header
+- Numbers right-aligned
+- Sortable columns
+- Row hover highlight
+- Optional: pagination or infinite scroll
 
-**结构**:
+**Structure**:
 ```html
 <table>
   <thead>
@@ -185,50 +185,50 @@
 </table>
 ```
 
-**反模式**:
-- 无 sticky header，滚动后不知道列名
-- 纯文本无格式化
-- 单元格内容无省略
+**Anti-patterns**:
+- No sticky header, lose column names after scroll
+- Plain text without formatting
+- Cell content without ellipsis
 
 ---
 
-## Form | 表单
+## Form | Form
 
-**何时使用**: 收集用户输入并提交
+**When to use**: Collecting user input and submitting
 
-**最佳实践**:
-- 单列布局更快扫描
-- 必填字段用 asterisk (*) 标记
-- 错误信息 inline 显示
-- 提交按钮禁用时显示原因
-- 成功/失败反馈要明确
+**Best practices**:
+- Single column layout scans faster
+- Required fields marked with asterisk (*)
+- Error messages shown inline
+- Submit button shows reason when disabled
+- Success/failure feedback is clear
 
-**流程**:
-1. 显示表单
-2. 用户填写
-3. 验证（on blur）
-4. 提交
-5. 反馈结果
+**Flow**:
+1. Display form
+2. User fills in
+3. Validate (on blur)
+4. Submit
+5. Show result
 
-**反模式**:
-- 多列布局（让视线跳跃）
-- 提交后无反馈
-- 验证信息位置不一致
+**Anti-patterns**:
+- Multi-column layout (causes eye jumping)
+- No feedback after submit
+- Inconsistent validation message positions
 
 ---
 
-## Toast | 提示
+## Toast | Toast
 
-**何时使用**: 操作成功后的简短确认
+**When to use**: Brief confirmation after successful operation
 
-**最佳实践**:
-- 自动消失 4-6 秒
-- 允许手动关闭
-- -destructive 操作提供 Undo
-- 新消息在上方堆叠
-- 位置: 右上角或底部
+**Best practices**:
+- Auto dismiss after 4-6 seconds
+- Allow manual close
+- Destructive operations provide Undo
+- New messages stack at top
+- Position: top right or bottom
 
-**结构**:
+**Structure**:
 ```html
 <div class="toast" role="alert">
   <icon />
@@ -237,69 +237,69 @@
 </div>
 ```
 
-**反模式**:
-- 停留超过 10 秒
-- 无法手动关闭
-- 危险操作无 Undo
-- 遮盖重要内容
+**Anti-patterns**:
+- Stay longer than 10 seconds
+- Cannot manually close
+- Dangerous operations without Undo
+- Cover important content
 
 ---
 
-## Alert | 警告提示
+## Alert | Alert
 
-**何时使用**: 向用户展示重要状态信息
+**When to use**: Displaying important status information to user
 
-**最佳实践**:
-- 使用语义化颜色（success/error/warning/info）
-- 最多 1-2 句话
-- 配合图标增强识别
-- 可选带操作按钮
+**Best practices**:
+- Use semantic colors (success/error/warning/info)
+- Maximum 1-2 sentences
+- Use icons to enhance recognition
+- Optional action buttons
 
-**变体**:
-- **Success**: 绿色，用于操作成功
-- **Error**: 红色，用于错误提示，需要解决
-- **Warning**: 黄色/橙色，用于警告
-- **Info**: 蓝色，用于一般信息
+**Variants**:
+- **Success**: Green, for successful operations
+- **Error**: Red, for error messages, needs resolution
+- **Warning**: Yellow/orange, for warnings
+- **Info**: Blue, for general information
 
-**反模式**:
-- 语义化颜色用于装饰
-- 超过 3 行文字
-- 堆叠多个 Alert
+**Anti-patterns**:
+- Semantic colors used for decoration
+- More than 3 lines of text
+- Multiple Alerts stacked
 
 ---
 
-## Badge | 徽章
+## Badge | Badge
 
-**何时使用**: 状态标签、元数据
+**When to use**: Status labels, metadata
 
-**最佳实践**:
-- 1-2 个词
-- pill 形状用于状态
-- 颜色不超过 3 种（区分不同状态）
-- 与上下文对比度足够
+**Best practices**:
+- 1-2 words
+- Pill shape for status
+- No more than 3 colors (to distinguish different states)
+- Sufficient contrast with context
 
-**变体**:
+**Variants**:
 - **Status badges**: Active, Pending, Archived
-- **Count badges**: 数字计数
-- **Tag badges**: 分类标签
+- **Count badges**: Number count
+- **Tag badges**: Category tags
 
-**反模式**:
-- 彩虹配色（每个状态一个鲜艳颜色）
-- 超过 3 个词
-- 边框与背景无对比
+**Anti-patterns**:
+- Rainbow colors (each state a bright color)
+- More than 3 words
+- Border has no contrast with background
 
 ---
 
-## Empty State | 空状态
+## Empty State | Empty State
 
-**何时使用**: 列表/数据为空时
+**When to use**: When list/data is empty
 
-**最佳实践**:
-- 提供插图或图标
-- 用正向语言（「还没有项目，创建第一个吧」而非「暂无数据」）
-- 提供 CTA 按钮引导用户行动
+**Best practices**:
+- Provide illustration or icon
+- Use positive language ("No projects yet, create your first one" not "No data")
+- Provide CTA button to guide user action
 
-**结构**:
+**Structure**:
 ```html
 <div class="empty-state">
   <icon illustration />
@@ -309,24 +309,24 @@
 </div>
 ```
 
-**反模式**:
-- 「No data」纯文字
-- 无引导用户下一步
-- 负面语气
+**Anti-patterns**:
+- "No data" plain text
+- No guidance for next step
+- Negative tone
 
 ---
 
-## Loading | 加载状态
+## Loading | Loading State
 
-**何时使用**: 内容加载中
+**When to use**: While content is loading
 
-**最佳实践**:
-- Skeleton 优于 Spinner（300ms 延迟后显示）
-- Skeleton 要与实际布局匹配
-- Spinner 用于按钮内或小区域
-- 提供加载进度百分比（如果可计算）
+**Best practices**:
+- Skeleton is better than Spinner (show after 300ms delay)
+- Skeleton should match actual layout
+- Spinner for buttons or small areas
+- Provide loading progress percentage (if calculable)
 
-**Skeleton 示例**:
+**Skeleton Example**:
 ```html
 <div class="skeleton">
   <div class="skeleton-line" style="width: 60%"></div>
@@ -335,24 +335,24 @@
 </div>
 ```
 
-**反模式**:
-- Spinner 用于可预知布局的内容
-- 骨架屏与实际内容布局不符
-- 无加载状态（内容闪烁）
+**Anti-patterns**:
+- Spinner for content with predictable layout
+- Skeleton doesn't match actual content layout
+- No loading state (content flickers)
 
 ---
 
-## Dropdown | 下拉菜单
+## Dropdown | Dropdown
 
-**何时使用**: 选择列表、操作菜单
+**When to use**: Selection list, action menu
 
-**最佳实践**:
-- 菜单项 7±2 个（符合认知）
-- 危险操作放在最后，用红色
-- 支持键盘导航（上下箭头 + Enter）
-- 点击外部或 Escape 关闭
+**Best practices**:
+- Menu items 7±2 (matches cognition)
+- Dangerous operations at the end, in red
+- Support keyboard navigation (up/down arrows + Enter)
+- Click outside or Escape to close
 
-**结构**:
+**Structure**:
 ```html
 <div class="dropdown">
   <button aria-haspopup="true">Options</button>
@@ -365,101 +365,101 @@
 </div>
 ```
 
-**反模式**:
-- 菜单项超过 10 个（用分组或搜索替代）
-- 无键盘导航
-- 危险操作在列表顶部
+**Anti-patterns**:
+- More than 10 menu items (use grouping or search instead)
+- No keyboard navigation
+- Dangerous operations at the top of the list
 
 ---
 
-## Tabs | 标签页
+## Tabs | Tabs
 
-**何时使用**: 同页面切换不同面板
+**When to use**: Switching different panels on the same page
 
-**最佳实践**:
-- 2-7 个 Tab
-- Active 状态有视觉指示（底线或背景）
-- 移动端折叠为 Accordion 或 Scroll
-- Tab 内容懒加载
+**Best practices**:
+- 2-7 Tabs
+- Active state has visual indicator (underline or background)
+- Mobile collapses to Accordion or Scroll
+- Tab content lazy loads
 
-**反模式**:
-- 超过 7 个 Tab
-- 无 active 状态指示
-- Tab 间内容无关联
-
----
-
-## Drawer | 抽屉
-
-**何时使用**: 次要面板、详情侧边栏
-
-**最佳实践**:
-- 右滑打开（详情面板）
-- 左滑打开（辅助导航）
-- 宽度 320-480px（桌面）
-- 点击外部或 X 关闭
-
-**反模式**:
-- 遮罩整个页面
-- 与 Modal 混淆使用
+**Anti-patterns**:
+- More than 7 Tabs
+- No active state indicator
+- Tab content unrelated to each other
 
 ---
 
-## Avatar | 头像
+## Drawer | Drawer
 
-**何时使用**: 用户标识
+**When to use**: Secondary panels, detail sidebars
 
-**最佳实践**:
-- 圆形或圆角方形
-- 提供 fallback（首字母或默认图）
-- 多个头像堆叠显示
-- 支持在线/离线状态指示
+**Best practices**:
+- Slide in from right (detail panel)
+- Slide in from left (auxiliary navigation)
+- Width 320-480px (desktop)
+- Click outside or X to close
 
-**尺寸**:
-- sm: 24-32px（列表内）
-- md: 40-48px（默认）
-- lg: 64-80px（个人页）
-
----
-
-## Tooltip | 工具提示
-
-**何时使用**: 图标按钮的说明
-
-**最佳实践**:
-- 延迟显示 200-300ms
-- 悬浮在触发元素上方
-- 文字简短（1-2 句）
-- 不用于关键信息
-
-**反模式**:
-- 关键信息只用 Tooltip
-- 无延迟，频繁触发
-- 文字超过 3 行
+**Anti-patterns**:
+- Covers entire page
+- Confused with Modal
 
 ---
 
-## 布局模式
+## Avatar | Avatar
 
-### 单列布局
-适用于: 表单、详情页、注册/登录
+**When to use**: User identification
 
-### 两栏布局
-适用于: Dashboard、列表+详情
+**Best practices**:
+- Round or rounded square
+- Provide fallback (initials or default image)
+- Multiple avatars stack display
+- Support online/offline status indicator
+
+**Sizes**:
+- sm: 24-32px (in lists)
+- md: 40-48px (default)
+- lg: 64-80px (profile page)
+
+---
+
+## Tooltip | Tooltip
+
+**When to use**: Explanation for icon buttons
+
+**Best practices**:
+- Delay display 200-300ms
+- Hover above trigger element
+- Text is brief (1-2 sentences)
+- Not for critical information
+
+**Anti-patterns**:
+- Critical information only in Tooltip
+- No delay, triggers frequently
+- Text more than 3 lines
+
+---
+
+## Layout Patterns
+
+### Single Column Layout
+Applicable: Forms, detail pages, registration/login
+
+### Two Column Layout
+Applicable: Dashboard, list + detail
 
 ```
 [Sidebar 240px] [Content fluid]
 ```
 
-### 三栏布局
-适用于: 邮件、复杂 Dashboard
+### Three Column Layout
+Applicable: Email, complex Dashboard
 
 ```
 [Nav 240px] [Content fluid] [Detail 320px]
 ```
 
-### 网格布局
-适用于: 卡片列表、相册、产品列表
+### Grid Layout
+Applicable: Card lists, albums, product lists
 
 ```
 .grid {
@@ -471,28 +471,28 @@
 
 ---
 
-## 组件组合规则
+## Component Composition Rules
 
-### 表单 + 卡片
+### Form + Card
 ```
 Card
-  Header: 标题 + 操作按钮
+  Header: Title + Action button
   Body: Form
     Input groups
     Validation messages
   Footer: Cancel + Submit
 ```
 
-### 列表 + 分页
+### List + Pagination
 ```
 Container
-  Header: 标题 + New 按钮
+  Header: Title + New button
   Filter bar (optional)
   Table / Card list
   Pagination / Load more
 ```
 
-### Dashboard 布局
+### Dashboard Layout
 ```
 Dashboard
   KPI Cards row
@@ -502,14 +502,14 @@ Dashboard
 
 ---
 
-## 快速查询表
+## Quick Reference Table
 
-| 需求 | 组件 |
-|------|------|
-| 触发操作 | Button |
-| 收集输入 | Input, Form, Select |
-| 展示内容 | Card, Table, Badge, Avatar |
-| 导航 | Navigation, Tabs, Breadcrumbs |
-| 反馈 | Toast, Alert, Modal |
-| 状态 | Empty State, Loading, Skeleton |
-| 组织 | Drawer, Dropdown, Tooltip |
+| Need | Component |
+|------|-----------|
+| Trigger action | Button |
+| Collect input | Input, Form, Select |
+| Display content | Card, Table, Badge, Avatar |
+| Navigation | Navigation, Tabs, Breadcrumbs |
+| Feedback | Toast, Alert, Modal |
+| State | Empty State, Loading, Skeleton |
+| Organization | Drawer, Dropdown, Tooltip |

@@ -1,115 +1,115 @@
-# 成功标准设计 | Success Criteria
+# Success Criteria Design | Success Criteria
 
-## 核心目标
+## Core Objective
 
-将模糊的"成功"转化为**可测量、可验证的指标**。
+Transform vague "success" into **measurable, verifiable metrics**.
 
-## 好标准 vs 坏标准
+## Good Criteria vs. Bad Criteria
 
-| 坏标准 | 好标准 | 改进点 |
-|--------|--------|--------|
-| "系统要快" | "API 响应时间 p95 < 200ms" | 具体数值 |
-| "好用" | "新用户首次任务完成率 > 80%" | 可测量 |
-| "更多人用" | "月活跃用户增长 20%" | 有基准线 |
-| "稳定" | "可用性 > 99.9%" | 可验证 |
+| Bad Criteria | Good Criteria | Improvement |
+|--------------|---------------|--------------|
+| "System must be fast" | "API response time p95 < 200ms" | Specific value |
+| "Easy to use" | "New user first task completion rate > 80%" | Measurable |
+| "More users" | "Monthly active user growth 20%" | Has baseline |
+| "Stable" | "Availability > 99.9%" | Verifiable |
 
-## 指标类型
+## Metric Types
 
-### 1. 业务指标
+### 1. Business Metrics
 ```
-- 收入增长 X%
-- 用户增长 X%
-- 转化率提高 X%
-- 客户满意度提升 X%
-```
-
-### 2. 产品指标
-```
-- 日活/月活用户数
-- 用户留存率
-- 功能使用率
-- 任务完成率
+- Revenue growth X%
+- User growth X%
+- Conversion rate improvement X%
+- Customer satisfaction improvement X%
 ```
 
-### 3. 技术指标
+### 2. Product Metrics
 ```
-- 响应时间 (p50/p95/p99)
-- 可用性 (uptime %)
-- 错误率 (error rate %)
-- 性能 (throughput)
+- DAU/MAU users
+- User retention rate
+- Feature adoption rate
+- Task completion rate
 ```
 
-## 指标设计步骤
+### 3. Technical Metrics
+```
+- Response time (p50/p95/p99)
+- Availability (uptime %)
+- Error rate (error rate %)
+- Performance (throughput)
+```
 
-### Step 1: 从业务目标反推
+## Metric Design Steps
+
+### Step 1: Backtrack from Business Goals
 
 ```
-业务目标：增加收入
+Business goal: Increase revenue
     ↓
-用户行为：更多付费用户
+User behavior: More paying users
     ↓
-转化漏斗：注册 → 试用 → 付费
+Conversion funnel: Register → Trial → Pay
     ↓
-关键指标：试用转付费率
+Key metric: Trial to paid conversion rate
 ```
 
-### Step 2: 确定基准线
+### Step 2: Establish Baseline
 
 ```
-现状：[当前数值]
-目标：[期望数值]
-差距：[需要提升多少]
+Current state: [current value]
+Goal: [expected value]
+Gap: [how much improvement needed]
 ```
 
-### Step 3: 设置验收条件
+### Step 3: Set Acceptance Criteria
 
 ```
-指标：付费转化率
-基准：当前 5%
-目标：提升到 10%
-验收：连续 30 天转化率 >= 10%
+Metric: Paid conversion rate
+Baseline: Current 5%
+Target: Increase to 10%
+Acceptance: Conversion rate >= 10% for 30 consecutive days
 ```
 
-## 指标模板
+## Metric Template
 
 ```markdown
-## 成功标准
+## Success Criteria
 
-| # | 指标名称 | 当前值 | 目标值 | 衡量方式 | 验收条件 |
-|---|----------|--------|--------|----------|----------|
-| 1 |          |        |        |          |          |
-| 2 |          |        |        |          |          |
-| 3 |          |        |        |          |          |
+| # | Metric Name | Current | Target | Measurement | Acceptance Criteria |
+|---|-------------|---------|--------|-------------|---------------------|
+| 1 |             |         |        |             |                     |
+| 2 |             |         |        |             |                     |
+| 3 |             |         |        |             |                     |
 
-### 指标说明
+### Metric Details
 
-**指标 1：[名称]**
-- 定义：[具体计算方式]
-- 数据来源：[从哪里获取数据]
-- 衡量频率：[每天/每周/每月]
+**Metric 1: [Name]**
+- Definition: [Specific calculation method]
+- Data source: [Where to get data]
+- Measurement frequency: [Daily/Weekly/Monthly]
 ```
 
-## 常见错误
+## Common Mistakes
 
-| 错误 | 问题 | 修正 |
-|------|------|------|
-| 技术指标优先 | 可能和业务脱节 | 先业务后技术 |
-| 指标太多 | 无法聚焦 | 最多 5 个核心指标 |
-| 无法测量 | 无法验证 | 找可量化的替代指标 |
-| 没有基准 | 无法评估进度 | 先建立基准线 |
+| Mistake | Problem | Fix |
+|---------|---------|-----|
+| Prioritizing technical metrics | May disconnect from business | Business first, then technical |
+| Too many metrics | Cannot focus | Maximum 5 core metrics |
+| Cannot measure | Cannot verify | Find quantifiable alternative metrics |
+| No baseline | Cannot assess progress | Establish baseline first |
 
-## SMART 原则
+## SMART Principles
 
-好指标应该是：
+Good metrics should be:
 
-- **S**pecific（具体）：指标定义清晰
-- **M**easurable（可测量）：有明确数值
-- **A**chievable（可达成）：有资源可以实现
-- **R**elevant（相关）：和业务目标相关
-- **T**ime-bound（有时限）：有明确的时间节点
+- **S**pecific: Metric definition is clear
+- **M**easurable: Has explicit values
+- **A**chievable: Resources available to achieve
+- **R**elevant: Relevant to business goals
+- **T**ime-bound: Has clear time milestones
 
-## 何时退出
+## When to Exit
 
-- 至少有 3 个可测量的指标
-- 每个指标都有明确的当前值和目标值
-- 用户确认这些指标可以衡量成功
+- At least 3 measurable metrics
+- Each metric has clear current value and target value
+- User confirms these metrics can measure success

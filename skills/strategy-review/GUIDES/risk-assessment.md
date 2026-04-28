@@ -1,106 +1,106 @@
-# 风险评估方法 | Risk Assessment
+# Risk Assessment Method | Risk Assessment
 
-## 核心目标
+## Core Objective
 
-识别、评估风险，制定应对策略，确保项目可控。
+Identify, evaluate risks, develop response strategies, and ensure project control.
 
-## 风险分类
+## Risk Classification
 
-| 类别 | 示例 | 影响 |
+| Category | Examples | Impact |
 |------|------|------|
-| **市场风险** | 需求不如预期、竞争加剧 | 收入 |
-| **技术风险** | 技术难点、性能问题、安全漏洞 | 产品 |
-| **运营风险** | 团队流失、关键人员离开 | 执行 |
-| **财务风险** | 资金链断裂、成本超支 | 生存 |
-| **合规风险** | 政策变化、侵权 | 法律 |
+| **Market risk** | Demand below expectations, intensified competition | Revenue |
+| **Technical risk** | Technical difficulties, performance issues, security vulnerabilities | Product |
+| **Operational risk** | Team attrition, key personnel departure | Execution |
+| **Financial risk** | Cash flow rupture, cost overruns | Survival |
+| **Compliance risk** | Policy changes, infringement | Legal |
 
-## 风险评估矩阵
+## Risk Assessment Matrix
 
-| 概率/影响 | 低影响 | 中影响 | 高影响 |
+| Probability/Impact | Low Impact | Medium Impact | High Impact |
 |------------|--------|--------|--------|
-| **高概率** | 中风险 | 高风险 | 极高风险 |
-| **中概率** | 低风险 | 中风险 | 高风险 |
-| **低概率** | 低风险 | 低风险 | 中风险 |
+| **High probability** | Medium risk | High risk | Very high risk |
+| **Medium probability** | Low risk | Medium risk | High risk |
+| **Low probability** | Low risk | Low risk | Medium risk |
 
-## 风险识别步骤
+## Risk Identification Steps
 
-### 1. 发散 - 头脑风暴风险
-
-```
-"什么可能导致这个项目失败？"
-"用户可能不接受的3个原因是什么？"
-"技术上的3个最大挑战是什么？"
-```
-
-### 2. 聚焦 - 分类和优先级
+### 1. Divergence - Brainstorm Risks
 
 ```
-可能性高 + 影响大 → 必须解决
-可能性低 + 影响大 → 监控和预案
-可能性高 + 影响小 → 快速解决
+"What could cause this project to fail?"
+"What are 3 reasons users might not accept it?"
+"What are the 3 biggest technical challenges?"
 ```
 
-## 风险记录模板
+### 2. Convergence - Classify and Prioritize
+
+```
+High likelihood + High impact → Must resolve
+Low likelihood + High impact → Monitor and prepare contingency
+High likelihood + Low impact → Resolve quickly
+```
+
+## Risk Register Template
 
 ```markdown
-## 风险清单
+## Risk Register
 
-| ID | 风险描述 | 类别 | 概率 | 影响 | 优先级 | 应对策略 |
+| ID | Risk Description | Category | Probability | Impact | Priority | Response Strategy |
 |----|----------|------|------|------|--------|----------|
 | R1 |          |      |      |      |        |          |
 | R2 |          |      |      |      |        |          |
 ```
 
-## 应对策略
+## Response Strategies
 
-| 策略 | 适用场景 | 成本 |
+| Strategy | Applicable Scenario | Cost |
 |------|----------|------|
-| **规避** | 风险太高 | 放弃机会 |
-| **减轻** | 降低概率或影响 | 投入资源 |
-| **转移** | 分担风险 | 保险/合作 |
-| **接受** | 风险低或不可避免 | 预留缓冲 |
+| **Avoid** | Risk too high | Give up opportunity |
+| **Mitigate** | Reduce probability or impact | Invest resources |
+| **Transfer** | Share risk | Insurance/collaboration |
+| **Accept** | Low risk or unavoidable | Reserve buffer |
 
-## 关键风险示例
+## Key Risk Examples
 
-### 1. 竞争风险
-
-```markdown
-**风险**: 巨头入场，以更低价格或更好体验竞争
-**概率**: 中
-**影响**: 高
-**应对**: 
-- 快速建立用户壁垒（网络效应）
-- 差异化聚焦细分市场
-- 建立品牌忠诚度
-```
-
-### 2. 技术风险
+### 1. Competition Risk
 
 ```markdown
-**风险**: 核心功能性能无法达到要求
-**概率**: 中
-**影响**: 高
-**应对**:
-- 早期 POC 验证技术可行性
-- 预留技术攻关时间
-- 备选技术方案
+**Risk**: Major player enters with lower price or better experience
+**Probability**: Medium
+**Impact**: High
+**Response**:
+- Quickly build user barriers (network effects)
+- Differentiate by focusing on niche market
+- Build brand loyalty
 ```
 
-### 3. 资金风险
+### 2. Technical Risk
 
 ```markdown
-**风险**: 资金在产品完成前耗尽
-**概率**: 中
-**影响**: 致命
-**应对**:
-- 分阶段融资
-- 控制 burn rate
-- 设定最小 MVP
+**Risk**: Core functionality performance cannot meet requirements
+**Probability**: Medium
+**Impact**: High
+**Response**:
+- Early POC to validate technical feasibility
+- Reserve time for technical breakthroughs
+- Backup technical solutions
 ```
 
-## 何时退出
+### 3. Funding Risk
 
-- 主要风险已识别（至少5个）
-- 每个风险有概率和影响评估
-- 关键风险有应对策略
-- 用户确认风险可接受
+```markdown
+**Risk**: Funds run out before product completion
+**Probability**: Medium
+**Impact**: Fatal
+**Response**:
+- Phase-based fundraising
+- Control burn rate
+- Define minimum MVP
+```
+
+## When to Exit
+
+- Major risks have been identified (at least 5)
+- Each risk has probability and impact assessment
+- Key risks have response strategies
+- Users confirm risks are acceptable

@@ -1,151 +1,151 @@
-# 回滚指南 | Rollback Procedures
+# Rollback Guide | Rollback Procedures
 
-## 核心目标
+## Core Objective
 
-在部署失败时快速、安全地回滚到稳定版本。
+Quickly and safely rollback to a stable version when deployment fails.
 
-## 回滚触发条件
+## Rollback Triggers
 
-| 条件 | 描述 |
-|------|------|
-| 健康检查失败 | 多次重试仍无法通过 |
-| 错误率飙升 | 超过正常基线 3 倍 |
-| 关键功能不可用 | 核心功能报错 |
-| 性能严重下降 | 响应时间超过 SLA 5 倍 |
+| Condition | Description |
+|-----------|-------------|
+| Health check failed | Still failing after multiple retries |
+| Error rate spiked | Exceeds normal baseline by 3x |
+| Critical functionality unavailable | Core features erroring |
+| Severe performance degradation | Response time exceeds SLA by 5x |
 
-## 回滚策略
+## Rollback Strategies
 
-### 1. 蓝绿部署
-
-```markdown
-[Green] 生产环境 ← 当前流量
-[Blue]  新版本   ← 备用
-
-问题发生时：
-切换流量到 Blue → 停止 Green 的问题版本
-```
-
-### 2. 金丝雀发布
+### 1. Blue-Green Deployment
 
 ```markdown
-流量分配：
-5%  → 新版本
-95% → 稳定版本
+[Green] Production Environment ← Current Traffic
+[Blue]  New Version           ← Standby
 
-发现问题：
-逐步减少新版本流量直至完全回滚
+When problem occurs:
+Switch traffic to Blue → Stop problematic Green version
 ```
 
-### 3. 快速回滚
+### 2. Canary Release
 
 ```markdown
-当发现问题时：
-1. 立即停止新版本
-2. 切换到上一稳定版本
-3. 保留现场用于排查
+Traffic allocation:
+5%  → New version
+95% → Stable version
+
+Problem discovered:
+Gradually reduce new version traffic until complete rollback
 ```
 
-## 回滚步骤
-
-### Step 1: 确认问题
+### 3. Fast Rollback
 
 ```markdown
-检查指标：
-- 错误率是否真的升高？
-- 是否是其他原因（网络、依赖）？
-- 影响范围有多大？
+When problem is discovered:
+1. Immediately stop new version
+2. Switch to previous stable version
+3. Preserve现场 for investigation
 ```
 
-### Step 2: 决策
+## Rollback Steps
+
+### Step 1: Confirm Problem
 
 ```markdown
-需要回滚吗？
-- 问题影响核心功能 → 回滚
-- 问题影响少量用户 → 可以继续观察
-- 问题可控 → 尝试修复后部署
+Check metrics:
+- Is error rate really increased?
+- Is it another reason (network, dependency)?
+- How large is the impact scope?
 ```
 
-### Step 3: 执行回滚
+### Step 2: Decision
+
+```markdown
+Need to rollback?
+- Problem affects core functionality → Rollback
+- Problem affects small number of users → Can continue observing
+- Problem is controllable → Try fixing then deploy
+```
+
+### Step 3: Execute Rollback
 
 ```bash
-# 方法 A: 使用版本标签
+# Method A: Use version tags
 git checkout v1.2.3
 npm run build
 pm2 restart app
 
-# 方法 B: 使用容器
+# Method B: Use containers
 kubectl rollout undo deployment/myapp
 
-# 方法 C: 使用负载均衡
-将流量从新版本切回旧版本
+# Method C: Use load balancer
+Switch traffic from new version back to old version
 ```
 
-### Step 4: 验证
+### Step 4: Verify
 
 ```bash
-# 健康检查
+# Health check
 curl https://api.example.com/health
 
-# 功能验证
-运行冒烟测试
+# Functionality verification
+Run smoke tests
 
-# 指标确认
-错误率恢复正常
-响应时间恢复正常
+# Metric confirmation
+Error rate returns to normal
+Response time returns to normal
 ```
 
-### Step 5: 通知
+### Step 5: Notify
 
 ```markdown
-回滚完成后：
-1. 通知相关团队
-2. 记录事件
-3. 安排问题复盘
+After rollback complete:
+1. Notify relevant teams
+2. Document incident
+3. Schedule postmortem
 ```
 
-## 回滚时间目标
+## Rollback Time Objectives
 
-| 场景 | 目标时间 |
-|------|----------|
-| 快速回滚 | < 5 分钟 |
-| 标准回滚 | < 15 分钟 |
-| 复杂回滚 | < 30 分钟 |
+| Scenario | Target Time |
+|----------|-------------|
+| Fast rollback | < 5 minutes |
+| Standard rollback | < 15 minutes |
+| Complex rollback | < 30 minutes |
 
-## 回滚后处理
+## Post-Rollback Handling
 
-### 1. 现场保留
+### 1. Preserve现场
 
 ```markdown
-不要立即删除问题版本
-保留日志、Metrics、Trace
-用于问题排查
+Do not delete problematic version immediately
+Preserve logs, Metrics, Traces
+For problem investigation
 ```
 
-### 2. 事件记录
+### 2. Incident Documentation
 
 ```markdown
-## 回滚事件报告
+## Rollback Incident Report
 
-时间：[时间]
-问题：[现象]
-原因：[初步判断]
-影响：[范围]
-回滚：[时长]
-改进：[措施]
+Time: [Time]
+Problem: [Phenomenon]
+Cause: [Preliminary judgment]
+Impact: [Scope]
+Rollback: [Duration]
+Improvement: [Measures]
 ```
 
-### 3. 复盘会议
+### 3. Postmortem Meeting
 
 ```markdown
-讨论：
-1. 问题根因是什么？
-2. 为什么测试没发现？
-3. 如何防止再次发生？
+Discussion:
+1. What is the root cause?
+2. Why didn't testing catch it?
+3. How to prevent it from happening again?
 ```
 
-## 何时退出
+## When to Exit
 
-- 系统恢复到稳定状态
-- 错误率回到正常基线
-- 核心功能正常工作
-- 用户受影响最小化
+- System restored to stable state
+- Error rate back to normal baseline
+- Core functionality working normally
+- User impact minimized

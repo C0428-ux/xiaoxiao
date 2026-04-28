@@ -1,49 +1,49 @@
-# Subagent Patterns | Subagent 使用模式
+# Subagent Patterns | Subagent Usage Patterns
 
-本指南说明如何在 TDD 开发中使用 subagents 并行分发任务。
-
----
-
-## 何时使用 Subagent
-
-### 适合并行的任务
-
-| 任务类型 | 特征 | 示例 |
-|---------|------|------|
-| **独立后端任务** | 无共享状态，不同文件 | 创建 User API、Project API |
-| **独立前端任务** | 无共享状态，不同组件 | Button 组件、Card 组件 |
-| **测试任务** | 独立模块的测试 | Service unit tests |
-
-### 不适合并行的任务
-
-| 任务类型 | 原因 |
-|---------|------|
-| **有依赖的任务** | 必须等待前置任务完成 |
-| **修改同一文件** | 需要文件锁，可能冲突 |
-| **集成测试** | 需要所有模块完成后才能运行 |
+This guide explains how to use subagents in TDD development for parallel task distribution.
 
 ---
 
-## Subagent 类型
+## When to Use Subagents
+
+### Tasks Suitable for Parallel Execution
+
+| Task Type | Characteristics | Example |
+|-----------|---------------|---------|
+| **Independent backend tasks** | No shared state, different files | Create User API, Project API |
+| **Independent frontend tasks** | No shared state, different components | Button component, Card component |
+| **Testing tasks** | Tests for independent modules | Service unit tests |
+
+### Tasks Not Suitable for Parallel Execution
+
+| Task Type | Reason |
+|-----------|--------|
+| **Tasks with dependencies** | Must wait for prerequisites to complete |
+| **Modifying the same file** | Requires file locking, potential conflicts |
+| **Integration tests** | Requires all modules to complete before running |
+
+---
+
+## Subagent Types
 
 ### 1. Parallel Dispatcher
 
-**职责**: 读取任务依赖图，分发并行任务给 workers
+**Responsibility**: Read task dependency graph, distribute parallel tasks to workers
 
-**输入**:
-- task-planning 输出
-- ui-design 目录路径
+**Input**:
+- task-planning output
+- ui-design directory path
 
-**输出**:
-- 初始化 Message Bus
-- 分发多个 task-worker
-- 返回执行结果
+**Output**:
+- Initialize Message Bus
+- Distribute multiple task-workers
+- Return execution results
 
 ### 2. Task Worker
 
-**职责**: 执行单个任务，遵循 TDD
+**Responsibility**: Execute a single task, following TDD
 
-**输入**:
+**Input**:
 ```javascript
 {
   taskId: string,
@@ -51,33 +51,33 @@
   taskType: 'backend' | 'frontend',
   files: string[],
   acceptance: string,
-  uiDesignPath: string,  // 前端任务需要
+  uiDesignPath: string,  // Required for frontend tasks
   busPath: string,
   workerId: string
 }
 ```
 
-**输出**:
-- 完成的代码文件
-- 测试结果
-- Message Bus 事件
+**Output**:
+- Completed code files
+- Test results
+- Message Bus events
 
 ---
 
-## Message Bus 协调
+## Message Bus Coordination
 
-### 文件结构
+### File Structure
 
 ```
 docs/xiaoxiao/plans/tdd/.message-bus/
-├── worker-status.json    # 所有 worker 状态
-├── locks.json            # 文件锁
+├── worker-status.json    # All worker statuses
+├── locks.json            # File locks
 └── events/
     ├── TASK_COMPLETE_{taskId}.event
     └── TASK_FAILED_{taskId}.event
 ```
 
-### worker-status.json 格式
+### worker-status.json Format
 
 ```javascript
 {
@@ -98,20 +98,20 @@ docs/xiaoxiao/plans/tdd/.message-bus/
 }
 ```
 
-### events/ 事件格式
+### events/ Event Format
 
 **TASK_COMPLETE_{taskId}.event**:
 ```
 task-1-1234567890
 ```
-（内容为 commit SHA 或 taskId）
+(Content is commit SHA or taskId)
 
 **TASK_FAILED_{taskId}.event**:
 ```
 Error: Cannot find module '../auth'
 ```
 
-### locks.json 格式
+### locks.json Format
 
 ```javascript
 {
@@ -122,33 +122,33 @@ Error: Cannot find module '../auth'
 
 ---
 
-## DAG 任务依赖分析
+## DAG Task Dependency Analysis
 
-### 依赖图示例
+### Dependency Graph Example
 
 ```
-Task A (无依赖) ──┬──> Task C (依赖 A) ───> Task E (依赖 C)
-                  └──> Task D (依赖 A)
-Task B (无依赖) ──────────────────────────────> Task F (依赖 B)
+Task A (no dependencies) ──┬──> Task C (depends on A) ───> Task E (depends on C)
+                            └──> Task D (depends on A)
+Task B (no dependencies) ──────────────────────────────> Task F (depends on B)
 ```
 
-### 并行组
+### Parallel Groups
 
 ```javascript
-// 第一组（可并行）
+// First group (can run in parallel)
 ['Task A', 'Task B']
 
-// 第二组（依赖 A, B 完成）
+// Second group (depends on A, B completing)
 ['Task C', 'Task D', 'Task F']
 
-// 第三组（依赖 C 完成）
+// Third group (depends on C completing)
 ['Task E']
 ```
 
-### 前端任务依赖后端任务
+### Frontend Tasks Depending on Backend Tasks
 
 ```javascript
-// 前端任务通常依赖后端 API 完成
+// Frontend tasks usually depend on backend API completion
 const dependencyMap = {
   'LoginPage': ['LoginAPI', 'AuthService'],
   'UserList': ['UserAPI', 'UserService'],
@@ -158,21 +158,21 @@ const dependencyMap = {
 
 ---
 
-## Worker 协调流程
+## Worker Coordination Flow
 
-### 1. Dispatcher 初始化
+### 1. Dispatcher Initialization
 
 ```javascript
-// 初始化 Message Bus
+// Initialize Message Bus
 mkdir -p `${busPath}/events`;
 Write(`${busPath}/worker-status.json`, '{}');
 Write(`${busPath}/locks.json`, '{}');
 ```
 
-### 2. Dispatcher 分发任务
+### 2. Dispatcher Distributes Tasks
 
 ```javascript
-// 并行分发第一组任务
+// Distribute first group of tasks in parallel
 const workers = await Promise.all(
   parallelGroup.map(task => Agent({
     subagent_type: 'task-worker',
@@ -182,10 +182,10 @@ const workers = await Promise.all(
 );
 ```
 
-### 3. Worker 注册
+### 3. Worker Registration
 
 ```javascript
-// 每个 worker 启动时注册
+// Each worker registers on startup
 status[workerId] = {
   worker_id: workerId,
   task_id: taskId,
@@ -196,58 +196,58 @@ status[workerId] = {
 Write(`${busPath}/worker-status.json`, JSON.stringify(status));
 ```
 
-### 4. Worker 执行 TDD
+### 4. Worker Executes TDD
 
 ```javascript
-// RED - 写失败测试
+// RED - write failing test
 Write(testFile, testCode);
 Bash('npm test -- --test ' + testFile);
-// 验证失败
+// Verify failure
 
-// GREEN - 写最小实现
+// GREEN - write minimal implementation
 Write(implFile, implCode);
 Bash('npm test -- --test ' + testFile);
-// 验证通过
+// Verify pass
 
-// REFACTOR - 清理
+// REFACTOR - cleanup
 ```
 
-### 5. Worker 完成任务
+### 5. Worker Completes Task
 
 ```javascript
-// 发送完成事件
+// Send completion event
 Write(`${busPath}/events/TASK_COMPLETE_${taskId}.event`, taskId);
 
-// 更新状态
+// Update status
 status[workerId].status = 'COMPLETED';
 status[workerId].last_heartbeat = new Date().toISOString();
 Write(`${busPath}/worker-status.json`, JSON.stringify(status));
 ```
 
-### 6. Dispatcher 轮询完成
+### 6. Dispatcher Polls for Completion
 
 ```javascript
-// 轮询检查完成事件
+// Poll for completion events
 while (completed < expected) {
   const events = await Glob(`${busPath}/events/*.event`);
-  // 处理完成/失败事件
-  // 检查是否有任务现在可以执行
+  // Process completion/failure events
+  // Check if any tasks are now ready to execute
   await sleep(5000);
 }
 ```
 
 ---
 
-## 文件锁机制
+## File Lock Mechanism
 
-### 获取锁
+### Acquiring Lock
 
 ```javascript
 async function acquireLock(filePath) {
   const locks = JSON.parse(await Read(`${busPath}/locks.json`));
 
   if (locks[filePath]) {
-    return false; // 锁被占用
+    return false; // Lock is held
   }
 
   locks[filePath] = workerId;
@@ -256,7 +256,7 @@ async function acquireLock(filePath) {
 }
 ```
 
-### 释放锁
+### Releasing Lock
 
 ```javascript
 async function releaseLock(filePath) {
@@ -266,12 +266,12 @@ async function releaseLock(filePath) {
 }
 ```
 
-### 使用锁
+### Using Lock
 
 ```javascript
-// 修改共享文件前
+// Before modifying shared files
 while (!(await acquireLock(filePath))) {
-  await sleep(1000); // 等待锁释放
+  await sleep(1000); // Wait for lock release
 }
 
 try {
@@ -283,26 +283,26 @@ try {
 
 ---
 
-## 并行限制
+## Parallel Limits
 
-| 限制 | 值 | 原因 |
-|------|-----|------|
-| 最大并发 workers | 5 | 避免资源竞争 |
-| Worker 超时 | 30 分钟 | 防止僵尸进程 |
-| 心跳间隔 | 5 分钟 | 监控 worker 存活 |
-| 轮询间隔 | 5 秒 | 及时发现完成事件 |
+| Limit | Value | Reason |
+|-------|-------|--------|
+| Max concurrent workers | 5 | Avoid resource contention |
+| Worker timeout | 30 minutes | Prevent zombie processes |
+| Heartbeat interval | 5 minutes | Monitor worker存活 |
+| Polling interval | 5 seconds | Detect completion events promptly |
 
 ---
 
-## 错误处理
+## Error Handling
 
-### Worker 失败
+### Worker Failure
 
 ```javascript
-// 隔离失败任务
+// Isolate failed task
 const failedTaskId = parseFailedEvent(event);
 
-// 标记依赖任务为 BLOCKED
+// Mark dependent tasks as BLOCKED
 dag.nodes.forEach(node => {
   if (node.dependsOn.includes(failedTaskId)) {
     node.status = 'BLOCKED';
@@ -310,27 +310,27 @@ dag.nodes.forEach(node => {
   }
 });
 
-// 继续执行无依赖任务
+// Continue executing tasks without dependencies
 ```
 
-### 超时处理
+### Timeout Handling
 
 ```javascript
-// 检查 worker 是否超时
+// Check if worker has timed out
 const now = Date.now();
 const heartbeatAge = now - new Date(status.last_heartbeat).getTime();
 
-if (heartbeatAge > 30 * 60 * 1000) { // 30 分钟
-  // 标记为 FAILED
-  // 继续其他任务
+if (heartbeatAge > 30 * 60 * 1000) { // 30 minutes
+  // Mark as FAILED
+  // Continue other tasks
 }
 ```
 
 ---
 
-## 结果汇总
+## Result Summary
 
-### Dispatcher 最终输出
+### Dispatcher Final Output
 
 ```javascript
 {
@@ -350,13 +350,13 @@ if (heartbeatAge > 30 * 60 * 1000) { // 30 分钟
 
 ---
 
-## 快速查询
+## Quick Reference
 
-| 场景 | 模式 |
-|------|------|
-| 并行分发后端任务 | parallel-dispatcher + backend task-worker |
-| 前端任务并行 | parallel-dispatcher + frontend task-worker |
-| 任务有依赖 | 等待依赖完成后再分发 |
-| 修改同一文件 | 文件锁机制 |
-| Worker 超时 | 心跳监控 + 超时处理 |
-| 任务失败 | 隔离 + 继续无依赖任务 |
+| Scenario | Pattern |
+|----------|---------|
+| Parallel distribution of backend tasks | parallel-dispatcher + backend task-worker |
+| Frontend task parallelization | parallel-dispatcher + frontend task-worker |
+| Tasks with dependencies | Wait for dependencies to complete before distributing |
+| Modifying the same file | File lock mechanism |
+| Worker timeout | Heartbeat monitoring + timeout handling |
+| Task failure | Isolation + continue tasks without dependencies |

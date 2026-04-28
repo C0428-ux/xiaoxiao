@@ -1,50 +1,50 @@
-# API 设计指南 | API Design
+# API Design Guide | API Design
 
-## 核心目标
+## Core Objective
 
-设计清晰、一致、易用的 API 接口。
+Design clear, consistent, and easy-to-use API interfaces.
 
-## RESTful API 基础
+## RESTful API Basics
 
-### 资源命名
+### Resource Naming
 
 ```
-# 好的命名
-GET  /users          # 用户列表
-GET  /users/{id}     # 单个用户
-POST /users          # 创建用户
-PUT  /users/{id}     # 更新用户
-DELETE /users/{id}   # 删除用户
+# Good naming
+GET  /users          # User list
+GET  /users/{id}     # Single user
+POST /users          # Create user
+PUT  /users/{id}     # Update user
+DELETE /users/{id}   # Delete user
 
-# 避免
+# Avoid
 GET /getUsers
 GET /fetchUser?id=1
 POST /createUser
 ```
 
-### HTTP 方法对应
+### HTTP Method Mapping
 
-| 方法 | 用途 | 幂等 |  Body |
-|------|------|------|-------|
-| GET | 查询 | 是 | 无 |
-| POST | 创建 | 否 | 有 |
-| PUT | 全量更新 | 是 | 有 |
-| PATCH | 部分更新 | 否 | 有 |
-| DELETE | 删除 | 是 | 无 |
+| Method | Purpose | Idempotent | Body |
+|--------|---------|------------|------|
+| GET | Query | Yes | No |
+| POST | Create | No | Yes |
+| PUT | Full update | Yes | Yes |
+| PATCH | Partial update | No | Yes |
+| DELETE | Delete | Yes | No |
 
-## API 设计原则
+## API Design Principles
 
-### 1. 一致性
+### 1. Consistency
 
 ```markdown
-## 用户相关
+## User related
 GET    /users
 POST   /users
 GET    /users/{id}
 PUT    /users/{id}
 DELETE /users/{id}
 
-## 订单相关（保持一致）
+## Order related (maintain consistency)
 GET    /orders
 POST   /orders
 GET    /orders/{id}
@@ -52,26 +52,26 @@ PUT    /orders/{id}
 DELETE /orders/{id}
 ```
 
-### 2. 清晰的状态码
+### 2. Clear Status Codes
 
-| 状态码 | 含义 | 场景 |
-|--------|------|------|
-| 200 | 成功 | 正常返回 |
-| 201 | 创建成功 | POST 创建新资源 |
-| 204 | 无内容 | DELETE 成功 |
-| 400 | 客户端错误 | 参数错误 |
-| 401 | 未认证 | 没登录 |
-| 403 | 无权限 | 没权限 |
-| 404 | 不存在 | 资源不存在 |
-| 500 | 服务端错误 | 服务器异常 |
+| Status Code | Meaning | Scenario |
+|-------------|---------|----------|
+| 200 | Success | Normal return |
+| 201 | Created | POST creates new resource |
+| 204 | No content | DELETE success |
+| 400 | Client error | Parameter error |
+| 401 | Unauthorized | Not logged in |
+| 403 | Forbidden | No permission |
+| 404 | Not found | Resource does not exist |
+| 500 | Server error | Server exception |
 
-### 3. 错误响应格式
+### 3. Error Response Format
 
 ```json
 {
   "error": {
     "code": "USER_NOT_FOUND",
-    "message": "用户不存在",
+    "message": "User does not exist",
     "details": {
       "userId": 12345
     }
@@ -79,7 +79,7 @@ DELETE /orders/{id}
 }
 ```
 
-## 认证与授权
+## Authentication and Authorization
 
 ### Bearer Token
 
@@ -87,26 +87,26 @@ DELETE /orders/{id}
 Authorization: Bearer <token>
 ```
 
-### API Key（内部服务）
+### API Key (Internal Services)
 
 ```markdown
 X-API-Key: <api-key>
 ```
 
-## 版本管理
+## Versioning
 
 ```markdown
-# URL 版本
+# URL version
 GET /v1/users
 GET /v2/users
 
-# Header 版本（不推荐）
+# Header version (not recommended)
 Accept: application/vnd.api+json;version=2
 ```
 
-## 分页与过滤
+## Pagination and Filtering
 
-### 分页
+### Pagination
 
 ```markdown
 GET /users?page=2&per_page=20
@@ -123,14 +123,14 @@ Response:
 }
 ```
 
-### 过滤
+### Filtering
 
 ```markdown
 GET /users?status=active&role=admin
 GET /orders?created_after=2024-01-01
 ```
 
-## 速率限制
+## Rate Limiting
 
 ```markdown
 X-RateLimit-Limit: 1000
@@ -138,4 +138,9 @@ X-RateLimit-Remaining: 999
 X-RateLimit-Reset: 1640000000
 ```
 
-## API
+## When to Exit
+
+- API structure is finalized
+- Naming conventions are consistent
+- Error codes are standardized
+- Documentation is complete

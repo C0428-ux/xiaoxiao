@@ -1,67 +1,67 @@
-# 数据建模指南 | Data Modeling
+# Data Modeling Guide | Data Modeling
 
-## 核心目标
+## Core Objective
 
-设计合理的数据模型，支持业务需求并保持可扩展性。
+Design reasonable data models that support business requirements while maintaining scalability.
 
-## 数据库类型选择
+## Database Type Selection
 
-### 关系型 (SQL)
+### Relational (SQL)
 
-**适用场景**：
-- 数据结构稳定
-- 事务要求高（ACID）
-- 复杂查询多
-- 关联关系复杂
+**Applicable Scenarios**:
+- Stable data structure
+- High transaction requirements (ACID)
+- Many complex queries
+- Complex relationships
 
-**代表产品**：PostgreSQL, MySQL
+**Representative Products**: PostgreSQL, MySQL
 
-### 文档型 (NoSQL)
+### Document-Oriented (NoSQL)
 
-**适用场景**：
-- 数据结构灵活
-- 读多写少
-- 不需要复杂关联
-- 水平扩展需求
+**Applicable Scenarios**:
+- Flexible data structure
+- Read-heavy, write-light
+- No complex relationships needed
+- Horizontal scaling requirements
 
-**代表产品**：MongoDB, DynamoDB
+**Representative Products**: MongoDB, DynamoDB
 
-### 键值型 (KV)
+### Key-Value (KV)
 
-**适用场景**：
-- 缓存
-- 会话存储
-- 配置
-- 简单查询
+**Applicable Scenarios**:
+- Caching
+- Session storage
+- Configuration
+- Simple queries
 
-**代表产品**：Redis, Memcached
+**Representative Products**: Redis, Memcached
 
-### 时序型 (TSDB)
+### Time-Series (TSDB)
 
-**适用场景**：
-- 监控指标
-- IoT 数据
-- 日志数据
+**Applicable Scenarios**:
+- Monitoring metrics
+- IoT data
+- Log data
 
-**代表产品**：InfluxDB, TimescaleDB
+**Representative Products**: InfluxDB, TimescaleDB
 
-## 建模步骤
+## Modeling Steps
 
-### 1. 识别实体
+### 1. Identify Entities
 
 ```
-用户、订单、产品、评论...
+Users, Orders, Products, Reviews...
 ```
 
-### 2. 确定关系
+### 2. Determine Relationships
 
-| 关系 | 示例 |
-|------|------|
-| 一对一 | 用户 ↔ 用户详情 |
-| 一对多 | 用户 → 订单 |
-| 多对多 | 用户 ←→ 角色 |
+| Relationship | Example |
+|--------------|---------|
+| One-to-One | User ↔ User Details |
+| One-to-Many | User → Orders |
+| Many-to-Many | User ←→ Roles |
 
-### 3. 定义属性
+### 3. Define Attributes
 
 ```markdown
 ## User
@@ -79,77 +79,77 @@
 - created_at: Timestamp
 ```
 
-## 范式 vs 反范式
+## Normalization vs Denormalization
 
-### 正常化 (3NF)
-
-```
-优点：数据不冗余、更新快
-缺点：查询可能需要多表 JOIN
-```
-
-### 反正常化
+### Normalization (3NF)
 
 ```
-优点：查询快、减少 JOIN
-缺点：数据冗余、更新复杂
+Advantages: No data redundancy, fast updates
+Disadvantages: Queries may require multiple table JOINs
 ```
 
-**建议**：先正常化，必要时反正常化
+### Denormalization
 
-## 索引设计
+```
+Advantages: Fast queries, fewer JOINs
+Disadvantages: Data redundancy, complex updates
+```
 
-### 何时建索引
+**Recommendation**: Start with normalization, denormalize when necessary
 
-- WHERE 条件常用字段
-- JOIN 关联字段
-- ORDER BY 排序字段
+## Index Design
 
-### 索引类型
+### When to Create Indexes
 
-| 类型 | 适用场景 |
-|------|----------|
-| B-tree | 范围查询、排序 |
-| Hash | 等值查询 |
-| GIN | 全文搜索、JSON |
-| GiST | 地理数据 |
+- Fields commonly used in WHERE conditions
+- JOIN fields
+- ORDER BY fields
 
-## 迁移策略
+### Index Types
 
-### 原则
+| Type | Applicable Scenarios |
+|------|---------------------|
+| B-tree | Range queries, sorting |
+| Hash | Equality queries |
+| GIN | Full-text search, JSON |
+| GiST | Geospatial data |
 
-1. **向后兼容**：新旧代码同时运行
-2. **小步迁移**：一次只改一个小地方
-3. **回滚准备**：准备好回滚脚本
+## Migration Strategy
 
-### 迁移步骤
+### Principles
+
+1. **Backward Compatibility**: New and old code run simultaneously
+2. **Small Steps**: Only change one small thing at a time
+3. **Rollback Preparation**: Prepare rollback scripts
+
+### Migration Steps
 
 ```markdown
-1. 添加新字段（可空）
-2. 部署新代码（写新旧两个字段）
-3. 数据迁移（后台跑脚本）
-4. 验证数据一致
-5. 移除旧字段
+1. Add new field (nullable)
+2. Deploy new code (write to both old and new fields)
+3. Data migration (run script in background)
+4. Verify data consistency
+5. Remove old field
 ```
 
-## 数据保留
+## Data Retention
 
-提前规划数据保留策略：
+Plan data retention strategy in advance:
 
 ```markdown
-## 数据保留策略
+## Data Retention Policy
 
-| 数据类型 | 保留期 | 处理方式 |
-|----------|--------|----------|
-| 行为日志 | 30天 | 删除 |
-| 交易数据 | 永久 | 归档 |
-| 用户上传 | 用户删除 | 级联删除 |
-| 会话数据 | 7天 | Redis TTL |
+| Data Type | Retention Period | Handling |
+|-----------|------------------|----------|
+| Behavioral logs | 30 days | Delete |
+| Transaction data | Permanent | Archive |
+| User uploads | Until user deletes | Cascade delete |
+| Session data | 7 days | Redis TTL |
 ```
 
-## 何时退出
+## When to Exit
 
-- 数据模型已确定
-- 关系清晰、无歧义
-- 索引已设计
-- 迁移策略已规划
+- Data model is finalized
+- Relationships are clear and unambiguous
+- Indexes are designed
+- Migration strategy is planned

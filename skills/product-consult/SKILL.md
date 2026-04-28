@@ -11,15 +11,13 @@ domain: product
 role: product-designer
 triggers:
   - /product-consult
-  - 产品咨询
-  - 我要做产品
-  - 新项目
-  - 添加功能
-  - 需求不明确
-  - 需求不清
-  - 做产品
-  - 设计产品
-  - 产品设计
+  - product consultation
+  - I want to build a product
+  - new project
+  - add feature
+  - requirements unclear
+  - build product
+  - design product
 output-format: .SPEC.md
 related-skills:
   - strategy-review
@@ -27,144 +25,144 @@ related-skills:
 prerequisites: []
 ---
 
-# Product Consult | 产品咨询
+# Product Consult | Product Consultation
 
-## 强制执行协议
+## Mandatory Execution Protocol
 
-**规则**：
-- 必须按顺序执行每个 Step，不得跳过
-- 每个 Step 必须执行验证（检查点）才能进入下一步
-- 使用 `xiaoxiao save-progress <skill> <step>` 标记步骤完成
-- CONFIRM 节点必须等待用户确认，不得自动继续
-
----
-
-## Step 1: 初始化
-
-**动作**：
-1. 执行 `xiaoxiao save-progress product-consult step1-complete`
-2. 向用户提问：
-   - "这是什么类型的产品？"（如：Web应用、移动App、SaaS平台等）
-   - "主要用户是谁？"（如：管理员、最终用户、开发者等）
-3. 确认产品类型
-
-**验证**：用户回答了产品类型和用户
-
-**CONFIRM**："Step 1 完成。产品类型：[类型]，主要用户：[用户]。继续？"
+**Rules**:
+- MUST execute each Step in order, no skipping
+- MUST verify each Step (checkpoint) before proceeding to next
+- MUST use `xiaoxiao save-progress <skill> <step>` to mark step completion
+- CONFIRM nodes MUST wait for user confirmation, never auto-continue
 
 ---
 
-## Step 2: 核心场景
+## Step 1: Initialization
 
-**动作**：
-1. 向用户提问：
-   - "用户要解决的核心问题是什么？"
-   - "用户最重要的一个动作是什么？"
-2. 用一句话总结：
-   - "这是一个 [产品类型]，帮助 [用户] 完成 [核心动作]"
-3. 确认总结是否正确
+**Action**:
+1. Execute `xiaoxiao save-progress product-consult step1-complete`
+2. Ask user:
+   - "What type of product is this?" (e.g., Web App, Mobile App, SaaS Platform)
+   - "Who are the primary users?" (e.g., Admin, End Users, Developers)
+3. Confirm product type
 
-**验证**：核心场景已确认
+**Verification**: User answered product type and users
 
-**CONFIRM**："核心场景：[一句话总结]。正确？"
-
----
-
-## Step 3: 功能设计
-
-**动作**：
-1. 向用户提问：
-   - "第一个版本必须有哪些功能？"（P0）
-   - "哪些功能重要但不是关键？"（P1）
-   - "哪些功能是锦上添花？"（P2）
-2. 对每个 P0 功能定义用户流程：
-   - 入口：用户如何开始？
-   - 核心步骤：必须发生什么？
-   - 出口：用户如何完成？
-3. 提问："这个产品**绝对不能**做什么？"（明确范围外）
-
-**验证**：P0/P1/P2 功能已定义，范围外已明确
-
-**CONFIRM**："P0: [功能列表]。范围外：[列表]。继续？"
+**CONFIRM**: "Step 1 complete. Product type: [type], Primary users: [users]. Continue?"
 
 ---
 
-## Step 4: UX 结构
+## Step 2: Core Scenario
 
-**动作**：
-1. 向用户提问：
-   - "用户如何在功能之间导航？"
-   - "主页面/Dashboard 是什么布局？"
-   - "用户如何访问 P0 功能？"
-2. 列出需要的页面：
-   - 主页/仪表盘
-   - P0 功能页面
-   - 设置/个人中心（如需要）
-3. 提问："有不同权限的用户角色吗？"（如：管理员 vs 普通用户）
+**Action**:
+1. Ask user:
+   - "What core problem does the user solve?"
+   - "What is the single most important action for users?"
+2. Summarize in one sentence:
+   - "This is a [product type] that helps [users] complete [core action]"
+3. Confirm summary is correct
 
-**验证**：页面列表和导航结构已确认
+**Verification**: Core scenario confirmed
 
-**CONFIRM**："页面：[列表]。导航：[模型]。继续？"
+**CONFIRM**: "Core scenario: [one sentence summary]. Correct?"
 
 ---
 
-## Step 5: 成功标准
+## Step 3: Feature Design
 
-**动作**：
-1. 向用户提问："如何衡量这个产品成功了？"
-2. 定义 3-5 个可衡量的标准（不是技术指标，是业务结果）：
-   - ❌ "快速" → ✅ "<3秒完成主要操作"
-   - ❌ "好用" → ✅ "新用户首次任务 <5分钟"
-   - ❌ "受欢迎" → ✅ "第3个月 50% 周活用户"
+**Action**:
+1. Ask user:
+   - "What features MUST be in the first version?" (P0)
+   - "What features are important but not critical?" (P1)
+   - "What features are nice to have?" (P2)
+2. For each P0 feature, define user flow:
+   - Entry: How does user start?
+   - Core steps: What must happen?
+   - Exit: How does user complete?
+3. Ask: "What should this product ABSOLUTELY NOT do?" (explicit out-of-scope)
 
-**验证**：3-5 个可衡量标准已定义
+**Verification**: P0/P1/P2 features defined, out-of-scope explicit
 
-**CONFIRM**："成功标准：[列表]。同意？"
-
----
-
-## Step 6: MVP 范围
-
-**动作**：
-1. 向用户提问："发布的绝对最低要求是什么？"
-2. 明确边界：
-   - **In（包含）**：MVP 必须有的
-   - **Out（不包含）**：明确不做
-3. 确认 MVP 范围
-
-**验证**：MVP 边界已明确
-
-**CONFIRM**："MVP：[功能]。范围外：[功能]。继续？"
+**CONFIRM**: "P0: [feature list]. Out of scope: [list]. Continue?"
 
 ---
 
-## Step 7: 输出 SPEC.md
+## Step 4: UX Structure
 
-**动作**：
-1. 在项目根目录创建 `.SPEC.md`
-2. 包含以下章节：
+**Action**:
+1. Ask user:
+   - "How do users navigate between features?"
+   - "What is the main Dashboard/Home layout?"
+   - "How do users access P0 features?"
+2. List required pages:
+   - Home/Dashboard
+   - P0 feature pages
+   - Settings/Profile (if needed)
+3. Ask: "Are there different user roles with different permissions?" (e.g., Admin vs Regular users)
+
+**Verification**: Page list and navigation structure confirmed
+
+**CONFIRM**: "Pages: [list]. Navigation: [model]. Continue?"
+
+---
+
+## Step 5: Success Criteria
+
+**Action**:
+1. Ask user: "How do we measure if this product is successful?"
+2. Define 3-5 measurable criteria (not technical metrics, business outcomes):
+   - ❌ "Fast" → ✅ "<3 seconds for main operation"
+   - ❌ "Easy to use" → ✅ "New users complete first task in <5 minutes"
+   - ❌ "Popular" → ✅ "50% weekly active users by month 3"
+
+**Verification**: 3-5 measurable criteria defined
+
+**CONFIRM**: "Success criteria: [list]. Agree?"
+
+---
+
+## Step 6: MVP Scope
+
+**Action**:
+1. Ask user: "What is the absolute minimum required to launch?"
+2. Define boundaries:
+   - **In (included)**: What MVP must have
+   - **Out (excluded)**: What is explicitly not doing
+3. Confirm MVP scope
+
+**Verification**: MVP boundaries explicit
+
+**CONFIRM**: "MVP: [features]. Out of scope: [features]. Continue?"
+
+---
+
+## Step 7: Output SPEC.md
+
+**Action**:
+1. Create `.SPEC.md` in project root
+2. Include these sections:
    - Product Type & Users
    - Core Scenario
-   - Features（P0/P1/P2 + 用户流程）
-   - UX Structure（页面 + 导航）
-   - Success Criteria（3-5 个可衡量标准）
-   - MVP Scope（In/Out 列表）
-3. 执行 `xiaoxiao complete product-consult .SPEC.md`
+   - Features (P0/P1/P2 + user flows)
+   - UX Structure (pages + navigation)
+   - Success Criteria (3-5 measurable criteria)
+   - MVP Scope (In/Out lists)
+3. Execute `xiaoxiao complete product-consult .SPEC.md`
 
-**验证**：.SPEC.md 已创建且包含所有章节
+**Verification**: .SPEC.md created with all sections
 
-**CONFIRM**："SPEC.md 已完成并保存。确认进入 Strategy Review 阶段？"
+**CONFIRM**: "SPEC.md complete and saved. Confirm entry to Strategy Review?"
 
 ---
 
-## 状态更新命令
+## State Update Commands
 
-每个 Step 完成后必须执行：
+After each Step, MUST execute:
 ```bash
 xiaoxiao save-progress product-consult step[N]-complete
 ```
 
-最终完成必须执行：
+For final completion, MUST execute:
 ```bash
 xiaoxiao complete product-consult .SPEC.md
 ```

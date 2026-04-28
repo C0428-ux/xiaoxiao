@@ -1,187 +1,187 @@
-# 无障碍设计指南 | Accessibility
+# Accessibility Design Guide | Accessibility
 
-## 核心目标
+## Core Objective
 
-确保产品对所有用户可访问，包括残障人士。
+Ensure the product is accessible to all users, including people with disabilities.
 
-## WCAG 2.1 AA 标准
+## WCAG 2.1 AA Standards
 
-| 原则 | 说明 |
-|------|------|
-| 可感知 | 信息和组件对用户可感知 |
-| 可操作 | 用户可以操作界面 |
-| 可理解 | 信息和界面操作可理解 |
-| 健壮性 | 内容可被多种方式解释 |
+| Principle | Description |
+|-----------|-------------|
+| Perceivable | Information and components are perceivable by users |
+| Operable | Users can operate the interface |
+| Understandable | Information and interface operations are understandable |
+| Robust | Content can be interpreted in multiple ways |
 
-## 视觉无障碍
+## Visual Accessibility
 
-### 颜色对比
+### Color Contrast
 
 ```markdown
-## 文字对比度
+## Text Contrast
 
-| 场景 | 最小对比度 |
-|------|-----------|
-| 正常文字 | 4.5:1 |
-| 大文字(18px+) | 3:1 |
-| UI组件和图形 | 3:1 |
+| Scenario | Minimum Contrast |
+|----------|------------------|
+| Normal text | 4.5:1 |
+| Large text (18px+) | 3:1 |
+| UI components and graphics | 3:1 |
 
-## 检查工具
+## Checking Tools
 - WebAIM Contrast Checker
 - Figma Contrast plugin
 ```
 
-### 不要只靠颜色传达信息
+### Do Not Rely on Color Alone
 
 ```markdown
-# 错误
-状态：红色 = 错误，绿色 = 成功
+# Wrong
+Status: Red = Error, Green = Success
 
-# 正确
-状态：红色 + 图标 + 文字说明
+# Correct
+Status: Red + Icon + Text explanation
 ```
 
-## 键盘无障碍
+## Keyboard Accessibility
 
-### 焦点可见
+### Focus Visibility
 
 ```markdown
-/* 焦点样式 */
+/* Focus styles */
 :focus {
   outline: 2px solid #0066cc;
   outline-offset: 2px;
 }
 ```
 
-### 焦点顺序
+### Focus Order
 
 ```markdown
-Tab键顺序 = 视觉逻辑顺序
-1 → 2 → 3 → 4（按阅读顺序）
+Tab order = Visual logical order
+1 → 2 → 3 → 4 (follows reading order)
 ```
 
-### 快捷键
+### Keyboard Shortcuts
 
 ```markdown
-| 快捷键 | 操作 |
-|--------|------|
-| Tab | 下一个焦点 |
-| Shift+Tab | 上一个焦点 |
-| Enter | 激活按钮/链接 |
-| Escape | 关闭弹窗/取消 |
-| Space | 激活按钮 |
+| Shortcut | Action |
+|----------|--------|
+| Tab | Next focus |
+| Shift+Tab | Previous focus |
+| Enter | Activate button/link |
+| Escape | Close modal/cancel |
+| Space | Activate button |
 ```
 
-## 屏幕阅读器支持
+## Screen Reader Support
 
-### 语义化标签
+### Semantic Tags
 
 ```markdown
-<button> 按钮（自动读出）
-<a href> 链接（自动读出）
-<h1>-<h6> 标题（层级结构）
-<input> 输入框（自动读出标签）
+<button> Button (auto announced)
+<a href> Link (auto announced)
+<h1>-<h6> Heading (hierarchical structure)
+<input> Input field (auto announces label)
 ```
 
-### ARIA 属性
+### ARIA Attributes
 
 ```markdown
-## 必要属性
-aria-label="关闭按钮"
+## Required Attributes
+aria-label="Close button"
 aria-describedby="error-message"
 aria-required="true"
 
-## 状态属性
+## State Attributes
 aria-expanded="true/false"
 aria-selected="true/false"
 aria-disabled="true/false"
 aria-hidden="true"
 ```
 
-### 图片描述
+### Image Descriptions
 
 ```markdown
-<img src="chart.png" alt="12月销售增长20%的图表">
-<img src="icon.png" alt=""> (装饰图用alt="")
+<img src="chart.png" alt="December sales growth chart showing 20% increase">
+<img src="icon.png" alt=""> (decorative images use alt="")
 ```
 
-## 表单无障碍
+## Form Accessibility
 
-### 标签关联
+### Label Association
 
 ```markdown
-<label for="email">邮箱</label>
+<label for="email">Email</label>
 <input id="email" type="email">
 
-<!-- 或 -->
+<!-- or -->
 <label>
-  邮箱
+  Email
   <input type="email">
 </label>
 ```
 
-### 错误提示
+### Error Messages
 
 ```markdown
 <input id="password" aria-describedby="password-hint" aria-invalid="true">
-<span id="password-hint">密码至少8位</span>
+<span id="password-hint">Password must be at least 8 characters</span>
 ```
 
-## 动态内容无障碍
+## Dynamic Content Accessibility
 
-### 实时更新
+### Live Updates
 
 ```markdown
-<!-- 页面更新时通知屏幕阅读器 -->
+<!-- Notify screen reader when page updates -->
 <div aria-live="polite" aria-atomic="true">
-  新内容已加载
+  New content loaded
 </div>
 ```
 
-### 加载状态
+### Loading States
 
 ```markdown
-<!-- 告诉屏幕阅读器正在加载 -->
-<div role="status" aria-label="加载中">
-  加载中...
+<!-- Tell screen reader it's loading -->
+<div role="status" aria-label="Loading">
+  Loading...
 </div>
 ```
 
-## 检查清单
+## Checklist
 
-### 视觉
-- [ ] 颜色对比度达标
-- [ ] 不只靠颜色传达信息
-- [ ] 支持放大200%
+### Visual
+- [ ] Color contrast meets standards
+- [ ] Do not rely on color alone
+- [ ] Support 200% zoom
 
-### 键盘
-- [ ] 所有功能可键盘操作
-- [ ] 焦点样式可见
-- [ ] 焦点顺序合理
+### Keyboard
+- [ ] All functions are keyboard accessible
+- [ ] Focus styles are visible
+- [ ] Focus order is logical
 
-### 屏幕阅读器
-- [ ] 所有图片有alt
-- [ ] 表单有label
-- [ ] ARIA使用正确
-- [ ] 动态内容有通知
+### Screen Reader
+- [ ] All images have alt text
+- [ ] Forms have labels
+- [ ] ARIA is used correctly
+- [ ] Dynamic content has notifications
 
-### 测试
-- [ ] 关闭图像浏览
-- [ ] 仅键盘操作测试
-- [ ] 屏幕阅读器测试
+### Testing
+- [ ] Test with images disabled
+- [ ] Keyboard-only testing
+- [ ] Screen reader testing
 
-## 常用工具
+## Common Tools
 
-| 工具 | 用途 |
-|------|------|
-| axe DevTools | 自动检测问题 |
-| WAVE | 网页无障碍评估 |
-| NVDA (Windows) | 屏幕阅读器 |
-| VoiceOver (Mac) | 屏幕阅读器 |
+| Tool | Purpose |
+|------|---------|
+| axe DevTools | Automatic issue detection |
+| WAVE | Web accessibility evaluation |
+| NVDA (Windows) | Screen reader |
+| VoiceOver (Mac) | Screen reader |
 
-## 何时退出
+## When to Exit
 
-- 通过 axe DevTools 检测无高危问题
-- 键盘操作完整流程可走通
-- 屏幕阅读器可读取主要内容
-- 颜色对比度符合 AA 标准
+- No high-severity issues detected by axe DevTools
+- Keyboard operation works through complete flow
+- Screen reader can read main content
+- Color contrast meets AA standards

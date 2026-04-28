@@ -1,50 +1,50 @@
-# Mock 使用指南 | Mocking Guidelines
+# Mock Usage Guide | Mocking Guidelines
 
-## 核心目标
+## Core Objective
 
-正确使用 mock，避免测试Mocks而非真实行为。
+Use mocks correctly to avoid testing mocks instead of real behavior.
 
-## 何时使用 Mock
+## When to Use Mocks
 
-### 正确场景
+### Correct Scenarios
 
-| 场景 | 示例 |
-|------|------|
-| 外部 API 调用 | Stripe、发送邮件 |
-| 数据库操作 | 加快测试速度 |
-| 时间相关 | 固定时间 |
-| 第三方服务 | 日志服务、监控 |
+| Scenario | Example |
+|----------|---------|
+| External API calls | Stripe, sending emails |
+| Database operations | Speed up tests |
+| Time-related | Fixed time |
+| Third-party services | Logging services, monitoring |
 
-### 错误场景
+### Incorrect Scenarios
 
 ```javascript
-// ❌ Mock 内部实现
+// Bad - mocking internal implementation
 it('should calculate total', () => {
   const mockMath = { random: () => 0.5 }
-  const result = calculateWithTax(100, mockMath) // 不要这样做
+  const result = calculateWithTax(100, mockMath) // Don't do this
 })
 ```
 
-## Mock 边界原则
+## Mock Boundary Principles
 
-### 只 Mock 边界
+### Only Mock Boundaries
 
 ```javascript
-// ✅ 好 - Mock 外部依赖
+// Good - mock external dependencies
 const mockEmailService = { send: jest.fn() }
 UserService.sendWelcomeEmail = mockEmailService.send
 
-// ❌ 坏 - Mock 内部模块
+// Bad - mock internal modules
 const mockUserModel = { findById: jest.fn() }
-UserService.UserModel = mockUserModel // 不要这样做
+UserService.UserModel = mockUserModel // Don't do this
 ```
 
-## Mock 示例
+## Mock Examples
 
-### Mock 外部 API
+### Mock External API
 
 ```javascript
-// 假设 UserService 依赖外部邮件服务
+// Assuming UserService depends on external email service
 const mockSendEmail = jest.fn().mockResolvedValue({ messageId: '123' })
 EmailService.send = mockSendEmail
 
@@ -60,16 +60,16 @@ it('should send welcome email on registration', async () => {
 })
 ```
 
-### Mock 时间
+### Mock Time
 
 ```javascript
-// 使用 fake timers
+// Use fake timers
 it('should expire token after 1 hour', () => {
   jest.useFakeTimers()
 
   const token = createToken()
 
-  // 快进 1 小时
+  // Fast forward 1 hour
   jest.advanceTimersByTime(60 * 60 * 1000)
 
   expect(isTokenExpired(token)).toBe(true)
@@ -78,51 +78,51 @@ it('should expire token after 1 hour', () => {
 })
 ```
 
-### Mock 数据库（谨慎）
+### Mock Database (Use with Caution)
 
 ```javascript
-// 如果必须 Mock 数据库，确保测试真实行为
+// If you must mock the database, ensure tests cover real behavior
 const mockDb = {
   query: jest.fn().mockResolvedValue([{ id: 1, name: 'Test' }])
 }
 
-// 但最好用真实数据库做集成测试
+// But it's better to use a real database for integration tests
 ```
 
-## 不要 Mock 的内容
+## What Not to Mock
 
-| 不要 Mock | 原因 |
-|-----------|------|
-| 被测试的代码本身 | 测试会变得无意义 |
-| 简单函数 | 直接测试更可靠 |
-| 业务逻辑 | Mock 掉就没有测试效果了 |
-| 构造函数 | 可能导致奇怪的 bug |
+| Don't Mock | Reason |
+|------------|--------|
+| The code under test itself | Tests become meaningless |
+| Simple functions | Direct testing is more reliable |
+| Business logic | Mocking it defeats the purpose of testing |
+| Constructors | May cause strange bugs |
 
-## Mock 清理
+## Mock Cleanup
 
 ```javascript
 beforeEach(() => {
-  jest.clearAllMocks() // 清理 mock 调用记录
+  jest.clearAllMocks() // Clear mock call records
 })
 
 afterEach(() => {
-  jest.resetAllMocks() // 重置 mock 实现
+  jest.resetAllMocks() // Reset mock implementations
 })
 ```
 
-## 常见问题
+## Common Questions
 
-### Q: 什么时候不用 mock？
+### Q: When should I not use mocks?
 
-A: 当测试的是你的代码与数据库/外部系统的交互时，使用真实的集成测试。
+A: When you're testing how your code interacts with a database or external system, use real integration tests instead.
 
-### Q: mock 太多怎么办？
+### Q: What if there are too many mocks?
 
-A: 说明测试设计可能有问题。考虑重构被测试的代码，降低耦合。
+A: This indicates a possible problem with test design. Consider refactoring the code under test to reduce coupling.
 
-## 何时退出
+## When to Stop
 
-- 只 mock 外部边界
-- 没有 mock 内部实现
-- mock 行为与真实服务一致
-- 测试能捕获真实环境的问题
+- Only mock external boundaries
+- No mocking of internal implementation
+- Mock behavior matches real service
+- Tests can catch real-world environment issues

@@ -1,79 +1,79 @@
-# AAA 模式 | Arrange-Act-Assert
+# AAA Pattern | Arrange-Act-Assert
 
-## 核心目标
+## Core Objective
 
-标准化测试结构，让测试易于阅读和维护。
+Standardize test structure to make tests easy to read and maintain.
 
-## AAA 结构
+## AAA Structure
 
 ```javascript
 describe('LoginForm', () => {
   it('should submit credentials to server', () => {
-    // Arrange - 准备测试数据
+    // Arrange - prepare test data
     const email = 'test@example.com'
     const password = 'password123'
     const expectedEndpoint = '/api/login'
 
-    // Act - 执行被测操作
+    // Act - execute the operation under test
     const result = submitLogin(email, password)
 
-    // Assert - 验证结果
+    // Assert - verify the result
     expect(result.endpoint).toBe(expectedEndpoint)
   })
 })
 ```
 
-## 详解
+## Detailed Explanation
 
-### 1. Arrange（准备）
+### 1. Arrange (Preparation)
 
-**目的**：设置测试所需的前置条件
+**Purpose**: Set up preconditions required for the test
 
 ```javascript
-// 准备数据
+// Prepare data
 const user = { name: 'Test User', email: 'test@example.com' }
 
-// 创建 mock
+// Create mocks
 const mockDatabase = createMockDatabase()
 
-// 设置初始状态
+// Set initial state
 await mockDatabase.seed(user)
 ```
 
-### 2. Act（执行）
+### 2. Act (Execute)
 
-**目的**：调用被测试的代码
+**Purpose**: Call the code under test
 
 ```javascript
-// 单一操作
+// Single operation
 const result = await UserService.create(user)
 
-// 或链式操作
+// Or chained operations
 const order = await OrderService
   .create({ userId: 1, items: [...] })
   .then(order => OrderService.calculateTotal(order.id))
 ```
 
-### 3. Assert（断言）
+### 3. Assert (Verify)
 
-**目的**：验证预期结果
+**Purpose**: Verify expected results
 
 ```javascript
-// 单个断言
+// Single assertion
 expect(result).toBeDefined()
 
-// 多个断言（但保持测试专注）
+// Multiple assertions (but keep tests focused)
 expect(result.id).toBeDefined()
 expect(result.email).toBe(user.email)
 expect(result.createdAt).toBeInstanceOf(Date)
 ```
 
-## 简化规则
+## Simplification Rules
 
-### 规则1：保持简洁
+### Rule 1: Keep It Simple
 
 ```javascript
-// ❌ 过度准备
+// Bad - excessive preparation
 beforeEach(async () => {
   const users = await createTestUsers(10)
   const products = await createTestProducts(50)
@@ -81,24 +81,24 @@ beforeEach(async () => {
   // ...
 })
 
-// ✅ 只准备需要的
+// Good - only prepare what you need
 beforeEach(async () => {
   testUser = await createUser({ email: 'test@example.com' })
 })
 ```
 
-### 规则2：Act 只做一件事
+### Rule 2: Act Does One Thing
 
 ```javascript
-// ❌ Act 中有多个操作
+// Bad - multiple operations in Act
 it('should create and return user', async () => {
   // ...
   const user = await UserService.create(userData)
-  const session = await SessionService.create(user.id) // Act 里有第二个操作
+  const session = await SessionService.create(user.id) // Second operation in Act
   // ...
 })
 
-// ✅ 分开测试
+// Good - separate tests
 it('should create user', async () => {
   const user = await UserService.create(userData)
   expect(user).toBeDefined()
@@ -110,28 +110,28 @@ it('should create session for user', async () => {
 })
 ```
 
-### 规则3：断言要明确
+### Rule 3: Assertions Must Be Clear
 
 ```javascript
-// ❌ 模糊断言
+// Bad - vague assertion
 expect(result).toBeTruthy()
 
-// ✅ 明确断言
+// Good - explicit assertion
 expect(result.success).toBe(true)
 expect(result.userId).toBe(123)
 ```
 
-## 常见错误
+## Common Mistakes
 
-### 错误1：混淆 Arrange 和 Act
+### Mistake 1: Confusing Arrange and Act
 
 ```javascript
-// ❌ 把 Act 放在 Arrange 里
+// Bad - putting Act in Arrange
 beforeEach(() => {
-  user = UserService.create() // 这其实是 Act！
+  user = UserService.create() // This is actually Act!
 })
 
-// ✅ 正确
+// Good - correct
 beforeEach(() => {
   userData = { name: 'Test', email: 'test@test.com' } // Arrange
 })
@@ -142,19 +142,19 @@ it('should create user', () => {
 })
 ```
 
-### 错误2：Act 里有断言
+### Mistake 2: Assertions in Act
 
 ```javascript
-// ❌
+// Bad
 it('should login', () => {
   const result = UserService.login(credentials)
-  expect(result.token).toBeDefined() // 这应该在 Assert 里
+  expect(result.token).toBeDefined() // This should be in Assert
 })
 ```
 
-## 何时退出
+## When to Stop
 
-- 测试严格遵循 Arrange-Act-Assert 结构
-- Act 只包含要测试的操作
-- 断言清晰明确
-- 测试失败时能快速定位阶段
+- Tests strictly follow Arrange-Act-Assert structure
+- Act contains only the operation being tested
+- Assertions are clear and explicit
+- When tests fail, you can quickly identify which phase is problematic

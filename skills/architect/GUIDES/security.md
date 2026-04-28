@@ -1,158 +1,158 @@
-# 安全架构指南 | Security Architecture
+# Security Architecture Guide | Security Architecture
 
-## 核心目标
+## Core Objective
 
-设计安全可靠的系统架构，保护用户数据和系统资源。
+Design a secure and reliable system architecture to protect user data and system resources.
 
-## 安全原则
+## Security Principles
 
-### 1. 最小权限
-
-```
-每个模块/用户只获取完成工作所需的最小权限
-```
-
-### 2. 纵深防御
+### 1. Least Privilege
 
 ```
-不依赖单一安全措施，多层防护
+Each module/user only gets the minimum privileges needed to complete their work
 ```
 
-### 3. 默认安全
+### 2. Defense in Depth
 
 ```
-安全应该是默认配置，不是可选配置
+Don't rely on a single security measure, use multiple layers of protection
 ```
 
-## 认证设计
+### 3. Secure by Default
 
-### 密码存储
+```
+Security should be the default configuration, not an optional configuration
+```
+
+## Authentication Design
+
+### Password Storage
 
 ```markdown
-# 错误方式
-直接存储密码 → 密码泄露
+# Wrong way
+Store password directly → Password leak
 
-# 正确方式
-密码 + salt → hash → 存储
+# Correct way
+Password + salt → hash → storage
 ```
 
-### Token 设计
+### Token Design
 
 ```markdown
 ## Access Token
-- 有效期：15分钟
-- 存储：内存（不持久化）
+- Validity: 15 minutes
+- Storage: Memory (not persisted)
 
 ## Refresh Token
-- 有效期：7天
-- 存储：HttpOnly Cookie 或安全存储
+- Validity: 7 days
+- Storage: HttpOnly Cookie or secure storage
 ```
 
 ### OAuth 2.0
 
 ```
-用户 → 授权服务器 → 授权码 → 你的服务器 → 换 Token
+User → Authorization server → Authorization code → Your server → Exchange for Token
 ```
 
-## 授权设计
+## Authorization Design
 
-### RBAC（基于角色的访问控制）
+### RBAC (Role-Based Access Control)
 
 ```markdown
-## 角色
-- Admin: 所有权限
-- Editor: 增删改
-- Viewer: 只读
+## Roles
+- Admin: All permissions
+- Editor: Create, update, delete
+- Viewer: Read-only
 
-## 用户 ↔ 角色 ↔ 权限
+## User ↔ Role ↔ Permission
 ```
 
-### 资源级别权限
+### Resource-Level Permissions
 
 ```markdown
-# 用户只能访问自己的资源
+# User can only access their own resources
 GET /users/{userId}/orders
-→ 验证 userId === 当前登录用户
+→ Verify userId === currently logged-in user
 ```
 
-## 数据保护
+## Data Protection
 
-### 传输加密
+### Transport Encryption
 
 ```
-HTTPS (TLS 1.2+) 全部流量
+HTTPS (TLS 1.2+) for all traffic
 ```
 
-### 敏感数据加密
+### Sensitive Data Encryption
 
 ```markdown
-## 需要加密
-- 密码
-- API Key
-- 身份证号
-- 银行卡号
+## Need encryption
+- Passwords
+- API Keys
+- ID card numbers
+- Bank card numbers
 
-## 加密方式
-- 存储：AES-256
-- 传输：TLS
+## Encryption methods
+- Storage: AES-256
+- Transport: TLS
 ```
 
-### 数据脱敏
+### Data Masking
 
 ```markdown
-## 日志脱敏
-手机号：138****5678
-身份证：320****1234
+## Log masking
+Phone: 138****5678
+ID card: 320****1234
 
-## API 响应脱敏
-返回最小必要数据
+## API response masking
+Return minimum necessary data
 ```
 
-## 常见攻击防护
+## Common Attack Prevention
 
-### SQL 注入
+### SQL Injection
 
 ```markdown
-# 错误
+# Wrong
 query = "SELECT * FROM users WHERE id = " + id
 
-# 正确 - 参数化查询
+# Correct - Parameterized query
 query = "SELECT * FROM users WHERE id = $1" + [id]
 ```
 
 ### XSS
 
 ```markdown
-# 输出时转义
-用户输入 → 转义 → 存储 → 转义 → 输出
+# Escape on output
+User input → Escape → Store → Escape → Output
 ```
 
 ### CSRF
 
 ```markdown
-# 使用 SameSite Cookie
+# Use SameSite Cookie
 Set-Cookie: session=xxx; SameSite=Strict
 
 # CSRF Token
-表单包含 CSRF Token
+Form includes CSRF Token
 ```
 
-## 安全检查清单
+## Security Checklist
 
-- [ ] HTTPS 强制
-- [ ] 密码 hash + salt
-- [ ] Token 有过期时间
-- [ ] 权限最小化
-- [ ] 输入验证
-- [ ] SQL 参数化
-- [ ] 输出转义
-- [ ] 安全 Header（CSP, X-Frame-Options 等）
-- [ ] 日志记录异常
-- [ ] 定期安全审计
+- [ ] Enforce HTTPS
+- [ ] Password hash + salt
+- [ ] Token has expiration time
+- [ ] Least privilege
+- [ ] Input validation
+- [ ] SQL parameterized queries
+- [ ] Output escaping
+- [ ] Security Headers (CSP, X-Frame-Options, etc.)
+- [ ] Log exceptions
+- [ ] Regular security audits
 
-## 何时退出
+## When to Exit
 
-- 认证方案已定
-- 授权模型已设计
-- 敏感数据保护方案已定
-- 安全检查清单通过
+- Authentication scheme is finalized
+- Authorization model is designed
+- Sensitive data protection plan is finalized
+- Security checklist passed

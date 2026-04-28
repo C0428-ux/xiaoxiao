@@ -1,20 +1,20 @@
-# 线框图符号指南 | Wireframe Symbols
+# Wireframe Symbols Guide | Wireframe Symbols
 
-## 核心目标
+## Core Objective
 
-统一使用标准的线框图符号，让设计沟通更高效。
+Unified use of standard wireframe symbols for more efficient design communication.
 
-## 基础元素
+## Basic Elements
 
-### 文本
+### Text
 
 ```markdown
-标题文字
-正文内容
-[按钮]
+Title text
+Body content
+[Button]
 ```
 
-### 容器
+### Container
 
 ```markdown
 ┌──────────────┐
@@ -24,36 +24,36 @@
 └──────────────┘
 ```
 
-### 表单元素
+### Form Elements
 
 ```markdown
 ┌──────────────┐
-│ [输入框    ] │
+│ [Input      ] │
 └──────────────┘
 
 ┌──────────────┐
-│ [选择器   ▼] │
+│ [Selector  ▼] │
 └──────────────┘
 
-☑ 复选框
-○ 单选框
+☑ Checkbox
+○ Radio button
 ```
 
-### 按钮
+### Buttons
 
 ```markdown
-[主按钮]
-[次要按钮]
-[链接文字]
+[Primary button]
+[Secondary button]
+[Link text]
 ```
 
-## 布局符号
+## Layout Symbols
 
-### 页面结构
+### Page Structure
 
 ```markdown
 +----------------------------------+
-|  Header (导航栏)                  |
+|  Header (Navigation bar)          |
 +----------------------------------+
 |        |                         |
 |  Side  |     Main Content        |
@@ -64,7 +64,7 @@
 +----------------------------------+
 ```
 
-### 栅格
+### Grid
 
 ```markdown
 +---+---+---+---+---+---+---+---+
@@ -74,99 +74,99 @@
 +---+---+---+---+---+---+---+---+
 ```
 
-## 交互符号
+## Interaction Symbols
 
-### 点击/触摸
-
-```markdown
-(○) 点击目标
-```
-
-### 手势
+### Click/Touch
 
 ```markdown
-→ swipe right (右滑)
-← swipe left (左滑)
-↑ swipe up (上滑)
-↓ swipe down (下滑)
-⊙ long press (长按)
+(○) Click target
 ```
 
-### 状态变化
+### Gestures
 
 ```markdown
-A → B  (状态A变为状态B)
-A + B  (A和B同时发生)
-A | B  (A或B)
+→ swipe right
+← swipe left
+↑ swipe up
+↓ swipe down
+⊙ long press
 ```
 
-## 组件示例
+### State Changes
 
-### 导航栏
+```markdown
+A → B  (State A changes to state B)
+A + B  (A and B happen simultaneously)
+A | B  (A or B)
+```
+
+## Component Examples
+
+### Navigation Bar
 
 ```markdown
 +----------------------------------+
-| [Logo]  首页  产品  关于   [用户] |
+| [Logo]  Home  Product  About   [User] |
 +----------------------------------+
 ```
 
-### 卡片
+### Card
 
 ```markdown
 +------------------------+
-|  [图片]                  |
-|  标题                    |
-|  描述文字...             |
-|  $价格         [按钮]    |
+|  [Image]               |
+|  Title                 |
+|  Description text...    |
+|  $Price         [Button]|
 +------------------------+
 ```
 
-### 列表项
+### List Item
 
 ```markdown
 +------------------------+
-| [图标]  标题       >   |
-|        副标题           |
+| [Icon]  Title       >   |
+|        Subtitle        |
 +------------------------+
 ```
 
-### 表单
+### Form
 
 ```markdown
-标签
+Label
 ┌────────────────────┐
-│ 输入内容...        │
+│ Input content...   │
 └────────────────────┘
 
-错误状态
+Error state
 ┌────────────────────┐
-│ ✗ 错误提示         │
+│ ✗ Error message    │
 └────────────────────┘
 ```
 
-### 弹窗/Modal
+### Modal/Dialog
 
 ```markdown
 +------------------------+
-|  标题              [X] |
+|  Title              [X] |
 +------------------------+
 |                        |
-|  内容区域              |
+|  Content area          |
 |                        |
 +------------------------+
-|  [取消]      [确认]   |
+|  [Cancel]      [Confirm] |
 +------------------------+
 ```
 
-### Toast 提示
+### Toast Notification
 
 ```markdown
 ┌────────────────────┐
-│ ✓ 操作成功         │
+│ ✓ Operation successful │
 └────────────────────┘
 ```
 
-## 响应式断点
+## Responsive Breakpoints
 
 ```markdown
 Mobile:  < 768px
@@ -174,20 +174,20 @@ Tablet:  768px - 1024px
 Desktop: > 1024px
 ```
 
-## 颜色标注
+## Color Annotations
 
 ```markdown
-# 主色 - 主要操作
-# 次色 - 次要操作
-# 成功色 - 成功提示
-# 警告色 - 警告提示
-# 错误色 - 错误提示
-# 灰色 - 禁用/次要信息
+# Primary - Primary actions
+# Secondary - Secondary actions
+# Success - Success notifications
+# Warning - Warning notifications
+# Error - Error notifications
+# Gray - Disabled/secondary info
 ```
 
-## 何时退出
+## When to Exit
 
-- 所有页面都有线框图
-- 组件状态已标注
-- 交互流程已标注
-- 响应式方案已说明
+- All pages have wireframes
+- Component states are annotated
+- Interaction flows are documented
+- Responsive strategies are explained

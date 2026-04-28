@@ -1,14 +1,14 @@
-# Design Presets | 设计风格预设
+# Design Presets | Design Presets
 
-5 种经过验证的设计方向，适用于不同场景。选择最符合项目气质的风格。
+5 validated design directions for different scenarios. Choose the style that best matches your project personality.
 
 ---
 
-## 1. Modern SaaS（默认）
+## 1. Modern SaaS (Default)
 
-**适用场景**: B2B/SaaS 产品、后台管理系统、协作工具
+**Applicable scenarios**: B2B/SaaS products, admin systems, collaboration tools
 
-**Philosophy**: 干净、专业、空间感强。少即是多。
+**Philosophy**: Clean, professional, spacious. Less is more.
 
 ### Colors
 ```css
@@ -25,7 +25,7 @@
 ```
 
 ### Typography
-- **Display**: Inter (Google Fonts) 或 system-ui
+- **Display**: Inter (Google Fonts) or system-ui
 - **Body**: Inter, -apple-system, sans-serif
 - **Scale**: 12/14/16/20/24/32/48px
 
@@ -43,9 +43,9 @@
 
 ## 2. Apple-level Minimal
 
-**适用场景**: 消费级应用、高端产品、个人作品集
+**Applicable scenarios**: Consumer apps, premium products, personal portfolios
 
-**Philosophy**: 克制、大胆的留白、精确的层次感。模仿 Apple 设计语言。
+**Philosophy**: Restraint, bold whitespace, precise hierarchy. Emulate Apple design language.
 
 ### Colors
 ```css
@@ -64,27 +64,27 @@
 ### Typography
 - **Display**: SF Pro Display, -apple-system, BlinkMacSystemFont
 - **Body**: SF Pro Text, -apple-system, sans-serif
-- **Scale**: 13/15/17/22/28/41/56px (Apple 风格)
-- **Tracking**: 略紧于默认，增强层次
+- **Scale**: 13/15/17/22/28/41/56px (Apple style)
+- **Tracking**: Slightly tighter than default, enhanced hierarchy
 
 ### Spacing
 - **Grid**: 8px base
 - **Scale**: 8, 16, 24, 40, 64, 96px
-- **特点**: 大量留白，内容区最小 640px 最大 980px
+- **Feature**: Generous whitespace, content area minimum 640px maximum 980px
 
 ### Components
-- Rounded corners: 12-16px (更大的圆角)
-- Shadows: 极轻 (0 2px 12px rgba(0,0,0,0.08))
-- Cards: 纯色背景或微阴影
-- Buttons: Apple 风格，圆角 12px，hover 时微调
+- Rounded corners: 12-16px (larger)
+- Shadows: extremely light (0 2px 12px rgba(0,0,0,0.08))
+- Cards: solid color background or subtle shadow
+- Buttons: Apple style, 12px rounded corners, subtle adjustment on hover
 
 ---
 
 ## 3. Enterprise / Corporate
 
-**适用场景**: 企业内部系统、政府/金融、表格密集型应用
+**Applicable scenarios**: Enterprise internal systems, government/finance, data-intensive applications
 
-**Philosophy**: 信息密度高、结构清晰、高效操作。功能优先。
+**Philosophy**: High information density, clear structure, efficient operations. Function first.
 
 ### Colors
 ```css
@@ -102,29 +102,29 @@
 
 ### Typography
 - **Display**: system-ui, -apple-system, sans-serif
-- **Body**: system-ui, 优先可读性
-- **Scale**: 11/13/14/16/18/20/24px (紧凑)
-- **Table**: 13px 正文，最小行高 36px
+- **Body**: system-ui, readability first
+- **Scale**: 11/13/14/16/18/20/24px (compact)
+- **Table**: 13px body, minimum row height 36px
 
 ### Spacing
-- **Grid**: 4px base（更紧凑）
+- **Grid**: 4px base (more compact)
 - **Scale**: 4, 8, 12, 16, 20, 24, 32px
-- **Tables**: 单元格 padding 8-12px
+- **Tables**: cell padding 8-12px
 
 ### Components
-- Rounded corners: 4-6px (较小)
-- Shadows: 几乎不用，用边框区分
-- Cards: 白色背景，灰色边框
-- Forms: 标签在左或上方，紧凑布局
-- Tables: 斑马纹，可排序列，固定表头
+- Rounded corners: 4-6px (smaller)
+- Shadows: almost none, use borders to differentiate
+- Cards: white background, gray border
+- Forms: labels on left or top, compact layout
+- Tables: zebra striping, sortable columns, sticky header
 
 ---
 
 ## 4. Creative / Portfolio
 
-**适用场景**: 作品集、创意机构、时尚/艺术相关
+**Applicable scenarios**: Portfolios, creative agencies, fashion/art related
 
-**Philosophy**: 打破常规、大胆表达、不对称布局。个性大于一致。
+**Philosophy**: Break conventions, bold expression, asymmetric layouts. Personality over consistency.
 
 ### Colors
 ```css
@@ -141,30 +141,30 @@
 ```
 
 ### Typography
-- **Display**: 装饰性字体 (Playfair Display, Space Grotesk, etc.)
+- **Display**: Decorative fonts (Playfair Display, Space Grotesk, etc.)
 - **Body**: Inter, -apple-system, sans-serif
-- **Scale**: 不规则，强调戏剧性
-- **Headings**: 32/48/64/96px (大胆)
+- **Scale**: Irregular, emphasis on drama
+- **Headings**: 32/48/64/96px (bold)
 
 ### Spacing
 - **Grid**: 8px base
-- **Scale**: 极端对比 (8px vs 96px)
-- **特点**: 不对称边距，文本块可偏移
+- **Scale**: Extreme contrast (8px vs 96px)
+- **Feature**: Asymmetric margins, text blocks can offset
 
 ### Components
-- Rounded corners: 0px 或 16-24px (两极化)
-- Shadows: 强阴影或无阴影
-- Cards: 深色主题，hover 时发光
-- Buttons: 描边或全色，鼓励交互
-- 动效: 150-300ms ease-out，微妙
+- Rounded corners: 0px or 16-24px (polarized)
+- Shadows: strong shadow or no shadow
+- Cards: dark theme, glow on hover
+- Buttons: outlined or full color, encouraging interaction
+- Motion: 150-300ms ease-out, subtle
 
 ---
 
 ## 5. Data Dashboard
 
-**适用场景**: 数据可视化、监控面板、Analytics 产品
+**Applicable scenarios**: Data visualization, monitoring dashboards, Analytics products
 
-**Philosophy**: 数据优先、层次清晰、扫描性高。让数据讲故事。
+**Philosophy**: Data first, clear hierarchy, high scanability. Let data tell the story.
 
 ### Colors
 ```css
@@ -182,7 +182,7 @@
 ```
 
 ### Typography
-- **Display**: Inter 或 DM Sans
+- **Display**: Inter or DM Sans
 - **Body**: Inter, -apple-system, sans-serif
 - **Scale**: 11/12/14/16/20/24/32px
 - **Numbers**: Tabular nums (font-variant-numeric: tabular-nums)
@@ -190,36 +190,36 @@
 ### Spacing
 - **Grid**: 8px base
 - **Scale**: 8, 12, 16, 24, 32px
-- **Dashboard**: 卡片间 16-24px 间距
+- **Dashboard**: 16-24px gap between cards
 
 ### Components
 - Rounded corners: 8-12px
-- Shadows: 适度，区分层次
-- Cards: 深色背景，数据网格布局
-- Charts: 16 色盲友好配色
-- Tables: 高密度，可排序
-- KPI Cards: 数字大，强调趋势
+- Shadows: moderate, differentiate layers
+- Cards: dark background, data grid layout
+- Charts: 16 color-blind friendly colors
+- Tables: high density, sortable
+- KPI Cards: large numbers, emphasize trends
 
 ---
 
-## 选择指南
+## Selection Guide
 
-| 场景 | 推荐预设 |
-|------|---------|
-| B2B SaaS / 管理后台 | Modern SaaS |
-| 消费级 App / 工具 | Apple-level Minimal |
-| 企业内部系统 | Enterprise / Corporate |
-| 作品集 / 创意网站 | Creative / Portfolio |
-| 数据平台 / Analytics | Data Dashboard |
+| Scenario | Recommended Preset |
+|----------|-------------------|
+| B2B SaaS / Admin | Modern SaaS |
+| Consumer App / Tools | Apple-level Minimal |
+| Enterprise Internal | Enterprise / Corporate |
+| Portfolio / Creative | Creative / Portfolio |
+| Data Platform / Analytics | Data Dashboard |
 
-**不确定时**: 从 Modern SaaS 开始，它是最安全的选择。
+**When unsure**: Start with Modern SaaS, it's the safest choice.
 
 ---
 
-## 应用方式
+## Application Method
 
-在 `SKILL.md` Phase 0 完成后：
-1. 向用户展示 5 种预设
-2. 用户选择或描述想要的风格
-3. 将选定预设的 CSS variables 注入生成的 HTML
-4. 后续所有组件都基于这个预设生成
+After completing SKILL.md Phase 0:
+1. Show user 5 presets
+2. User selects or describes desired style
+3. Inject selected preset CSS variables into generated HTML
+4. All subsequent components generated based on this preset

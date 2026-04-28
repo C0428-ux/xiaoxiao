@@ -10,10 +10,10 @@ domain: operations
 role: release-engineer
 triggers:
   - /ship
-  - 发布
-  - 上线
-  - 部署
+  - ship
+  - release
   - deploy
+  - launch
 prerequisites:
   - tdd-development
 output-format: docs/xiaoxiao/plans/ship-output.md
@@ -21,168 +21,168 @@ related-skills:
   - tdd-development
 ---
 
-# Ship | 发布上线
+# Ship | Production Release
 
-## 强制执行协议
+## Mandatory Execution Protocol
 
-**规则**：
-- 必须按顺序执行每个 Step，不得跳过
-- 每个 Step 必须执行验证（检查点）才能进入下一步
-- 使用 `xiaoxiao save-progress <skill> <step>` 标记步骤完成
-- CONFIRM 节点必须等待用户确认，不得自动继续
-
----
-
-## Step 1: 初始化
-
-**动作**：
-1. 执行 `xiaoxiao save-progress ship step1-complete`
-2. 检查 `docs/xiaoxiao/plans/tdd/` 是否存在（开发输出）
-3. 运行本地测试套件：`npm test`
-4. 验证所有 PR 已审查并合并
-
-**验证**：测试通过，PR 已合并
-
-**CONFIRM**："Step 1 完成。测试通过，代码已合并。继续？"
+**Rules**:
+- MUST execute each Step in order, no skipping
+- MUST verify each Step (checkpoint) before proceeding to next
+- MUST use `xiaoxiao save-progress <skill> <step>` to mark step completion
+- CONFIRM nodes MUST wait for user confirmation, never auto-continue
 
 ---
 
-## Step 2: 预发布检查
+## Step 1: Initialization
 
-**动作**：
-1. 运行预发布清单：
-   - [ ] 安全扫描完成
-   - [ ] 性能基准达标
-   - [ ] 数据库迁移已审查
-   - [ ] 环境变量已配置
-2. 创建发布候选版本
-3. 询问用户："准备部署了吗？"
+**Action**:
+1. Execute `xiaoxiao save-progress ship step1-complete`
+2. Check if `docs/xiaoxiao/plans/tdd/` exists (development output)
+3. Run local test suite: `npm test`
+4. Verify all PRs reviewed and merged
 
-**验证**：预发布检查完成
+**Verification**: Tests pass, PRs merged
 
-**CONFIRM**："预发布检查：[N] 通过，[N] 失败。准备好部署了？"
+**CONFIRM**: "Step 1 complete. Tests pass, code merged. Continue?"
 
 ---
 
-## Step 3: 部署执行
+## Step 2: Pre-Release Checklist
 
-**动作**：
-1. 通知利益相关者部署开始
-2. 执行部署步骤：
-   - 构建产物
-   - 部署到目标环境
-   - 运行数据库迁移
-3. 监控部署进度
-4. 验证部署成功
-5. 询问用户："部署成功。继续验证？"
+**Action**:
+1. Run pre-release checklist:
+   - [ ] Security scan complete
+   - [ ] Performance benchmarks met
+   - [ ] Database migrations reviewed
+   - [ ] Environment variables configured
+2. Create release candidate
+3. Ask user: "Ready to deploy?"
 
-**验证**：部署成功
+**Verification**: Pre-release checklist complete
 
-**CONFIRM**："已部署到 [环境]。验证成功？"
-
----
-
-## Step 4: 部署后验证
-
-**动作**：
-1. 运行冒烟测试（关键路径）
-2. 验证关键指标：
-   - 错误率：在正常范围内
-   - 延迟：在 SLA 内
-   - 流量：正常模式
-3. 检查日志是否有错误
-4. 验证数据完整性
-5. 询问用户："所有验证通过。向用户发布？"
-
-**验证**：验证完成
-
-**CONFIRM**："冒烟测试：[N] 通过。验证指标？"
+**CONFIRM**: "Pre-release check: [N] passed, [N] failed. Ready to deploy?"
 
 ---
 
-## Step 5: 生产发布
+## Step 3: Deployment Execution
 
-**动作**：
-1. 启用新部署的流量（尽可能逐步）
-2. 监控 15-30 分钟：
-   - 错误率
-   - 延迟
-   - 用户指标
-3. 观察异常
-4. 设置发布后监控
-5. 通知成功发布
+**Action**:
+1. Notify stakeholders deployment starting
+2. Execute deployment steps:
+   - Build artifacts
+   - Deploy to target environment
+   - Run database migrations
+3. Monitor deployment progress
+4. Verify deployment success
+5. Ask user: "Deployment successful. Continue with verification?"
 
-**验证**：新版本正在服务生产流量
+**Verification**: Deployment successful
 
-**CONFIRM**："正在服务 [X]% 流量。监控 30 分钟。"
-
----
-
-## Step 6: 发布后监控
-
-**动作**：
-1. 监控 24-48 小时：
-   - 错误率
-   - 性能指标
-   - 用户反馈
-   - 支持工单
-2. 设置异常警报
-3. 记录经验教训
-4. 更新操作手册（如需要）
-5. 关闭发布
-
-**验证**：监控完成，发布关闭
-
-**CONFIRM**："发布后监控完成（24-48h）。有异常需要处理吗？"
+**CONFIRM**: "Deployed to [environment]. Verification successful?"
 
 ---
 
-## Step 7: 回滚准备
+## Step 4: Post-Deployment Verification
 
-**动作**：
-1. 确保回滚计划就绪
-2. 记录回滚触发条件：
-   - 错误率大幅上升
-   - 关键功能损坏
-   - 性能降至 SLA 以下
-   - 发现安全问题
-   - 检测到数据损坏
-3. 询问用户："需要我现在准备详细的回滚方案文档吗？"
+**Action**:
+1. Run smoke tests (critical paths)
+2. Verify key metrics:
+   - Error rate: within normal range
+   - Latency: within SLA
+   - Traffic: normal pattern
+3. Check logs for errors
+4. Verify data integrity
+5. Ask user: "All verifications passed. Release to users?"
 
-**验证**：回滚准备就绪
+**Verification**: Verification complete
 
-**CONFIRM**："回滚准备就绪。继续？"
+**CONFIRM**: "Smoke tests: [N] passed. Verify metrics?"
 
 ---
 
-## Step 8: 输出文档
+## Step 5: Production Release
 
-**动作**：
-1. 创建 `docs/xiaoxiao/plans/ship-output.md`
-2. 包含以下章节：
-   - Release Summary（版本、更改、持续时间）
-   - Pre-Release Validation（检查清单结果）
-   - Deployment Steps（执行的步骤）
-   - Post-Release Validation（冒烟测试结果）
-   - Monitoring Setup（配置的警报）
-   - Incidents（如有）
+**Action**:
+1. Enable traffic to new deployment (gradually if possible)
+2. Monitor for 15-30 minutes:
+   - Error rate
+   - Latency
+   - User metrics
+3. Watch for anomalies
+4. Set up post-release monitoring
+5. Announce successful release
+
+**Verification**: New version serving production traffic
+
+**CONFIRM**: "Serving [X]% traffic. Monitoring for 30 minutes."
+
+---
+
+## Step 6: Post-Release Monitoring
+
+**Action**:
+1. Monitor for 24-48 hours:
+   - Error rate
+   - Performance metrics
+   - User feedback
+   - Support tickets
+2. Set up anomaly alerts
+3. Document lessons learned
+4. Update runbooks if needed
+5. Close release
+
+**Verification**: Monitoring complete, release closed
+
+**CONFIRM**: "Post-release monitoring complete (24-48h). Any incidents to handle?"
+
+---
+
+## Step 7: Rollback Preparation
+
+**Action**:
+1. Ensure rollback plan is ready
+2. Document rollback triggers:
+   - Error rate significantly increased
+   - Critical functionality broken
+   - Performance below SLA
+   - Security issue detected
+   - Data corruption detected
+3. Ask user: "Do you need me to prepare a detailed rollback procedure document now?"
+
+**Verification**: Rollback preparation ready
+
+**CONFIRM**: "Rollback preparation ready. Continue?"
+
+---
+
+## Step 8: Output Document
+
+**Action**:
+1. Create `docs/xiaoxiao/plans/ship-output.md`
+2. Include these sections:
+   - Release Summary (version, changes, duration)
+   - Pre-Release Validation (checklist results)
+   - Deployment Steps (steps executed)
+   - Post-Release Validation (smoke test results)
+   - Monitoring Setup (alerts configured)
+   - Incidents (if any)
    - Lessons Learned
-3. 执行 `xiaoxiao complete ship docs/xiaoxiao/plans/ship-output.md`
+3. Execute `xiaoxiao complete ship docs/xiaoxiao/plans/ship-output.md`
 
-**验证**：文档已创建且包含所有章节
+**Verification**: Document created with all sections
 
-**CONFIRM**："Ship 完成。文档已保存。所有阶段完成！"
+**CONFIRM**: "Ship complete. Document saved. All phases complete!"
 
 ---
 
-## 状态更新命令
+## State Update Commands
 
-每个 Step 完成后必须执行：
+After each Step, MUST execute:
 ```bash
 xiaoxiao save-progress ship step[N]-complete
 ```
 
-最终完成必须执行：
+For final completion, MUST execute:
 ```bash
 xiaoxiao complete ship docs/xiaoxiao/plans/ship-output.md
 ```

@@ -1,15 +1,15 @@
-# 可测试代码模式 | Testable Code Patterns
+# Testable Code Patterns | Testable Code Patterns
 
-## 核心目标
+## Core Objective
 
-编写易于测试的代码，提高代码质量和可测试性。
+Write code that is easy to test, improving code quality and testability.
 
-## 可测试性原则
+## Testability Principles
 
-### 1. 依赖注入
+### 1. Dependency Injection
 
 ```javascript
-// ❌ 难以测试 - 硬依赖
+// Bad - hard dependency, hard to test
 class UserService {
   private db = new Database()
 
@@ -18,7 +18,7 @@ class UserService {
   }
 }
 
-// ✅ 可测试 - 依赖注入
+// Good - dependency injection, testable
 class UserService {
   constructor(database) {
     this.db = database
@@ -29,15 +29,15 @@ class UserService {
   }
 }
 
-// 测试时可以注入 mock
+// Can inject mock during testing
 const mockDb = { insert: jest.fn() }
 const service = new UserService(mockDb)
 ```
 
-### 2. 单一职责
+### 2. Single Responsibility
 
 ```javascript
-// ❌ 职责过多
+// Bad - too many responsibilities
 async function createUserAndSendEmail(user) {
   const db = new Database()
   await db.insert('users', user)
@@ -45,7 +45,7 @@ async function createUserAndSendEmail(user) {
   await email.send(user.email, 'Welcome!')
 }
 
-// ✅ 单一职责，可分开测试
+// Good - single responsibility, can be tested separately
 async function createUser(user, db) {
   return db.insert('users', user)
 }
@@ -55,58 +55,58 @@ async function sendWelcomeEmail(email, emailService) {
 }
 ```
 
-### 3. 避免副作用
+### 3. Avoid Side Effects
 
 ```javascript
-// ❌ 有副作用
+// Bad - has side effects
 let counter = 0
 function increment() {
   counter++
   return counter
 }
 
-// ✅ 无副作用
+// Good - no side effects
 function increment(value) {
   return value + 1
 }
 ```
 
-## 常见反模式
+## Common Anti-Patterns
 
-### 全局状态
+### Global State
 
 ```javascript
-// ❌
+// Bad
 global.currentUser = { id: 1 }
 
-// ✅
+// Good
 function getUser(req) {
-  return req.user // 从请求传递，不是全局
+  return req.user // Pass via request, not global
 }
 ```
 
-### 静态方法
+### Static Methods
 
 ```javascript
-// ❌ 难以 mock
+// Bad - hard to mock
 const user = await User.findById(id)
 
-// ✅
+// Good
 const user = await this.userRepository.findById(id)
 ```
 
-### 构造函数做太多
+### Constructor Doing Too Much
 
 ```javascript
-// ❌ 构造函数里有副作用
+// Bad - side effects in constructor
 class Service {
   constructor() {
-    this.connect() // 连接数据库！
-    this.setupLogger() // 初始化日志！
+    this.connect() // Connecting to database!
+    this.setupLogger() // Initializing logger!
   }
 }
 
-// ✅ 明确初始化
+// Good - explicit initialization
 class Service {
   constructor(db, logger) {
     this.db = db
@@ -115,40 +115,40 @@ class Service {
 }
 ```
 
-## 可测试的函数签名
+## Test-Friendly Function Signatures
 
-### 好函数特征
+### Good Function Characteristics
 
 ```javascript
-// 输入明确
+// Clear inputs
 function calculateTax(amount, rate, region) {
   return amount * rate * region.multiplier
 }
 
-// 输出明确
+// Clear outputs
 function parseEmail(input) {
-  // 返回 { valid: boolean, email: string } 或抛出异常
+  // Returns { valid: boolean, email: string } or throws exception
 }
 
-// 无隐藏依赖
+// No hidden dependencies
 function validateEmail(email, emailValidator) {
   return emailValidator.isValid(email)
 }
 ```
 
-## 测试友好结构
+## Test-Friendly Structure
 
 ```
 src/
-├── services/        # 业务逻辑（可测试）
-├── repositories/     # 数据访问（可 mock）
-├── utils/           # 纯函数（容易测试）
-└── handlers/        # HTTP 处理（集成测试）
+├── services/        # Business logic (testable)
+├── repositories/    # Data access (mockable)
+├── utils/           # Pure functions (easy to test)
+└── handlers/        # HTTP handlers (integration tests)
 ```
 
-## 何时退出
+## When to Stop
 
-- 依赖通过注入获取
-- 函数有明确输入输出
-- 副作用最小化
-- 可以单独测试每个模块
+- Dependencies are injected
+- Functions have clear inputs and outputs
+- Side effects are minimized
+- Each module can be tested in isolation

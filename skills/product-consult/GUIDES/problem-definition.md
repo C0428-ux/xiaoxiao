@@ -1,119 +1,119 @@
-# 问题定义技巧 | Problem Definition
+# Problem Definition Techniques | Problem Definition
 
-## 核心目标
+## Core Objective
 
-在产品咨询的第一步，我们需要在用户的众多想法中，精准定位**真正要解决的核心问题**。
+In the first step of product consulting, we need to precisely identify the **core problem to truly solve** among the user's many ideas.
 
-## 问题类型识别
+## Problem Type Recognition
 
-用户在表达"想做什么"时，实际上可能想解决的是：
+When users express "what they want to do," they may actually be trying to solve:
 
-| 用户说 | 实际可能是 |
-|--------|-----------|
-| "做个 App" | 某个操作太繁琐，需要自动化 |
-| "要更快" | 等待时间超过用户容忍度 |
-| "要更好用" | 当前工具学习成本太高 |
-| "要更多人用" | 获客成本太高或产品价值不够明显 |
+| What user says | May actually mean |
+|----------------|-------------------|
+| "Build an App" | Some operation is too cumbersome, needs automation |
+| "Be faster" | Wait time exceeds user tolerance |
+| "Be easier to use" | Current tool has too high learning curve |
+| "Get more users" | Customer acquisition cost too high or product value not obvious enough |
 
-## 追问框架
+## Probing Framework
 
-### 第一层追问 - 探索问题本质
+### First Layer - Explore Problem Essence
 
 ```
-"你想解决什么问题？"
+"What problem do you want to solve?"
   ↓
-"这个问题对你有什么影响？"
+"What impact does this problem have on you?"
   ↓
-"如果不解决，会发生什么？"
+"What happens if it's not solved?"
 ```
 
-### 第二层追问 - 量化影响
+### Second Layer - Quantify Impact
 
 ```
-"这个问题多久出现一次？"
+"How often does this problem occur?"
   ↓
-"每次问题发生时，损失多少时间/金钱？"
+"How much time/money is lost each time it happens?"
   ↓
-"总共有多少人受影响？"
+"How many people are affected in total?"
 ```
 
-### 第三层追问 - 验证重要性
+### Third Layer - Verify Importance
 
 ```
-"为什么现在解决这个问题很重要？"
+"Why is it important to solve this problem now?"
   ↓
-"6个月后不解决会怎样？"
+"What happens if it's not solved in 6 months?"
   ↓
-"解决这个问题对你的业务有什么帮助？"
+"How does solving this problem help your business?"
 ```
 
-## 常用引导话术
+## Common Guiding Phrases
 
-当用户说不清楚问题时：
+When users can't articulate their problems clearly:
 
-| 场景 | 引导方式 |
-|------|----------|
-| 太抽象 | "能举个具体的例子吗？上一次遇到这个问题是什么时候？" |
-| 太模糊 | "你说的'不好用'具体是指什么？" |
-| 目标不清 | "解决之后，你的工作会变成什么样？" |
-| 范围太大 | "最让你头疼的是哪一点？" |
+| Scenario | Guiding approach |
+|----------|------------------|
+| Too abstract | "Can you give a specific example? When was the last time you encountered this problem?" |
+| Too vague | "What specifically do you mean by 'hard to use'?" |
+| Unclear goals | "What will your work look like after solving it?" |
+| Scope too large | "What bothers you the most?" |
 
-## 常见问题模式
+## Common Problem Patterns
 
-### 1. 效率问题
+### 1. Efficiency Problem
 ```
-用户表达："太慢了"、"要等很久"、"重复工作"
-本质：时间成本过高
-追问：每天浪费多少时间？多少人受影响？
-```
-
-### 2. 质量问
-```
-用户表达："总是出错"、"质量不行"
-本质：错误率或缺陷率过高
-追问：出什么错？频率如何？损失多大？
+User says: "Too slow", "Takes too long", "Repetitive work"
+Essence: Time cost too high
+Probe: How much time is wasted daily? How many people are affected?
 ```
 
-### 3. 体验问题
+### 2. Quality Problem
 ```
-用户表达："太复杂"、"不会用"、"不好用"
-本质：学习成本或操作成本高
-追问：哪里复杂？新用户要多久才能上手？
-```
-
-### 4. 增长问题
-```
-用户表达："没人用"、"获客难"
-本质：产品价值或渠道问题
-追问：来的用户为什么流失？竞品哪里比你好？
+User says: "Always makes mistakes", "Quality is not good"
+Essence: Error rate or defect rate too high
+Probe: What kind of errors? How often? How much is lost?
 ```
 
-## 问题定义检验
+### 3. Experience Problem
+```
+User says: "Too complicated", "Don't know how to use", "Not user-friendly"
+Essence: High learning cost or operation cost
+Probe: What's complicated? How long does it take for new users to get started?
+```
 
-一个好问题陈述应该满足：
+### 4. Growth Problem
+```
+User says: "Nobody uses it", "Hard to acquire customers"
+Essence: Product value or channel issues
+Probe: Why do acquired users churn? Where are competitors better?
+```
 
-- [ ] 具体（不是"用户体验差"而是"新用户注册转化率只有20%"）
-- [ ] 可量化（有时间/数量/金额）
-- [ ] 有截止日期（"如果不解决，6个月后..."）
-- [ ] 有Owner（这个问题是谁的问题）
+## Problem Definition Checklist
 
-## 输出格式
+A good problem statement should meet:
+
+- [ ] Specific (not "poor user experience" but "new user registration conversion rate is only 20%")
+- [ ] Quantifiable (has time/quantity/amount)
+- [ ] Has deadline ("if not solved, in 6 months...")
+- [ ] Has an Owner (whose problem is this)
+
+## Output Format
 
 ```markdown
-## 问题陈述
+## Problem Statement
 
-**核心问题**：[一句话描述，要具体]
+**Core Problem**: [One-sentence description, be specific]
 
-**影响范围**：
-- 频率：[每天/每周/每月] 发生
-- 人数：影响 [N] 个用户/员工
-- 损失：每次损失约 [时间/金钱]
+**Impact Scope**:
+- Frequency: Occurs [daily/weekly/monthly]
+- People: Affects [N] users/employees
+- Loss: Approximately [time/money] lost each time
 
-**紧迫性**：[为什么现在解决]
+**Urgency**: [Why solve it now]
 ```
 
-## 何时退出
+## When to Exit
 
-- 用户确认了核心问题陈述
-- 问题足够具体和清晰
-- 有初步的量化的影响数据（即使不精确）
+- User confirms the core problem statement
+- Problem is specific and clear enough
+- Has preliminary quantified impact data (even if imprecise)

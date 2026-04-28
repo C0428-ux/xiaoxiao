@@ -1,39 +1,39 @@
-# 依赖管理指南 | Dependency Management
+# Dependency Management Guide | Dependency Management
 
-## 核心目标
+## Core Objective
 
-识别任务间依赖关系，合理排序，确保高效执行。
+Identify inter-task dependencies, sequence them properly, and ensure efficient execution.
 
-## 依赖类型
+## Dependency Types
 
-### 1. 技术依赖
+### 1. Technical Dependencies
 
 ```markdown
-任务A（前置） → 任务B（后置）
+Task A (prerequisite) → Task B (dependent)
 
-示例：
-数据库设计 → API开发
-UI组件开发 → 页面集成
+Example:
+Database Design → API Development
+UI Component Development → Page Integration
 ```
 
-### 2. 业务依赖
+### 2. Business Dependencies
 
 ```markdown
-需求确认 → 设计开发
-设计评审 → 开发实现
+Requirements Confirmation → Design Development
+Design Review → Development Implementation
 ```
 
-### 3. 资源依赖
+### 3. Resource Dependencies
 
 ```markdown
-设计师A → 只能做设计A和B
-前端资源 → 只能同时做2个任务
+Designer A → Can only do design work A and B
+Frontend Resources → Can only handle 2 tasks simultaneously
 ```
 
-## 依赖图绘制
+## Drawing Dependency Graphs
 
 ```markdown
-## 依赖关系图
+## Dependency Graph
 
 Task A ──┬──> Task D
          │
@@ -42,64 +42,64 @@ Task B ──┴──> Task D ──> Task F
 Task C ───────────────> Task F
 ```
 
-## 关键路径识别
+## Critical Path Identification
 
-### 关键路径 = 完成项目所需的最长时间
-
-```markdown
-最长依赖链：
-A → B → D → F → G = 15天
-
-其他任务可以并行，但这些必须按顺序：
-总工期 = 15天
-```
-
-## 依赖处理策略
-
-### 1. 串行化
+### Critical Path = Longest time required to complete the project
 
 ```markdown
-当A是B的前置时：
-→ 先完成A
-→ 再开始B
+Longest dependency chain:
+A → B → D → F → G = 15 days
+
+Other tasks can run in parallel, but these must be sequential:
+Total duration = 15 days
 ```
 
-### 2. 并行化
+## Dependency Handling Strategies
+
+### 1. Serialization
 
 ```markdown
-当A和B无依赖时：
-→ 同时开始A和B
-→ 节省总时间
+When A is a prerequisite for B:
+→ Complete A first
+→ Then start B
 ```
 
-### 3. 解除依赖
+### 2. Parallelization
 
 ```markdown
-当A和B互相阻塞时：
-→ 寻找共同的中间点
-→ 定义清晰的接口
-→ 两边可以独立开发
+When A and B have no dependencies:
+→ Start A and B simultaneously
+→ Saves total time
 ```
 
-## 依赖风险管理
+### 3. Dependency Resolution
 
-| 风险 | 影响 | 应对 |
-|------|------|------|
-| 外部依赖延迟 | 阻塞后续任务 | 提前介入、找替代方案 |
-| 内部依赖冲突 | 资源争用 | 协调优先级、并行处理 |
-| 依赖遗漏 | 后期返工 | 仔细梳理、定期检查 |
+```markdown
+When A and B block each other:
+→ Find a common intermediate point
+→ Define clear interfaces
+→ Both sides can develop independently
+```
 
-## 依赖检查清单
+## Dependency Risk Management
 
-- [ ] 每个任务的前置任务已标注
-- [ ] 没有循环依赖（A→B→C→A）
-- [ ] 关键路径已识别
-- [ ] 外部依赖有负责人
-- [ ] 依赖变更时及时更新
+| Risk | Impact | Response |
+|------|--------|----------|
+| External dependency delay | Blocks downstream tasks | Engage early, find alternatives |
+| Internal dependency conflict | Resource contention | Coordinate priorities, parallel processing |
+| Missing dependencies | Rework later | Careful review, regular checks |
 
-## 何时退出
+## Dependency Checklist
 
-- 所有依赖关系已明确
-- 关键路径已识别
-- 没有循环依赖
-- 依赖风险已评估
+- [ ] Prerequisite tasks are marked for each task
+- [ ] No circular dependencies (A→B→C→A)
+- [ ] Critical path identified
+- [ ] External dependencies have owners
+- [ ] Dependencies updated when changes occur
+
+## When to Exit
+
+- All dependency relationships are clear
+- Critical path identified
+- No circular dependencies
+- Dependency risks assessed

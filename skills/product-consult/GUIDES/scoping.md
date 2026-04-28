@@ -1,82 +1,82 @@
-# 范围界定技巧 | Scope Definition
+# Scope Definition Techniques | Scope Definition
 
-## 核心目标
+## Core Objective
 
-明确**做什么**和**不做什么**，避免范围蔓延但又不遗漏重要内容。
+Clarify **what to do** and **what not to do**, avoid scope creep while not missing important content.
 
-## 范围定义原则
+## Scope Definition Principles
 
-### 1. MVP 优先
+### 1. MVP First
 
-MVP（Minimum Viable Product）= 最少功能满足早期用户验证
+MVP (Minimum Viable Product) = Minimum features to satisfy early user validation
 
 ```
-问题 → 最小解决方案 → 快速验证 → 迭代
+Problem → Minimum solution → Quick validation → Iterate
 ```
 
-### 2. 显式排除
+### 2. Explicit Exclusions
 
-不仅要告诉用户"做什么"，还要明确说"不做什么"。
+Not only tell users "what to do," but also explicitly state "what not to do."
 
 ```markdown
-### 包括
-- 用户注册和登录
-- 基本资料管理
+### Included
+- User registration and login
+- Basic profile management
 
-### 不包括
-- 社交分享功能
-- 第三方登录（P2）
-- 管理员后台（P2）
+### Not Included
+- Social sharing features
+- Third-party login (P2)
+- Admin dashboard (P2)
 ```
 
-## 优先级定义
+## Priority Definition
 
-| 优先级 | 定义 | 交付时间 | 说明 |
-|--------|------|----------|------|
-| P0 | 必须有 | MVP | 没有这个功能产品无法使用 |
-| P1 | 应该有 | v1.0 | 重要但不是 MVP |
-| P2 | 可以有 | v1.x | 锦上添花 |
+| Priority | Definition | Delivery time | Notes |
+|----------|------------|---------------|-------|
+| P0 | Must have | MVP | Product cannot be used without this |
+| P1 | Should have | v1.0 | Important but not MVP |
+| P2 | Nice to have | v1.x | Nice to have |
 
-## 范围蔓延处理
+## Scope Creep Handling
 
-### 预警信号
+### Warning Signs
 
-- 用户说"顺便加上..."
-- "这个很简单，顺便做了"
-- 讨论范围逐渐扩大
+- User says "while we're at it..."
+- "This is simple, let's do it on the side"
+- Discussion scope gradually expanding
 
-### 应对话术
-
-```
-"这个功能加进来会影响发布时间，我们可以..."
-- "先记下来作为 P1"
-- "等 MVP 验证后再加"
-- "但需要增加 X 天工作量，值吗？"
-```
-
-## 范围边界对话模板
+### Response Phrases
 
 ```
-"MVP 的核心是解决 [核心问题]，我们只需要..."
+"This feature will affect the release date, we can..."
+- "Write it down as P1"
+- "Add it after MVP validation"
+- "But it requires X more days of work, is it worth it?"
+```
+
+## Scope Boundary Dialogue Template
+
+```
+"The core of MVP is solving [core problem], we only need..."
   ↓
-"这些功能会放在 P1：..."
+"These features will be in P1: ..."
   ↓
-"这些明确不在 MVP 范围内：..."
+"These are explicitly not in MVP scope: ..."
   ↓
-"当核心问题被验证后，我们会优先做 P1"
+"When the core problem is validated, we'll prioritize P1"
 ```
 
-## 范围确认检查
+## Scope Confirmation Checklist
 
-- [ ] 核心问题（P0）有明确定义
-- [ ] 每个 P0 功能都有用户价值
-- [ ] P1/P2 有清晰的边界
-- [ ] 用户明确同意范围边界
-- [ ] 显式列出了"不包括"的内容
+- [ ] Core problem (P0) is clearly defined
+- [ ] Each P0 feature has user value
+- [ ] P1/P2 have clear boundaries
+- [ ] User explicitly agrees to scope boundaries
+- [ ] "Not included" content is explicitly listed
 
-## 何时退出
+## When to Exit
 
-- P0/MVP 范围明确且用户确认
-- P1/P2 有初步定义
-- "不包括"的内容已明确说明
-- 用户同意优先级排序
+- P0/MVP scope is clear and confirmed by user
+- P1/P2 have preliminary definitions
+- "Not included" content is clearly explained
+- User agrees to priority ordering

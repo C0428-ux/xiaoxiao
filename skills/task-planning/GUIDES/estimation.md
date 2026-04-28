@@ -1,102 +1,102 @@
-# 估算技术指南 | Estimation Techniques
+# Estimation Techniques Guide | Estimation Techniques
 
-## 核心目标
+## Core Objective
 
-将任务分解并估算合理的工作量。
+Break down tasks and estimate reasonable workload.
 
-## 估算单位
+## Estimation Units
 
-| 级别 | 小时 | 说明 |
-|------|------|------|
-| XS | 1-2h | 简单、确定 |
-| S | 4h | 标准、可预测 |
-| M | 1-2d | 有复杂度 |
-| L | 3-5d | 高复杂度 |
-| XL | 5+d | 需拆分 |
+| Level | Hours | Description |
+|-------|-------|-------------|
+| XS | 1-2h | Simple, certain |
+| S | 4h | Standard, predictable |
+| M | 1-2d | Has complexity |
+| L | 3-5d | High complexity |
+| XL | 5+d | Needs splitting |
 
-## 估算方法
+## Estimation Methods
 
-### 1. 对比法
+### 1. Comparison Method
 
 ```markdown
-选择一个已知任务作为基准
+Select a known task as baseline
 ↓
-对比新任务和基准的复杂度
+Compare the new task's complexity with the baseline
 ↓
-给出相对估值
+Give a relative estimate
 ```
 
-### 2. 三点估算法
+### 2. Three-Point Estimation
 
 ```markdown
-乐观估算 (O): 一切顺利
-最可能估算 (M): 正常情况
-悲观估算 (P): 问题重重
+Optimistic (O): Everything goes well
+Most Likely (M): Normal conditions
+Pessimistic (P): Many problems
 
-最终估算 = (O + 4M + P) / 6
+Final estimate = (O + 4M + P) / 6
 ```
 
-### 3. 故事点法
+### 3. Story Point Method
 
 ```markdown
-1点 = 1个标准人天
+1 point = 1 standard person-day
 
-参考任务: 1点
-新任务 vs 参考:
-- 2倍复杂 → 2点
-- 3倍复杂 → 3点
+Reference task: 1 point
+New task vs reference:
+- 2x complex → 2 points
+- 3x complex → 3 points
 ```
 
-## 影响因素
+## Influencing Factors
 
-### 增加估算的因素
+### Factors that increase estimates
 
-- 未知技术（需要学习）
-- 复杂业务逻辑
-- 多方依赖协调
-- 质量要求高
-- 需要测试覆盖
+- Unknown technology (needs learning)
+- Complex business logic
+- Multi-party dependency coordination
+- High quality requirements
+- Needs test coverage
 
-### 减少估算的因素
+### Factors that decrease estimates
 
-- 熟悉的技术栈
-- 简单的 CRUD
-- 有现成代码参考
-- 明确的业务规则
+- Familiar tech stack
+- Simple CRUD
+- Existing code to reference
+- Clear business rules
 
-## 估算对话模板
+## Estimation Conversation Template
 
 ```markdown
-"这个任务涉及什么？"
+"What does this task involve?"
   ↓
-"有没有类似的任务可以参考？"
+"Are there similar tasks we can reference?"
   ↓
-"最大的不确定性是什么？"
+"What is the biggest uncertainty?"
   ↓
-"考虑到这些，估算是多少？"
+"Considering these factors, what is the estimate?"
 ```
 
-## 缓冲时间
+## Buffer Time
 
-| 任务复杂度 | 建议缓冲 |
-|------------|----------|
-| 低 | 10% |
-| 中 | 20% |
-| 高 | 30% |
-| 实验性 | 50%+ |
+| Task Complexity | Recommended Buffer |
+|-----------------|--------------------|
+| Low | 10% |
+| Medium | 20% |
+| High | 30% |
+| Experimental | 50%+ |
 
-## 常见错误
+## Common Mistakes
 
-| 错误 | 问题 | 修正 |
-|------|------|------|
-| 乐观估算 | 只看顺利情况 | 加缓冲 |
-| 忽略研究 | 不确定的技术没算时间 | 分成研究和实现 |
-| 忽略测试 | 只估了开发 | 加测试时间 |
-| 忽略会议 | 假设纯开发时间 | 加20% |
+| Mistake | Problem | Correction |
+|---------|---------|------------|
+| Optimistic estimation | Only considers smooth scenarios | Add buffer |
+| Ignoring research | Uncertain technology not accounted for | Split into research and implementation |
+| Ignoring testing | Only estimated development | Add testing time |
+| Ignoring meetings | Assumes pure development time | Add 20% |
 
-## 何时退出
+## When to Exit
 
-- 所有任务都有估算
-- 估算经过团队讨论
-- 缓冲时间已考虑
-- 用户确认估算合理
+- All tasks have estimates
+- Estimates have been discussed with the team
+- Buffer time has been considered
+- User confirms estimates are reasonable

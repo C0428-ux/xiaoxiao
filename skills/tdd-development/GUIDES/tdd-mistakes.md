@@ -1,30 +1,30 @@
-# TDD 常见错误 | Common TDD Mistakes
+# TDD Common Mistakes | Common TDD Mistakes
 
-## 核心目标
+## Core Objective
 
-识别并避免 TDD 实践中的常见错误。
+Identify and avoid common mistakes in TDD practice.
 
-## 错误 1: 先写实现后补测试
+## Mistake 1: Writing Implementation Before Tests
 
 ```markdown
-❌ 错误做法
-写代码 → 写测试 → 通过
+Wrong Approach
+Write code → Write tests → Pass
 
-✅ 正确做法
-写测试（RED）→ 写实现（GREEN）→ 重构（REFACTOR）
+Correct Approach
+Write tests (RED) → Write implementation (GREEN) → Refactor (REFACTOR)
 ```
 
-**后果**：测试无效，测试只是验证已完成的代码
+**Consequence**: Tests are ineffective, they only verify code that is already complete
 
-## 错误 2: 测试太多细节
+## Mistake 2: Testing Too Many Details
 
 ```javascript
-// ❌ 测试实现细节
+// Bad - testing implementation details
 it('should call validateEmail and hashPassword in order', () => {
   expect(validateEmail).toHaveBeenCalledBefore(hashPassword)
 })
 
-// ✅ 测试行为
+// Good - testing behavior
 it('should create user with valid email and hashed password', () => {
   const user = await UserService.create(validUser)
   expect(user.email).toBe(validUser.email)
@@ -32,30 +32,30 @@ it('should create user with valid email and hashed password', () => {
 })
 ```
 
-## 错误 3: 测试太复杂
+## Mistake 3: Tests Too Complex
 
 ```javascript
-// ❌ 一个测试测太多
+// Bad - one test does too much
 it('should do everything correctly', async () => {
-  // 100 行测试代码
-  // 测试了创建、更新、删除、查询...
+  // 100 lines of test code
+  // Tests create, update, delete, query...
 })
 
-// ✅ 一个测试一个行为
+// Good - one test, one behavior
 it('should create user')
 it('should update user email')
 it('should delete user')
 ```
 
-## 错误 4: 不测试边界
+## Mistake 4: Not Testing Boundaries
 
 ```javascript
-// ❌ 只测 happy path
+// Bad - only testing happy path
 it('should return user when found', () => {
   expect(service.findById(1)).toBe(user)
 })
 
-// ✅ 测试边界情况
+// Good - testing edge cases
 it('should throw NotFoundError when user does not exist', () => {
   expect(() => service.findById(999)).toThrow(NotFoundError)
 })
@@ -65,83 +65,83 @@ it('should throw ValidationError for invalid email format', () => {
 })
 ```
 
-## 错误 5: 测试有顺序依赖
+## Mistake 5: Tests Having Order Dependencies
 
 ```javascript
-// ❌ 测试间有依赖
+// Bad - dependencies between tests
 it('test 1', () => {
-  const id = service.create(user) // 创建用户
+  const id = service.create(user) // Creates user
 })
 
 it('test 2', () => {
-  const user = service.findById(id) // 依赖 test 1 创建的用户
+  const user = service.findById(id) // Depends on test 1 creating the user
 })
 
-// ✅ 每个测试独立
+// Good - each test is independent
 beforeEach(() => {
-  service.clear() // 清理数据
+  service.clear() // Clear data
 })
 
 it('should create user', () => { /* ... */ })
 it('should find user by id', () => {
-  service.create(user) // 在本测试内创建
+  service.create(user) // Create within this test
 })
 ```
 
-## 错误 6: Mock 所有东西
+## Mistake 6: Mocking Everything
 
 ```javascript
-// ❌ Mock 过度
+// Bad - excessive mocking
 it('should calculate sum', () => {
   const mockMath = { add: (a, b) => a + b }
   const calculator = new Calculator(mockMath)
   expect(calculator.add(1, 2)).toBe(3)
 })
 
-// ✅ 使用真实逻辑
+// Good - use real logic
 it('should calculate sum', () => {
   const calculator = new Calculator()
   expect(calculator.add(1, 2)).toBe(3)
 })
 ```
 
-## 错误 7: 测试命名模糊
+## Mistake 7: Vague Test Names
 
 ```javascript
-// ❌
+// Bad
 it('test1')
 it('should work')
 
-// ✅
+// Good
 it('should return 404 when resource not found')
 it('should create user with valid data')
 ```
 
-## 错误 8: 忽略测试失败
+## Mistake 8: Ignoring Test Failures
 
 ```markdown
-# 红色测试？别忽略！
+# Red Tests? Don't Ignore!
 
-❌ "测试失败了，但我们知道代码是对的"
-✅ "测试失败说明我的假设或代码有问题"
+Wrong: "The test failed, but we know the code is correct"
+Right: "A failing test means there's a problem with my assumptions or code"
 ```
 
-## 错误 9: 不测试错误路径
+## Mistake 9: Not Testing Error Paths
 
 ```javascript
-// ❌ 只测成功
+// Bad - only testing success
 it('should create user', () => { /* ... */ })
 
-// ✅ 也要测失败
+// Good - also test failures
 it('should throw error for invalid email')
 it('should throw error for duplicate email')
 it('should throw error when database is down')
 ```
 
-## 错误 10: 过度的断言
+## Mistake 10: Excessive Assertions
 
 ```javascript
-// ❌ 断言太多
+// Bad - too many assertions
 expect(result.id).toBeDefined()
 expect(result.name).toBe('John')
 expect(result.email).toBe('john@example.com')
@@ -149,17 +149,17 @@ expect(result.createdAt).toBeInstanceOf(Date)
 expect(result.updatedAt).toBeInstanceOf(Date)
 // ...
 
-// ✅ 聚焦关键断言
+// Good - focus on key assertions
 expect(result).toMatchObject({
   name: 'John',
   email: 'john@example.com'
 })
 ```
 
-## 何时退出
+## When to Stop
 
-- 测试驱动开发（不是测试滞后）
-- 测试行为而非实现
-- 每个测试独立
-- 边界情况有覆盖
-- 测试失败时及时修复
+- Test-driven development (not test-lagging)
+- Testing behavior, not implementation
+- Each test is independent
+- Edge cases are covered
+- Test failures are fixed promptly

@@ -1,112 +1,112 @@
-# 可行性评估方法 | Feasibility Assessment
+# Feasibility Assessment Method | Feasibility Assessment
 
-## 核心目标
+## Core Objective
 
-评估产品从技术、资源、经济角度是否可行。
+Evaluate whether a product is feasible from technical, resource, and economic perspectives.
 
-## 可行性维度
+## Feasibility Dimensions
 
-### 1. 技术可行性
+### 1. Technical Feasibility
 
-**评估问题**：
+**Assessment Questions**:
 
 ```
-- 核心技术是否成熟？
-- 技术风险有多大？
-- 需要突破哪些技术难题？
-- 团队是否有技术能力？
+- Is the core technology mature?
+- How large is the technical risk?
+- What technical challenges need to be overcome?
+- Does the team have the technical capability?
 ```
 
-**技术风险矩阵**：
+**Technical Risk Matrix**:
 
-| 风险 | 影响 | 可能性 | 应对 |
+| Risk | Impact | Likelihood | Response |
 |------|------|--------|------|
-| 新技术验证 | 高 | 中 | 做 POC |
-| 性能要求 | 高 | 低 | 提前压测 |
-| 安全合规 | 高 | 中 | 咨询专家 |
+| New technology validation | High | Medium | Do POC |
+| Performance requirements | High | Low | Early load testing |
+| Security compliance | High | Medium | Consult experts |
 
-### 2. 资源可行性
+### 2. Resource Feasibility
 
-**评估问题**：
+**Assessment Questions**:
 
 ```
-- 需要多少开发人员？什么技能？
-- 现有团队能cover吗？
-- 需要多久能招聘到位？
-- 资金能支撑多久？
+- How many developers are needed? What skills?
+- Can the current team cover it?
+- How long to recruit?
+- How long can funding sustain operations?
 ```
 
-**团队需求估算**：
+**Team Requirements Estimate**:
 
-| 角色 | 人数 | 月薪 | 所需时间 |
+| Role | Headcount | Monthly Salary | Duration |
 |------|------|------|----------|
-| 前端 | 2 | X | 3个月 |
-| 后端 | 2 | X | 3个月 |
-| 设计 | 1 | X | 2个月 |
-| 测试 | 1 | X | 2个月 |
+| Frontend | 2 | X | 3 months |
+| Backend | 2 | X | 3 months |
+| Design | 1 | X | 2 months |
+| QA | 1 | X | 2 months |
 
-### 3. 经济可行性
+### 3. Economic Feasibility
 
-**评估问题**：
+**Assessment Questions**:
 
 ```
-- 开发成本是多少？
-- 预期 ROI 是多少？
-- 多久能回本？
-- 融资还是自造血？
+- What is the development cost?
+- What is the expected ROI?
+- How long to break even?
+- VC funding or self-sustaining?
 ```
 
-**成本估算模板**：
+**Cost Estimation Template**:
 
 ```markdown
-## 开发成本估算
+## Development Cost Estimation
 
-### 一次性成本
-- 开发人力：[X] 人 × [Y] 月 × [Z] 薪资
-- 基础设施：¥[X]
-- 设计/品牌：¥[X]
-- 其他：¥[X]
+### One-time Costs
+- Development labor: [X] people × [Y] months × [Z] salary
+- Infrastructure: ¥[X]
+- Design/Branding: ¥[X]
+- Others: ¥[X]
 
-### 持续成本
-- 运维：¥[X]/月
-- 客服：¥[X]/月
-- 营销：¥[X]/月
+### Recurring Costs
+- Operations: ¥[X]/month
+- Customer support: ¥[X]/month
+- Marketing: ¥[X]/month
 
-### 总成本
-- 6个月：¥[X]
-- 12个月：¥[X]
+### Total Cost
+- 6 months: ¥[X]
+- 12 months: ¥[X]
 ```
 
-**ROI 计算**：
+**ROI Calculation**:
 
 ```markdown
-## 收入预测
+## Revenue Projection
 
-### 保守
-- 第1年用户：[X]
-- 付费率：[X]%
-- ARPU：¥[X]
-- 年收入：¥[X]
+### Conservative
+- Year 1 users: [X]
+- Paid conversion: [X]%
+- ARPU: ¥[X]
+- Annual revenue: ¥[X]
 
-### 目标
-- 第1年用户：[X]
-- 付费率：[X]%
-- ARPU：¥[X]
-- 年收入：¥[X]
+### Target
+- Year 1 users: [X]
+- Paid conversion: [X]%
+- ARPU: ¥[X]
+- Annual revenue: ¥[X]
 ```
 
-## 可行性决策
+## Feasibility Decision
 
-| 评估结果 | 决策 |
+| Assessment Result | Decision |
 |----------|------|
-| 技术✅资源✅经济✅ | Go |
-| 技术❌资源✅经济✅ | No-Go or 调整 |
-| 技术✅资源❌经济✅ | 找资源 |
-| 技术✅资源✅经济❌ | 调整商业模式 |
+| Tech ✅ Resource ✅ Economic ✅ | Go |
+| Tech ❌ Resource ✅ Economic ✅ | No-Go or Adjust |
+| Tech ✅ Resource ❌ Economic ✅ | Find Resources |
+| Tech ✅ Resource ✅ Economic ❌ | Adjust Business Model |
 
-## 何时退出
+## When to Exit
 
-- 三个维度可行性都已评估
-- 主要风险已识别
-- 有明确的资源获取计划
-- 用户确认经济模型合理
+- All three feasibility dimensions have been assessed
+- Major risks have been identified
+- There is a clear resource acquisition plan
+- Users confirm the economic model is reasonable

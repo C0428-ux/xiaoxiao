@@ -1,94 +1,94 @@
-# 竞品分析方法 | Competitive Analysis
+# Competitive Analysis Method | Competitive Analysis
 
-## 核心目标
+## Core Objective
 
-了解竞争格局，找到差异化切入点，评估竞争壁垒。
+Understand the competitive landscape, find differentiation opportunities, and assess competitive barriers.
 
-## 竞品分类
+## Competitor Classification
 
-| 类型 | 定义 | 示例 |
+| Type | Definition | Example |
 |------|------|------|
-| **直接竞品** | 解决同样问题 | 我们的产品 vs 钉钉 |
-| **间接竞品** | 不同解法同一问题 | 我们的产品 vs 微信群 |
-| **替代品** | 用户不用任何产品 | 自建 Excel |
+| **Direct Competitor** | Solves the same problem | Our product vs. Dingtalk |
+| **Indirect Competitor** | Different solution to same problem | Our product vs. WeChat Groups |
+| **Substitute** | User uses no product at all | DIY Excel |
 
-## 竞品分析维度
+## Competitor Analysis Dimensions
 
-### 1. 产品维度
-
-```
-功能覆盖 - 解决了哪些需求
-用户体验 - 易用性、学习成本
-技术实力 - 性能、稳定性、安全性
-```
-
-### 2. 商业维度
+### 1. Product Dimensions
 
 ```
-定价策略 - 免费/订阅/按量
-商业模式 - B2B/B2C/B2B2C
-销售渠道 - 直销/代理/生态
+Feature coverage - what needs are being addressed
+User experience - ease of use, learning curve
+Technical capability - performance, stability, security
 ```
 
-### 3. 市场维度
+### 2. Business Dimensions
 
 ```
-市场份额 - 市场占有率
-用户口碑 - NPS、评价
-品牌认知 - 品牌知名度
+Pricing strategy - free/subscription/usage-based
+Business model - B2B/B2C/B2B2C
+Sales channels - direct/agency/ecosystem
 ```
 
-## 竞品分析表
+### 3. Market Dimensions
+
+```
+Market share - market penetration
+User reputation - NPS, reviews
+Brand awareness - brand recognition
+```
+
+## Competitor Analysis Table
 
 ```markdown
-| 竞品 | 目标用户 | 核心功能 | 优点 | 缺点 | 定价 | 市占率 |
+| Competitor | Target Users | Core Features | Pros | Cons | Pricing | Market Share |
 |------|----------|----------|------|------|------|--------|
-| 竞品A | 中小企业 | 全功能 | 生态完善 | 复杂贵 | ¥99/月 | 30% |
-| 竞品B | 大企业   | 专业定制 | 安全强 | 难上手 | ¥999/月 | 20% |
-| 竞品C | 小微     | 轻量简单 | 便宜   | 功能少 | 免费   | 25% |
+| Competitor A | SMBs | Full-featured | Complete ecosystem | Complex, expensive | ¥99/month | 30% |
+| Competitor B | Enterprises | Custom solutions | Strong security | Steep learning curve | ¥999/month | 20% |
+| Competitor C | Micro businesses | Light & simple | Cheap | Limited features | Free | 25% |
 ```
 
-## 差异化分析
+## Differentiation Analysis
 
-### 1. 找到空白
+### 1. Find Gaps
 
 ```
-用户痛点 → 现有竞品哪里满足不了 → 我们能做什么
+User pain points → What existing competitors can't fulfill → What we can do
 ```
 
-### 2. 评估壁垒
+### 2. Assess Barriers
 
-| 壁垒类型 | 说明 | 强度 |
+| Barrier Type | Description | Strength |
 |----------|------|------|
-| 技术壁垒 | 专利、专有技术 | 高 |
-| 网络效应 | 用户越多越有价值 | 高 |
-| 规模效应 | 规模大成本低 | 中 |
-| 品牌壁垒 | 品牌认知度 | 中 |
-| 转换成本 | 用户换产品代价 | 高 |
+| Technical barrier | Patents, proprietary technology | High |
+| Network effect | More users = more valuable | High |
+| Scale effect | Larger scale = lower cost | Medium |
+| Brand barrier | Brand recognition | Medium |
+| Switching cost | Cost for users to switch products | High |
 
-### 3. 竞争优势
+### 3. Competitive Advantage
 
 ```
-我们有而竞品没有 → 为什么我们能做
-竞品有而我们有 → 我们如何做得更好
-用户真正在乎 → 我们能否持续投入
+What we have that competitors don't → Why we can do it
+What competitors have that we don't → How we do it better
+What users really care about → Whether we can sustain investment
 ```
 
-## 定价分析
+## Pricing Analysis
 
 ```markdown
-## 竞品定价
+## Competitor Pricing
 
-| 竞品 | 定价模型 | 价格区间 | 收费方式 |
+| Competitor | Pricing Model | Price Range | Charging Method |
 |------|----------|----------|----------|
-| 竞品A | 订阅制 | ¥99-999/月 | 按功能分层 |
-| 竞品B | 订阅制 | ¥999+/月 | 按用户数 |
-| 竞品C | 免费+增值 | ¥0-29/月 | 基础免费，高级付费 |
+| Competitor A | Subscription | ¥99-999/month | Tiered by features |
+| Competitor B | Subscription | ¥999+/month | Per user |
+| Competitor C | Free + freemium | ¥0-29/month | Free basic, paid premium |
 ```
 
-## 何时退出
+## When to Exit
 
-- 主要竞品已清晰定位
-- 差异化切入点已明确
-- 用户确认我们的竞争优势
-- 壁垒评估已完成
+- Major competitors have been clearly positioned
+- Differentiation切入点 has been identified
+- Users confirm our competitive advantage
+- Barrier assessment is complete

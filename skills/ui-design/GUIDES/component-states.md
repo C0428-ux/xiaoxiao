@@ -1,128 +1,128 @@
-# 组件状态指南 | Component States
+# Component States Guide | Component States
 
-## 核心目标
+## Core Objective
 
-完整定义组件的所有状态，确保设计和开发的一致性。
+Fully define all component states to ensure consistency between design and development.
 
-## 通用状态
+## Common States
 
-| 状态 | 说明 | 视觉表现 |
-|------|------|----------|
-| Default | 默认状态 | 正常样式 |
-| Hover | 鼠标悬停 | 颜色加深/阴影 |
-| Active/Pressed | 点击中 | 颜色更深/缩放 |
-| Focus | 获得焦点 | 边框高亮 |
-| Disabled | 禁用 | 半透明/不可点击 |
-| Loading | 加载中 | 动画/占位 |
+| State | Description | Visual Expression |
+|-------|-------------|-------------------|
+| Default | Default state | Normal style |
+| Hover | Mouse over | Darker color/shadow |
+| Active/Pressed | Clicking | Darker color/scale |
+| Focus | Gained focus | Border highlight |
+| Disabled | Disabled | Semi-transparent/unclickable |
+| Loading | Loading | Animation/placeholder |
 
-## 按钮状态
+## Button States
 
 ```markdown
 ### Default
-[主要操作]
+[Primary Action]
 
 ### Hover
-[鼠标悬停 - 背景加深10%]
+[Mouse over - background 10% darker]
 
 ### Active/Pressed
-[点击中 - 背景加深20%]
+[Clicking - background 20% darker]
 
 ### Focus
-[获得焦点 - 蓝色边框]
+[Gained focus - blue border]
 
 ### Disabled
-[禁用 - 50%透明度]
+[Disabled - 50% opacity]
 
 ### Loading
-[加载中 - 显示spinner]
+[Loading - show spinner]
 ```
 
-## 输入框状态
+## Input States
 
 ```markdown
 ### Default
-┌────────────────────┐
-│ 输入内容...        │
-└────────────────────┘
++--------------------+
+| Input content...   |
++--------------------+
 
 ### Focus
-┌────────────────────┐
-│ ▌输入内容...       │  ← 蓝色边框
-└────────────────────┘
++--------------------+
+| |Input content...  |  <- blue border
++--------------------+
 
 ### Error
-┌────────────────────┐
-│ ✗ 请输入邮箱地址   │  ← 红色边框+错误信息
-└────────────────────┘
++--------------------+
+| X Please enter email|  <- red border + error message
++--------------------+
 
 ### Disabled
-┌────────────────────┐
-│   不可编辑内容     │  ← 灰色背景
-└────────────────────┘
++--------------------+
+|   Non-editable     |  <- gray background
++--------------------+
 ```
 
-## 卡片状态
+## Card States
 
 ```markdown
 ### Default
 +------------------------+
-| 标题                   |
-| 描述...                |
+| Title                  |
+| Description...         |
 +------------------------+
 
 ### Hover
 +------------------------+
-| 标题                   |  ← 阴影加深
-| 描述...                |
+| Title                  |  <- shadow deepens
+| Description...         |
 +------------------------+
 
 ### Selected
 +========================+
-== 标题                   == ← 边框高亮
-| 描述...                |
+== Title                  == <- border highlight
+| Description...         |
 +========================+
 ```
 
-## 列表项状态
+## List Item States
 
 ```markdown
 ### Default
 +------------------------+
-| ○ 选项A                |
+| ○ Option A             |
 +------------------------+
 
 ### Hover
 +------------------------+
-| ○ 选项A                |  ← 背景色变化
+| ○ Option A             |  <- background color change
 +------------------------+
 
 ### Selected
 +------------------------+
-| ● 选项B                |  ← 选中标记
+| ● Option B             |  <- selected indicator
 +------------------------+
 
 ### Disabled
 +------------------------+
-| ○ 选项C                |  ← 灰色文字
+| ○ Option C             |  <- gray text
 +------------------------+
 ```
 
-## 加载状态
+## Loading States
 
 ### Skeleton
 
 ```markdown
 +------------------------+
-| [████████░░] 标题      |
-| [██████░░░░] 描述      |
+| [████████░░] Title      |
+| [██████░░░░] Description|
 +------------------------+
 ```
 
 ### Spinner
 
 ```markdown
-加载中...
-[ ◐ ] [ ◑ ] [ ◒ ] [ ◓ ]  (旋转动画)
+Loading...
+[ ◐ ] [ ◑ ] [ ◒ ] [ ◓ ]  (rotation animation)
 ```
 
 ### Progress
@@ -131,45 +131,48 @@
 [████████░░░░░░░░░] 50%
 ```
 
-## 空状态
+## Empty State
 
 ```markdown
 +------------------------+
 |                        |
-|      [图标]            |
+|      [Icon]            |
 |                        |
-|   暂无数据             |
-|   描述文字             |
+|   No data yet          |
+|   Description text     |
 |                        |
-|   [操作按钮]          |
+|   [Action button]      |
 |                        |
 +------------------------+
 ```
 
-## 错误状态
+## Error State
 
 ```markdown
 +------------------------+
 |                        |
-|      [警告图标]        |
+|      [Warning icon]    |
 |                        |
-|   出错了               |
-|   [错误详情]           |
+|   Something went wrong |
+|   [Error details]      |
 |                        |
-|   [重试按钮]          |
+|   [Retry button]       |
 |                        |
 +------------------------+
 ```
 
-## 状态转换
+## State Transitions
 
-| 从 \ 到 | Default | Hover | Active | Disabled |
-|---------|---------|-------|--------|----------|
-| Default | - | 鼠标进入 | 点击 | 设置属性 |
-| Hover | 鼠标离开 | - | 点击 | 设置属性 |
-| Active | 释放 | 保持 | - | 失去焦点 |
+| From \ To | Default | Hover | Active | Disabled |
+|-----------|---------|-------|--------|----------|
+| Default | - | Mouse enter | Click | Set attribute |
+| Hover | Mouse leave | - | Click | Set attribute |
+| Active | Release | Maintain | - | Lose focus |
 | Disabled | - | - | - | - |
 
-## 何时退出
+## When to Exit
 
--
+- All component states fully defined
+- Transition logic documented
+- Edge cases handled
+- Ready for development implementation

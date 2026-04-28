@@ -1,22 +1,22 @@
-# 部署脚本指南 | Deployment Scripts
+# Deployment Scripts Guide | Deployment Scripts
 
-## 核心目标
+## Core Objective
 
-提供标准化的部署脚本，确保部署过程可靠、可重复。
+Provide standardized deployment scripts to ensure reliable, repeatable deployment processes.
 
-## 部署阶段
+## Deployment Phases
 
 ```markdown
-1. 构建 (Build)
-2. 测试 (Test)
-3. 打包 (Package)
-4. 部署 (Deploy)
-5. 验证 (Verify)
+1. Build
+2. Test
+3. Package
+4. Deploy
+5. Verify
 ```
 
-## 部署脚本模板
+## Deployment Script Templates
 
-### 1. 构建脚本
+### 1. Build Script
 
 ```bash
 #!/bin/bash
@@ -24,21 +24,21 @@
 
 set -e
 
-echo "=== 构建开始 ==="
+echo "=== Build Started ==="
 
-# 安装依赖
+# Install dependencies
 npm ci
 
-# 构建
+# Build
 npm run build
 
-# 单元测试
+# Unit tests
 npm run test:unit
 
-echo "=== 构建完成 ==="
+echo "=== Build Complete ==="
 ```
 
-### 2. 部署脚本
+### 2. Deploy Script
 
 ```bash
 #!/bin/bash
@@ -49,32 +49,32 @@ set -e
 ENV=$1  # staging / production
 VERSION=$2
 
-echo "=== 部署开始 ==="
-echo "环境: $ENV"
-echo "版本: $VERSION"
+echo "=== Deployment Started ==="
+echo "Environment: $ENV"
+echo "Version: $VERSION"
 
-# 拉取最新代码
+# Pull latest code
 git pull origin main
 
-# 安装依赖
+# Install dependencies
 npm ci
 
-# 构建
+# Build
 npm run build:$ENV
 
-# 运行数据库迁移
+# Run database migrations
 npm run migrate:$ENV
 
-# 重启服务
+# Restart service
 pm2 restart app --update-env
 
-# 验证部署
+# Verify deployment
 curl -f https://api.example.com/health || exit 1
 
-echo "=== 部署完成 ==="
+echo "=== Deployment Complete ==="
 ```
 
-### 3. 回滚脚本
+### 3. Rollback Script
 
 ```bash
 #!/bin/bash
@@ -82,28 +82,28 @@ echo "=== 部署完成 ==="
 
 set -e
 
-VERSION=$1  # 要回滚到的版本
+VERSION=$1  # version to rollback to
 
-echo "=== 回滚开始 ==="
-echo "目标版本: $VERSION"
+echo "=== Rollback Started ==="
+echo "Target version: $VERSION"
 
-# 切换到目标版本
+# Switch to target version
 git checkout $VERSION
 
-# 重新构建
+# Rebuild
 npm ci
 npm run build
 
-# 重启服务
+# Restart service
 pm2 restart app
 
-# 验证
+# Verify
 curl -f https://api.example.com/health || exit 1
 
-echo "=== 回滚完成 ==="
+echo "=== Rollback Complete ==="
 ```
 
-## Docker 部署
+## Docker Deployment
 
 ```dockerfile
 # Dockerfile
@@ -128,7 +128,7 @@ docker build -t myapp:$VERSION .
 docker push myapp:$VERSION
 ```
 
-## Kubernetes 部署
+## Kubernetes Deployment
 
 ```yaml
 # deployment.yaml
@@ -153,18 +153,18 @@ spec:
           value: production
 ```
 
-## 部署检查清单
+## Deployment Checklist
 
-- [ ] 构建成功
-- [ ] 测试全部通过
-- [ ] 迁移脚本已执行
-- [ ] 配置正确
-- [ ] 健康检查通过
-- [ ] 监控已启用
+- [ ] Build succeeded
+- [ ] All tests passed
+- [ ] Migration scripts executed
+- [ ] Configuration correct
+- [ ] Health check passed
+- [ ] Monitoring enabled
 
-## 何时退出
+## When to Exit
 
-- 部署脚本可重复执行
-- 有回滚方案
-- 部署过程被监控
-- 有部署日志
+- Deployment scripts are repeatable
+- Rollback plan exists
+- Deployment process is monitored
+- Deployment logs are available

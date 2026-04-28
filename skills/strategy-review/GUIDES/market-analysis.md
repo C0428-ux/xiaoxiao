@@ -1,84 +1,84 @@
-# 市场分析方法 | Market Analysis
+# Market Analysis Method | Market Analysis
 
-## 核心目标
+## Core Objective
 
-量化市场机会，判断产品是否有足够的市场空间支撑发展。
+Quantify market opportunity and determine if the product has sufficient market space to support growth.
 
-## 市场分析框架
+## Market Analysis Framework
 
 ### TAM / SAM / SOM
 
-| 层级 | 定义 | 用途 |
+| Level | Definition | Purpose |
 |------|------|------|
-| **TAM** | Total Addressable Market - 理论最大市场 | 评估天花板 |
-| **SAM** | Serviceable Addressable Market - 可服务市场 | 现实目标 |
-| **SOM** | Serviceable Obtainable Market - 可获得市场 | 短期可达 |
+| **TAM** | Total Addressable Market - theoretical maximum market | Assess ceiling |
+| **SAM** | Serviceable Addressable Market - addressable market | Realistic target |
+| **SOM** | Serviceable Obtainable Market - obtainable market | Short-term achievable |
 
-### 计算示例
-
-```
-TAM:  全球客服软件市场 = $50B
-SAM:  中小企业客服市场 = $15B
-SOM:  我们第一年能拿到的 = $50M
-```
-
-## 市场分析方法
-
-### 1. 需求验证法
+### Calculation Example
 
 ```
-用户痛点强烈程度 → 愿意付费的用户比例 → 市场大小
+TAM:  Global customer service software market = $50B
+SAM:  SMB customer service market = $15B
+SOM:  What we can capture in year 1 = $50M
 ```
 
-### 2. 竞品反推法
+## Market Analysis Methods
+
+### 1. Demand Validation Method
 
 ```
-竞品收入 × 竞品市场份额 = 市场总量
+User pain point intensity → Percentage willing to pay → Market size
 ```
 
-### 3. 自上而下法
+### 2. Competitor Back-calculation Method
 
 ```
-行业整体规模 × 目标细分比例 = 目标市场
+Competitor revenue × Competitor market share = Total market size
 ```
 
-## 市场趋势判断
+### 3. Top-down Method
 
-| 趋势 | 信号 | 影响 |
+```
+Industry total size × Target segment ratio = Target market
+```
+
+## Market Trend Assessment
+
+| Trend | Signals | Impact |
 |------|------|------|
-| 增长 | 行业报告、融资事件、招聘增长 | 机会窗口 |
-| 稳定 | 成熟市场、无大波动 | 差异化难 |
-| 下降 | 客户流失、市场萎缩 | 谨慎进入 |
+| Growth | Industry reports, funding events, hiring growth | Opportunity window |
+| Stable | Mature market, no major fluctuations | Hard to differentiate |
+| Decline | Customer churn, market contraction | Enter cautiously |
 
-## 关键问题
+## Key Questions
 
-- 这个市场在增长还是萎缩？
-- 增长/萎缩的速度是多少？
-- 驱动增长的因素是什么？
-- 这些因素可持续吗？
+- Is this market growing or shrinking?
+- What is the growth/shrinkage rate?
+- What are the growth drivers?
+- Are these factors sustainable?
 
-## 输出模板
+## Output Template
 
 ```markdown
-## 市场分析
+## Market Analysis
 
-### 市场规模
-- **TAM**: [金额/数量]
-- **SAM**: [金额/数量]
-- **SOM**: [金额/数量]
+### Market Size
+- **TAM**: [amount/quantity]
+- **SAM**: [amount/quantity]
+- **SOM**: [amount/quantity]
 
-### 市场趋势
-- **方向**: [增长/稳定/萎缩]
-- **增速**: [X%] YoY
-- **驱动因素**: [1, 2, 3]
+### Market Trend
+- **Direction**: [Growth/Stable/Decline]
+- **Growth rate**: [X%] YoY
+- **Drivers**: [1, 2, 3]
 
-### 关键数据来源
-- [来源1]
-- [来源2]
+### Key Data Sources
+- [Source 1]
+- [Source 2]
 ```
 
-## 何时退出
+## When to Exit
 
-- 有可信的市场数据支撑（哪怕是估算）
-- 用户确认市场机会判断
-- 有明确的切入点和差异化方向
+- Credible market data supports the analysis (even if estimated)
+- Users confirm market opportunity assessment
+- There is a clear entry point and differentiation direction

@@ -1,113 +1,118 @@
-# Sprint 规划指南 | Sprint Planning
+# Sprint Planning Guide | Sprint Planning
 
-## 核心目标
+## Core Objective
 
-将任务合理分配到 sprints，确保可预测的交付。
+Assign tasks to sprints reasonably to ensure predictable delivery.
 
-## Sprint 周期
+## Sprint Cycle
 
-| 周期 | 优点 | 缺点 |
-|------|------|------|
-| 1周 | 快速反馈 | 计划开销大 |
-| 2周 | 平衡 | - |
-| 3周 | 计划少 | 反馈慢 |
+| Duration | Advantages | Disadvantages |
+|----------|------------|---------------|
+| 1 week | Fast feedback | High planning overhead |
+| 2 weeks | Balanced | - |
+| 3 weeks | Less planning | Slow feedback |
 
-## Sprint 容量计算
+## Sprint Capacity Calculation
 
-### 可用人力
-
-```markdown
-团队：3人
-每人每天：6小时（开会/其他占2小时）
-Sprint：2周（10个工作日）
-
-容量 = 3 × 6 × 10 = 180人时
-     = 180 / 8 = 22人天
-```
-
-### 容量分配
+### Available Human Resources
 
 ```markdown
-总容量：22人天
-  - 计划/回顾：2人天
-  - 技术难题：2人天
-  - 紧急任务：2人天
-可用：16人天
+Team: 3 people
+Each person per day: 6 hours (meetings/other takes 2 hours)
+Sprint: 2 weeks (10 working days)
+
+Capacity = 3 × 6 × 10 = 180 person-hours
+        = 180 / 8 = 22 person-days
 ```
 
-## Sprint 规划步骤
-
-### 1. 确定 Sprint 目标
+### Capacity Allocation
 
 ```markdown
-Sprint 1 目标：
-- 用户登录功能上线
-- 完成首页UI设计
+Total capacity: 22 person-days
+  - Planning/Retrospective: 2 person-days
+  - Technical challenges: 2 person-days
+  - Urgent tasks: 2 person-days
+Available: 16 person-days
 ```
 
-### 2. 选择 PBI
+## Sprint Planning Steps
 
-```
-优先级从高到低：
-☐ P0: 用户登录 ← 选
-☐ P0: 首页UI   ← 选
-☐ P1: 社交登录   (容量不够，跳过)
-```
-
-### 3. 分解任务
+### 1. Define Sprint Goal
 
 ```markdown
-用户登录（P0）
-├── 设计登录UI        4h
-├── 设计注册UI        4h
-├── 开发登录API       8h
-├── 开发注册API       8h
-├── 前端登录集成      8h
-├── 前端注册集成      8h
-├── 测试              8h
-└── 部署              4h
+Sprint 1 Goal:
+- User login feature goes live
+- Complete homepage UI design
+```
+
+### 2. Select PBIs
+
+```
+Priority from high to low:
+☐ P0: User login ← Select
+☐ P0: Homepage UI   ← Select
+☐ P1: Social login   (Not enough capacity, skip)
+```
+
+### 3. Break Down Tasks
+
+```markdown
+User Login (P0)
+├── Design login UI        4h
+├── Design registration UI  4h
+├── Develop login API       8h
+├── Develop registration API 8h
+├── Frontend login integration  8h
+├── Frontend registration integration  8h
+├── Testing              8h
+└── Deployment           4h
 ────────────────────
-总计：52h ≈ 6.5人天
+Total: 52h ≈ 6.5 person-days
 ```
 
-### 4. 验证容量
+### 4. Validate Capacity
 
 ```markdown
-已选任务：6.5人天
-可用容量：16人天
+Selected tasks: 6.5 person-days
+Available capacity: 16 person-days
 ─────────────
-剩余：9.5人天 → 可以再加 P1 任务
+Remaining: 9.5 person-days → Can add more P1 tasks
 ```
 
-## Sprint 执行
+## Sprint Execution
 
-### 每日站会
+### Daily Standup
 
 ```markdown
-1. 昨天完成了什么？
-2. 今天计划做什么？
-3. 有什么阻塞？
+1. What did you complete yesterday?
+2. What are you planning to do today?
+3. What are the blockers?
 ```
 
-### Sprint 结束
+### Sprint End
 
 ```markdown
-1. 演示已完成的功能
-2. 回顾做得好的/需要改进的
-3. 计算燃尽图
+1. Demo completed features
+2. Review what went well/what needs improvement
+3. Calculate burndown chart
 ```
 
-## 估算 vs 实际
+## Estimate vs Actual
 
-记录估算和实际的差距：
+Record the gap between estimates and actual:
 
 ```markdown
-| 任务 | 估算 | 实际 | 差异 |
-|------|------|------|------|
-| 登录UI | 4h | 5h | +1h |
-| 登录API | 8h | 8h | 0 |
+| Task | Estimate | Actual | Variance |
+|------|----------|--------|----------|
+| Login UI | 4h | 5h | +1h |
+| Login API | 8h | 8h | 0 |
 ```
 
-**目的**：持续校准估算能力
+**Purpose**: Continuously calibrate estimation ability
 
-## 何时退出
+## When to Exit
+
+- Sprint goal is clear
+- Tasks are assigned
+- Capacity is validated
+- Team commits to the plan

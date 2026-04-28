@@ -1,147 +1,147 @@
-# 架构模式选择 | Architecture Patterns
+# Architecture Pattern Selection Guide | Architecture Patterns
 
-## 核心目标
+## Core Objective
 
-根据产品规模、团队能力、业务特性，选择最合适的架构模式。
+Select the most suitable architecture pattern based on product scale, team capability, and business characteristics.
 
-## 常见架构模式
+## Common Architecture Patterns
 
-### 1. 单体架构 (Monolith)
+### 1. Monolithic Architecture (Monolith)
 
-**特点**：
-- 全部代码打包在一个部署单元
-- 所有模块共享数据库
-- 简单、直接
+**Characteristics**:
+- All code packaged in one deployment unit
+- All modules share database
+- Simple and straightforward
 
-**适用场景**：
-- 小团队（< 10人）
-- 快速迭代期
-- 初期产品验证
+**Applicable Scenarios**:
+- Small teams (< 10 people)
+- Rapid iteration phase
+- Initial product validation
 
-**优点**：
-- 简单，容易理解
-- 部署简单
-- 开发速度快
+**Advantages**:
+- Simple, easy to understand
+- Easy deployment
+- Fast development
 
-**缺点**：
-- 技术栈单一
-- 扩展受限
-- 团队大了难以维护
+**Disadvantages**:
+- Single technology stack
+- Limited scalability
+- Hard to maintain as team grows
 
-### 2. 模块化单体 (Modular Monolith)
+### 2. Modular Monolith
 
-**特点**：
-- 模块间有清晰边界
-- 模块可独立开发
-- 最终还是单部署单元
+**Characteristics**:
+- Clear boundaries between modules
+- Modules can be developed independently
+- Still a single deployment unit
 
-**适用场景**：
-- 中等团队（10-30人）
-- 需要清晰模块划分
-- 但不需要独立部署
+**Applicable Scenarios**:
+- Medium-sized teams (10-30 people)
+- Need clear module division
+- But no independent deployment needed
 
-**优点**：
-- 边界清晰
-- 便于团队分工
-- 部署简单
+**Advantages**:
+- Clear boundaries
+- Easy for team division
+- Simple deployment
 
-**缺点**：
-- 仍有扩展限制
-- 模块间可能有隐式耦合
+**Disadvantages**:
+- Still has scaling limitations
+- Possible implicit coupling between modules
 
-### 3. 微服务架构 (Microservices)
+### 3. Microservices Architecture
 
-**特点**：
-- 每个服务独立部署
-- 服务间通过 API 通信
-- 各自独立的数据库
+**Characteristics**:
+- Each service deployed independently
+- Services communicate via APIs
+- Each has its own database
 
-**适用场景**：
-- 大团队（50+人）
-- 需要独立扩展
-- 多技术栈需求
+**Applicable Scenarios**:
+- Large teams (50+ people)
+- Need independent scaling
+- Multi-technology stack requirements
 
-**优点**：
-- 独立扩展
-- 技术灵活
-- 容错性好
+**Advantages**:
+- Independent scaling
+- Technology flexibility
+- Good fault tolerance
 
-**缺点**：
-- 复杂度高
-- 运维成本高
-- 分布式问题
+**Disadvantages**:
+- High complexity
+- High operational cost
+- Distributed system problems
 
-### 4. 事件驱动架构 (Event-Driven)
+### 4. Event-Driven Architecture
 
-**特点**：
-- 服务间通过事件通信
-- 异步处理
-- 最终一致性
+**Characteristics**:
+- Services communicate via events
+- Asynchronous processing
+- Eventual consistency
 
-**适用场景**：
-- 实时性要求高
-- 需要解耦
-- 大量异步任务
+**Applicable Scenarios**:
+- High real-time requirements
+- Need for decoupling
+- Many asynchronous tasks
 
-**优点**：
-- 松耦合
-- 可扩展
-- 适合实时系统
+**Advantages**:
+- Loose coupling
+- Scalable
+- Suitable for real-time systems
 
-**缺点**：
-- 调试困难
-- 最终一致性
-- 复杂度高
+**Disadvantages**:
+- Difficult to debug
+- Eventual consistency
+- High complexity
 
-## 决策矩阵
+## Decision Matrix
 
-| 因素 | 单体 | 模块化单体 | 微服务 | 事件驱动 |
-|------|------|------------|--------|----------|
-| 团队规模 | <10 | 10-30 | 50+ | 任意 |
-| 迭代速度 | 快 | 快 | 慢 | 中 |
-| 扩展需求 | 低 | 中 | 高 | 高 |
-| 技术多样 | 否 | 有限 | 是 | 是 |
-| 运维能力 | 低 | 中 | 高 | 高 |
-| 复杂度 | 低 | 中 | 高 | 高 |
+| Factor | Monolith | Modular Monolith | Microservices | Event-Driven |
+|--------|----------|------------------|---------------|---------------|
+| Team size | <10 | 10-30 | 50+ | Any |
+| Iteration speed | Fast | Fast | Slow | Medium |
+| Scaling needs | Low | Medium | High | High |
+| Technology diversity | No | Limited | Yes | Yes |
+| Operational capability | Low | Medium | High | High |
+| Complexity | Low | Medium | High | High |
 
-## 选择步骤
+## Selection Steps
 
 ```
-1. 评估团队规模
+1. Evaluate team size
    ↓
-2. 评估扩展需求
+2. Evaluate scaling needs
    ↓
-3. 评估运维能力
+3. Evaluate operational capability
    ↓
-4. 匹配模式
+4. Match pattern
 ```
 
-## 架构演进
+## Architecture Evolution
 
-不要一开始就用最复杂的架构。
-
-```
-MVP → 模块化单体 → (如需要) 微服务
-```
-
-## 混合架构
-
-也可以组合使用：
+Don't start with the most complex architecture from the beginning.
 
 ```
-核心系统用单体 + 特定功能用微服务
+MVP → Modular Monolith → (if needed) Microservices
 ```
 
-## 常见错误
+## Hybrid Architecture
 
-| 错误 | 问题 | 建议 |
-|------|------|------|
-| 微服务恐惧症 | 什么都用微服务 | 从单体开始 |
-| 微服务狂热 | 过早拆分 | 等团队和系统大了再拆 |
-| 技术选型跟风 | 别人用微服务我也用 | 根据实际需求选择 |
+Can also be combined:
 
-## 何时退出
+```
+Core system uses monolith + specific features use microservices
+```
 
-- 架构模式已选定
-- 团队对模式有共识
-- 模式选择有明确理由
+## Common Mistakes
+
+| Mistake | Problem | Recommendation |
+|---------|---------|----------------|
+| Microservices phobia | Using microservices for everything | Start with monolith |
+| Microservices mania | Premature splitting | Split when team and system grow |
+| Technology trend following | Others use microservices so I do too | Choose based on actual needs |
+
+## When to Exit
+
+- Architecture pattern is selected
+- Team has consensus on the pattern
+- Pattern selection has clear justification
