@@ -100,7 +100,7 @@ prerequisites:
 **Action**:
 1. Execute search commands to get market size data:
    ```bash
-   node search.js "[product category] market size 2024 TAM" --engine serper
+   node search.js "[product category] market size TAM" --engine serper
    node search.js "[product type] industry growth trend" --engine serper
    ```
 2. Record findings (sources MUST be verifiable)

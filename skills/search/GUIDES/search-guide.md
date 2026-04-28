@@ -12,10 +12,10 @@
 
 | Goal | Query Template |
 |------|-----------------|
-| Market Size | "project management software market size 2024" |
-| Competitors | "best task tracking tools 2024" |
+| Market Size | "project management software market size" |
+| Competitors | "best task tracking tools" |
 | Trends | "remote team collaboration market trend" |
-| Pricing | "SaaS pricing models 2024" |
+| Pricing | "SaaS pricing models" |
 
 ## Information Verification
 
