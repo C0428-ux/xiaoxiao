@@ -5,51 +5,45 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const GITHUB_REPO = 'C0428-ux/xiaoxiao';
+const { GITHUB_REPO } = require('./constants');
 
 class UpdateChecker {
-  constructor(skillPath) {
-    this.skillPath = skillPath;
+  constructor(frameworkDir) {
+    this.frameworkDir = frameworkDir;
   }
 
   getLocalVersion() {
     // 优先从 git 读取
     try {
       const sha = execSync('git rev-parse HEAD', {
-        cwd: this.skillPath,
+        cwd: this.frameworkDir,
         encoding: 'utf8',
         stdio: ['pipe', 'pipe', 'pipe']
       }).trim();
+      return { version: sha.substring(0, 7), sha, hasGit: true };
+    } catch (e) {}
 
-      return {
-        version: sha.substring(0, 7),
-        sha: sha
-      };
-    } catch (e) {
-      // 没有 git，从 version.json 读取
-      try {
-        const versionFile = path.join(this.skillPath, 'version.json');
-        if (fs.existsSync(versionFile)) {
-          const data = JSON.parse(fs.readFileSync(versionFile, 'utf-8'));
-          return {
-            version: data.version || data.sha?.substring(0, 7) || 'unknown',
-            sha: data.sha || null
-          };
-        }
-      } catch (e2) {}
-      return {
-        version: 'unknown',
-        sha: null
-      };
-    }
+    // 无 git，从 version.json 读取
+    try {
+      const versionFile = path.join(this.frameworkDir, 'version.json');
+      if (fs.existsSync(versionFile)) {
+        const data = JSON.parse(fs.readFileSync(versionFile, 'utf-8'));
+        return {
+          version: data.version || 'unknown',
+          sha: data.sha || null,
+          hasGit: false
+        };
+      }
+    } catch (e2) {}
+
+    return { version: 'unknown', sha: null, hasGit: false };
   }
 
-  // 通过 GitHub API 获取远程最新版本
-  getRemoteVersion() {
+  async getRemoteVersion() {
     return new Promise((resolve, reject) => {
       const options = {
         hostname: 'api.github.com',
-        path: `/repos/${GITHUB_REPO}/commits/main`,
+        path: `/repos/${GITHUB_REPO}/releases/latest`,
         method: 'GET',
         headers: {
           'User-Agent': 'xiaoxiao-update-checker',
@@ -70,12 +64,15 @@ class UpdateChecker {
               reject(new Error(`GitHub API returned ${res.statusCode}`));
               return;
             }
-            const commit = JSON.parse(data);
+            const release = JSON.parse(data);
             resolve({
-              version: commit.sha.substring(0, 7),
-              sha: commit.sha,
-              date: commit.commit.committer.date,
-              message: commit.commit.message.split('\n')[0]
+              version: release.tag_name?.replace(/^v/, '') || release.tag_name,
+              tag: release.tag_name,
+              sha: release.target_commitish,
+              date: release.published_at,
+              name: release.name,
+              zipball: release.zipball_url,
+              tarball: release.tarball_url
             });
           } catch (e) {
             reject(new Error('Failed to parse GitHub response'));
@@ -83,15 +80,8 @@ class UpdateChecker {
         });
       });
 
-      req.on('error', (err) => {
-        reject(new Error(`Network error: ${err.message}`));
-      });
-
-      req.setTimeout(10000, () => {
-        req.destroy();
-        reject(new Error('Request timeout'));
-      });
-
+      req.on('error', (err) => reject(new Error(`Network error: ${err.message}`)));
+      req.setTimeout(10000, () => { req.destroy(); reject(new Error('Request timeout')); });
       req.end();
     });
   }
@@ -114,17 +104,78 @@ class UpdateChecker {
     }
   }
 
-  // 使用 git pull 更新
   async update() {
     try {
-      console.log('📥 正在更新...');
-      execSync('git pull origin main', {
-        cwd: this.skillPath,
-        stdio: 'inherit'
-      });
-      console.log('\n✅ 更新完成！');
+      const remote = await this.getRemoteVersion();
+      console.log(`📥 正在下载 ${remote.version}...`);
+
+      const zipPath = path.join(this.frameworkDir, 'xiaoxiao-update.zip');
+      await this._downloadFile(remote.zipball, zipPath);
+
+      await this._extractAndReplace(zipPath);
+
+      const versionData = {
+        version: remote.version,
+        sha: remote.sha,
+        updatedAt: new Date().toISOString()
+      };
+      fs.writeFileSync(
+        path.join(this.frameworkDir, 'version.json'),
+        JSON.stringify(versionData, null, 2)
+      );
+
+      fs.unlinkSync(zipPath);
+      console.log('\n✅ 更新完成！请重启 xiaoxiao');
     } catch (err) {
       throw new Error(`更新失败: ${err.message}`);
+    }
+  }
+
+  _downloadFile(url, destPath) {
+    return new Promise((resolve, reject) => {
+      const file = fs.createWriteStream(destPath);
+      https.get(url, (res) => {
+        if (res.statusCode === 302 || res.statusCode === 301) {
+          https.get(res.headers.location, (res2) => {
+            res2.pipe(file);
+            file.on('finish', () => { file.close(); resolve(); });
+          }).on('error', reject);
+        } else {
+          res.pipe(file);
+          file.on('finish', () => { file.close(); resolve(); });
+        }
+      }).on('error', reject);
+    });
+  }
+
+  _extractAndReplace(zipPath) {
+    const extractDir = path.join(this.frameworkDir, 'xiaoxiao-update-temp');
+    const { execSync } = require('child_process');
+
+    execSync(`powershell -Command "Expand-Archive -Path '${zipPath}' -DestinationPath '${extractDir}' -Force"`, {
+      stdio: 'pipe'
+    });
+
+    const entries = fs.readdirSync(extractDir);
+    const extractedDir = path.join(extractDir, entries[0]);
+
+    this._copyRecursive(extractedDir, this.frameworkDir);
+
+    fs.rmSync(extractDir, { recursive: true, force: true });
+  }
+
+  _copyRecursive(src, dest) {
+    const entries = fs.readdirSync(src, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.name === '.git') continue;
+      const srcPath = path.join(src, entry.name);
+      const destPath = path.join(dest, entry.name);
+      if (entry.isDirectory()) {
+        if (!fs.existsSync(destPath)) fs.mkdirSync(destPath, { recursive: true });
+        this._copyRecursive(srcPath, destPath);
+      } else {
+        fs.copyFileSync(srcPath, destPath);
+      }
     }
   }
 
@@ -132,7 +183,8 @@ class UpdateChecker {
     const local = this.getLocalVersion();
     console.log('📦 XiaoXiao 版本信息\n');
     console.log(`SHA: ${local.sha || 'unknown'}`);
-    console.log(`框架目录: ${this.skillPath}`);
+    console.log(`Git: ${local.hasGit ? '是' : '否'}`);
+    console.log(`框架目录: ${this.frameworkDir}`);
   }
 }
 
@@ -151,18 +203,16 @@ if (require.main === module) {
         console.log(`ERROR: ${result.error}`);
         process.exit(1);
       }
-
       if (!result.hasUpdate) {
         console.log('STATUS: UP_TO_DATE');
         console.log(`VERSION: ${result.local.version}`);
         return;
       }
-
       console.log('STATUS: UPDATE_AVAILABLE');
       console.log(`CURRENT: ${result.local.version}`);
       console.log(`LATEST: ${result.remote.version}`);
       console.log(`DATE: ${result.remote.date}`);
-      console.log(`COMMIT: ${result.remote.message}`);
+      console.log(`TAG: ${result.remote.tag}`);
     });
   } else if (command === 'update') {
     checker.update().catch(err => {
@@ -179,7 +229,7 @@ XiaoXiao Update Checker
 
 命令:
   check    检查更新（输出 STATUS: UP_TO_DATE 或 STATUS: UPDATE_AVAILABLE）
-  update   执行 git pull 更新
+  update   下载并安装最新版本
   version  显示当前版本
     `);
   }
