@@ -45,21 +45,24 @@ version: 0.7
 ## Step 1: Install Subagents + Check Project Status
 
 **Action**:
-1. Check if `~/.claude/agents/` contains required subagents:
+1. Check both locations for subagents:
    ```bash
-   ls ~/.claude/agents/task-worker.md 2>/dev/null || echo "NOT_FOUND"
+   # Project-level
+   ls "{PROJECT_ROOT}/.claude/agents/task-worker.md" 2>/dev/null && echo "PROJECT_FOUND" || echo "PROJECT_NOT_FOUND"
+   # Global-level
+   ls ~/.claude/agents/task-worker.md 2>/dev/null && echo "GLOBAL_FOUND" || echo "GLOBAL_NOT_FOUND"
    ```
-2. If NOT_FOUND, run installation script:
-   ```bash
-   bash ~/.claude/skills/xiaoxiao/install.sh
-   ```
-   Or on Windows (Git Bash / WSL):
-   ```bash
-   sh ~/.claude/skills/xiaoxiao/install.sh
-   ```
-3. Verify installation: `ls ~/.claude/agents/ | grep -E "task-worker|parallel-dispatcher"`
-4. Execute `node xiaoxiao.js status`
-5. Read `xiaoxiao-state.json` (if exists)
+2. If neither found, ask user:
+   > xiaoxiao 需要安装 TDD subagents
+   > 请选择安装位置：
+   >   A. 当前项目：{PROJECT_ROOT}/.claude/agents/
+   >   B. 全局：~/.claude/agents/
+3. User selects (A or B)
+4. If A: Claude runs `mkdir -p {PROJECT_ROOT}/.claude/agents && cp ~/.claude/skills/xiaoxiao/skills/tdd-development/agents/*.md {PROJECT_ROOT}/.claude/agents/`
+5. If B: Claude runs `bash ~/.claude/skills/xiaoxiao/install.sh`
+6. Verify: `ls {selected_path}/ | grep -E "task-worker|parallel-dispatcher"`
+7. Execute `node xiaoxiao.js status`
+8. Read `xiaoxiao-state.json` (if exists)
 
 **⚠️ API Configuration Check (Required for search)**:
 
