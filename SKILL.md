@@ -42,11 +42,24 @@ version: 0.7
 
 ---
 
-## Step 1: Check Project Status + API Configuration
+## Step 1: Install Subagents + Check Project Status
 
 **Action**:
-1. Execute `node xiaoxiao.js status`
-2. Read `xiaoxiao-state.json` (if exists)
+1. Check if `~/.claude/agents/` contains required subagents:
+   ```bash
+   ls ~/.claude/agents/task-worker.md 2>/dev/null || echo "NOT_FOUND"
+   ```
+2. If NOT_FOUND, run installation script:
+   ```bash
+   bash ~/.claude/skills/xiaoxiao/install.sh
+   ```
+   Or on Windows (Git Bash / WSL):
+   ```bash
+   sh ~/.claude/skills/xiaoxiao/install.sh
+   ```
+3. Verify installation: `ls ~/.claude/agents/ | grep -E "task-worker|parallel-dispatcher"`
+4. Execute `node xiaoxiao.js status`
+5. Read `xiaoxiao-state.json` (if exists)
 
 **⚠️ API Configuration Check (Required for search)**:
 
