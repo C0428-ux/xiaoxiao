@@ -52,32 +52,23 @@ related-skills:
 **Action**:
 1. Read `docs/xiaoxiao/plans/architect-output.md` - understand subsystem boundaries
 2. Read `./SPEC.md` - extract P0 features
-3. Present 15 design style presets to user:
+3. Present 5 common design style presets to user:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  Design Style Selection                                      │
-├─────────────────────────────────────────────────────────────┤
-│  [1]  Modern SaaS       - B2B products, admin dashboards    │
-│  [2]  Apple Minimal     - Consumer apps, tools              │
-│  [3]  Enterprise        - Enterprise internal systems        │
-│  [4]  Creative          - Portfolios, creative websites      │
-│  [5]  Dashboard        - Data platforms, Analytics          │
-│  [6]  Developer Tools   - DevTools, CI/CD, code editors     │
-│  [7]  FinTech          - Banking, finance, trading         │
-│  [8]  Healthcare       - Medical, health apps, telemedicine│
-│  [9]  E-commerce       - Online stores, marketplaces        │
-│  [10] Social/Community - Forums, social apps, messaging     │
-│  [11] Gaming           - Gaming platforms, esports          │
-│  [12] Minimal          - Minimalist, brutalist design      │
-│  [13] Neo-Brutalism    - Bold startups, creative brands    │
-│  [14] Glass/Frosted    - Modern mobile, layered UI        │
-│  [15] Retro/Vintage    - Heritage brands, artisanal        │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│  Design Style Selection                                  │
+├─────────────────────────────────────────────────────────┤
+│  [1] Modern SaaS       - B2B products, admin dashboards  │
+│  [2] Apple Minimal     - Consumer apps, tools            │
+│  [3] Enterprise        - Enterprise internal systems      │
+│  [4] Creative          - Portfolios, creative websites    │
+│  [5] Dashboard        - Data platforms, Analytics       │
+└─────────────────────────────────────────────────────────┘
 ```
 
 4. Ask user: "Which design style best matches your product?"
-5. Load selected preset (from `GUIDES/design-presets.md`)
+5. If user wants more options: "Say 'more styles' for 10 additional presets"
+6. Load selected preset (from `GUIDES/design-presets.md` or `GUIDES/design-presets-expert.md`)
 
 **Verification**: Design preset confirmed
 
