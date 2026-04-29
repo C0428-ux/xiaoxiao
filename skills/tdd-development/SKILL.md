@@ -72,12 +72,13 @@ related-skills:
 **Action**:
 1. Read `docs/xiaoxiao/plans/ui-design/preview.html` - main preview
 2. Read `docs/xiaoxiao/plans/ui-design/pages/*.html` - each page
-3. Extract component structure
-4. **Important**: Frontend implementation follows UI design, not task descriptions
+3. Read `docs/xiaoxiao/plans/ui-design/components/component-spec.md` - component specs
+4. Extract component structure and visual specifications
+5. **Important**: Frontend implementation follows UI design, not task descriptions
 
-**Verification**: UI design read
+**Verification**: UI design read, component structure extracted
 
-**CONFIRM**: "UI design read. Found [N] pages. Continue?"
+**CONFIRM**: "UI design read. Found [N] pages, [N] components. Continue?"
 
 ---
 

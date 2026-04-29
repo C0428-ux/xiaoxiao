@@ -246,7 +246,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ## 成功标准
 
 - [ ] 向 Message Bus 注册
-- [ ] 前端任务读取了 UI 设计文件
+- [ ] 前端任务读取了 UI 设计文件（preview.html + pages + component-spec.md)
+- [ ] 组件实现严格对照 UI 设计的视觉规格（颜色、圆角、间距、字体）
 - [ ] 写测试前实现代码未写（铁律）
 - [ ] RED 阶段运行测试验证失败
 - [ ] GREEN 阶段运行测试验证通过
