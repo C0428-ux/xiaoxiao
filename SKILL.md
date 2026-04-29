@@ -53,14 +53,14 @@ version: 0.7
    ls ~/.claude/agents/task-worker.md 2>/dev/null && echo "GLOBAL_FOUND" || echo "GLOBAL_NOT_FOUND"
    ```
 2. If neither found, ask user:
-   > xiaoxiao 需要安装 TDD subagents
-   > 请选择安装位置：
-   >   A. 当前项目：{PROJECT_ROOT}/.claude/agents/
-   >   B. 全局：~/.claude/agents/
+   > xiaoxiao needs to install TDD subagents
+   > Choose installation location:
+   >   A. Current project: {PROJECT_ROOT}/.claude/agents/
+   >   B. Global: ~/.claude/agents/
 3. User selects (A or B)
-4. If A: Claude runs `mkdir -p {PROJECT_ROOT}/.claude/agents && cp ~/.claude/skills/xiaoxiao/skills/tdd-development/agents/*.md {PROJECT_ROOT}/.claude/agents/`
+4. If A: Claude runs `mkdir -p {PROJECT_ROOT}/.claude/agents && cp ~/.claude/skills/xiaoxiao/skills/tdd-development/agents/task-worker.md {PROJECT_ROOT}/.claude/agents/`
 5. If B: Claude runs `bash ~/.claude/skills/xiaoxiao/install.sh`
-6. Verify: `ls {selected_path}/ | grep -E "task-worker|parallel-dispatcher"`
+6. Verify: `ls {selected_path}/ | grep task-worker`
 7. Execute `node xiaoxiao.js status`
 8. Read `xiaoxiao-state.json` (if exists)
 

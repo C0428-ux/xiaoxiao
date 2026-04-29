@@ -85,20 +85,19 @@ related-skills:
 ## Step 4: Task Analysis
 
 **Action**:
-1. Analyze task dependencies (DAG):
-   - Backend tasks: API, database, auth
-   - Frontend tasks: components, pages (depend on backend)
-   - Identify parallel groups
-2. Identify first parallel group (no blockers)
-3. Ask user: "Found [N] backend tasks, [N] frontend tasks. [N] can run in parallel. Start?"
+1. Read `docs/xiaoxiao/plans/task-planning-output.md` - get task list
+2. Analyze:
+   - Total task count
+   - DAG dependencies
+   - Identify parallel groups (tasks with no dependencies)
 
-**Verification**: Parallel groups identified
+**Verification**: Task list and dependencies analyzed
 
-**CONFIRM**: "Found [N] backend tasks, [N] frontend tasks. [N] can run in parallel. Continue?"
+**CONFIRM**: "Found [N] tasks, [N] parallel group. Continue?"
 
 ---
 
-## Step 5: Task Distribution (MUST Use Agents)
+## Step 5: Task Distribution
 
 **⚠️ Critical: CANNOT write code yourself, MUST dispatch agents**
 
@@ -107,22 +106,17 @@ related-skills:
    ```bash
    mkdir -p docs/xiaoxiao/plans/tdd/.message-bus/events
    ```
-2. Read agent definition files:
-   - Read `skills/tdd-development/agents/task-worker.md` for worker prompt template
-3. Read task list from `docs/xiaoxiao/plans/task-planning-output.md`
-4. Analyze DAG dependencies, determine first parallel group (tasks with no dependencies)
-5. **Dispatch agents to execute each task**:
+2. Read `skills/tdd-development/agents/task-worker.md` for worker prompt template
+3. **Dispatch task-worker agents in parallel** (max 5 concurrent):
    ```javascript
-   // Example: dispatch task-worker using Agent tool
    const workers = await Promise.all(
      readyTasks.slice(0, 5).map(task => {
        const taskType = task.type === 'frontend' ? 'frontend' : 'backend';
 
        return Agent({
-         subagent_type: 'general-purpose',
+         subagent_type: 'task-worker',
          description: `Task Worker: ${task.name}`,
-         prompt: `You are a Task Worker Agent. Execute the following task:
-
+         prompt: `
 Task ID: ${task.id}
 Task Name: ${task.name}
 Task Type: ${taskType}
@@ -144,15 +138,12 @@ Follow TDD RED-GREEN-REFACTOR strictly:
      })
    );
    ```
-6. **Backend workers**: handle API, database, auth server-side tasks
-7. **Frontend workers**: handle UI components, pages (must read UI design files)
-8. Maximum 5 concurrent workers
-9. Monitor via Message Bus:
+4. Monitor via Message Bus:
    - `docs/xiaoxiao/plans/tdd/.message-bus/worker-status.json` - worker heartbeat
    - `docs/xiaoxiao/plans/tdd/.message-bus/events/TASK_COMPLETE_*.event` - completion events
    - `docs/xiaoxiao/plans/tdd/.message-bus/events/TASK_FAILED_*.event` - failure events
 
-**Verification**: Workers dispatched (YOU CANNOT write code yourself, MUST dispatch agents)
+**Verification**: Workers dispatched
 
 **CONFIRM**: "Workers dispatched: [N] parallel tasks. Waiting for completion..."
 

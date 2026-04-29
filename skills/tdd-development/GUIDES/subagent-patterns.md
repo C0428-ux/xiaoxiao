@@ -354,8 +354,8 @@ if (heartbeatAge > 30 * 60 * 1000) { // 30 minutes
 
 | Scenario | Pattern |
 |----------|---------|
-| Parallel distribution of backend tasks | parallel-dispatcher + backend task-worker |
-| Frontend task parallelization | parallel-dispatcher + frontend task-worker |
+| Parallel distribution of backend tasks | Claude + task-worker agents |
+| Frontend task parallelization | Claude + task-worker agents |
 | Tasks with dependencies | Wait for dependencies to complete before distributing |
 | Modifying the same file | File lock mechanism |
 | Worker timeout | Heartbeat monitoring + timeout handling |

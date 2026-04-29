@@ -22,7 +22,7 @@
       "entry": { "command": "save-progress", "args": ["tdd-development", "phase2-start"] },
       "actions": [
         "Initialize Message Bus",
-        "Dispatch workers using parallel-dispatcher",
+        "Dispatch workers using task-worker directly",
         "Monitor via worker-status.json",
         "Dispatch next group as dependencies complete"
       ],
