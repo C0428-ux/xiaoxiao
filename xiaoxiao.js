@@ -32,22 +32,27 @@ const CWD = process.cwd();
 function findProjectRoot(startDir) {
   let dir = startDir;
   const home = os.homedir();
+  const root = path.parse(dir).root;
 
-  while (dir !== home && dir !== path.parse(dir).root) {
+  while (dir !== home && dir !== root) {
     if (fs.existsSync(path.join(dir, 'xiaoxiao-state.json'))) {
       return dir;
     }
     dir = path.dirname(dir);
   }
-  return startDir;
+  return null;
 }
 
 const PROJECT_ROOT = findProjectRoot(CWD);
 
+// 未找到项目根目录时设置默认路径（用于 init-project 命令）
+const effectiveProjectRoot = PROJECT_ROOT || CWD;
+
 
 // ========== CLI 实例 ==========
 
-const stateManager = new StateManager(PROJECT_ROOT, FRAMEWORK_DIR);
+// PROJECT_ROOT 为 null 时使用当前目录（init-project 会自动处理）
+const stateManager = new StateManager(effectiveProjectRoot, FRAMEWORK_DIR);
 const updateChecker = new UpdateChecker(FRAMEWORK_DIR);
 
 // ========== 命令处理器 ==========
@@ -98,36 +103,36 @@ const COMMANDS = {
     if (!skillName) { console.log('❌ 请指定 Skill 名称'); return; }
     const state = stateManager.read();
     if (!state) { console.log('❌ 未找到状态文件'); return; }
-    const plansDir = path.join(PROJECT_ROOT, 'docs', 'xiaoxiao', 'plans');
+    const plansDir = path.join(effectiveProjectRoot, 'docs', 'xiaoxiao', 'plans');
     const defaultOutput = path.join(plansDir, `${skillName}-output.md`);
     const finalOutputPath = outputPath || defaultOutput;
     if (!fs.existsSync(plansDir)) fs.mkdirSync(plansDir, { recursive: true });
     if (!fs.existsSync(finalOutputPath)) { console.log(`❌ 输出文件不存在: ${finalOutputPath}`); return; }
-    stateManager.updateSkill(skillName, { status: 'completed', completedAt: new Date().toISOString(), outputs: { main: path.relative(PROJECT_ROOT, finalOutputPath) } });
+    stateManager.updateSkill(skillName, { status: 'completed', completedAt: new Date().toISOString(), outputs: { main: path.relative(effectiveProjectRoot, finalOutputPath) } });
     if (state.currentSkill === skillName) {
       const nextSkill = SKILLS[SKILLS.indexOf(skillName) + 1];
       stateManager.completeCurrentSkill({ outputPath: finalOutputPath });
       if (nextSkill) {
         console.log(`✅ ${skillName} 完成`);
-        console.log(`📄 输出: ${path.relative(PROJECT_ROOT, finalOutputPath)}`);
+        console.log(`📄 输出: ${path.relative(effectiveProjectRoot, finalOutputPath)}`);
         console.log(`\n▶ 进入下一阶段: ${nextSkill}`);
       } else {
         stateManager.completeIteration('完成所有阶段');
         console.log(`✅ ${skillName} 完成`);
-        console.log(`📄 输出: ${path.relative(PROJECT_ROOT, finalOutputPath)}`);
+        console.log(`📄 输出: ${path.relative(effectiveProjectRoot, finalOutputPath)}`);
         console.log(`\n🎉 所有阶段完成！`);
         console.log(`\n📌 迭代 ${state.currentIteration} 已完成`);
         console.log(`   使用 "xiaoxiao new-iteration" 开始新功能开发`);
       }
     } else {
       console.log(`✅ ${skillName} 标记为完成`);
-      console.log(`📄 输出: ${path.relative(PROJECT_ROOT, finalOutputPath)}`);
+      console.log(`📄 输出: ${path.relative(effectiveProjectRoot, finalOutputPath)}`);
     }
   },
 
   'init-project': (args) => {
-    const projectName = args[0] || path.basename(PROJECT_ROOT);
-    const plansDir = path.join(PROJECT_ROOT, 'docs', 'xiaoxiao', 'plans');
+    const projectName = args[0] || path.basename(effectiveProjectRoot);
+    const plansDir = path.join(effectiveProjectRoot, 'docs', 'xiaoxiao', 'plans');
 
     // 修复：直接检测框架标志文件
     const hasFrameworkMarkers =
@@ -137,7 +142,7 @@ const COMMANDS = {
 
     if (hasFrameworkMarkers) {
       console.log(`❌ 错误：不能在框架目录内初始化项目`);
-      console.log(`   当前目录 (${PROJECT_ROOT}) 似乎是 XiaoXiao 框架目录`);
+      console.log(`   当前目录 (${effectiveProjectRoot}) 似乎是 XiaoXiao 框架目录`);
       console.log(`\n请切换到项目目录后再运行 xiaoxiao init-project`);
       console.log(`   例如：cd ~/my-project && xiaoxiao init-project`);
       return;
@@ -146,7 +151,7 @@ const COMMANDS = {
     if (!fs.existsSync(plansDir)) fs.mkdirSync(plansDir, { recursive: true });
     stateManager.init(projectName);
     console.log(`✅ 项目初始化完成: ${projectName}`);
-    console.log(`   状态文件: ${path.join(PROJECT_ROOT, 'xiaoxiao-state.json')}`);
+    console.log(`   状态文件: ${path.join(effectiveProjectRoot, 'xiaoxiao-state.json')}`);
     console.log(`   输出目录: ${plansDir}`);
     console.log(`\n使用 /xiaoxiao 开始开发流程`);
   },

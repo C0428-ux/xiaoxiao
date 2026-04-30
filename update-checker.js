@@ -174,18 +174,44 @@ class UpdateChecker {
 
   _downloadFile(url, destPath) {
     return new Promise((resolve, reject) => {
-      const file = fs.createWriteStream(destPath);
-      https.get(url, (res) => {
-        if (res.statusCode === 302 || res.statusCode === 301) {
-          https.get(res.headers.location, (res2) => {
-            res2.pipe(file);
-            file.on('finish', () => { file.close(); resolve(); });
-          }).on('error', reject);
-        } else {
-          res.pipe(file);
-          file.on('finish', () => { file.close(); resolve(); });
+      this._downloadWithRedirect(url, destPath, 10, reject, resolve);
+    });
+  }
+
+  _downloadWithRedirect(url, destPath, maxRedirects, reject, resolve) {
+    const protocol = url.startsWith('https') ? https : http;
+    const file = fs.createWriteStream(destPath);
+
+    protocol.get(url, (res) => {
+      // 处理重定向
+      if ((res.statusCode === 302 || res.statusCode === 301) && res.headers.location) {
+        file.close();
+        fs.unlinkSync(destPath);
+
+        if (maxRedirects <= 0) {
+          reject(new Error('Too many redirects'));
+          return;
         }
-      }).on('error', reject);
+
+        // 处理相对 URL
+        const redirectUrl = new URL(res.headers.location, url).toString();
+        this._downloadWithRedirect(redirectUrl, destPath, maxRedirects - 1, reject, resolve);
+        return;
+      }
+
+      if (res.statusCode !== 200) {
+        file.close();
+        fs.unlinkSync(destPath);
+        reject(new Error(`HTTP ${res.statusCode}`));
+        return;
+      }
+
+      res.pipe(file);
+      file.on('finish', () => { file.close(); resolve(); });
+    }).on('error', (err) => {
+      file.close();
+      if (fs.existsSync(destPath)) fs.unlinkSync(destPath);
+      reject(err);
     });
   }
 

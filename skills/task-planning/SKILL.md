@@ -104,7 +104,7 @@ related-skills:
    - Frontend tasks: components, pages, state
    - Infra tasks: config, deployment, migration
 2. Each task MUST:
-   - Be small: max 1-3 days
+   - Be small: **max 1 day** (for TDD compatibility, 1-3 days is too large)
    - Be testable: can verify completion
    - Be independent: no internal blocking dependencies
 3. Ask user: "Is this task too large? Can it be split?"
@@ -178,12 +178,19 @@ related-skills:
    - Overview (total tasks, total estimate, timeline)
    - Epic Breakdown (stories grouped by epic)
    - Task List (all tasks with estimates and dependencies)
+   - **Task Dependency Table** (structured DAG for TDD workers):
+     ```
+     | Task ID | Task Name | Type | Estimate | Depends On | Priority |
+     |---------|-----------|------|----------|------------|----------|
+     | T1      | API auth  | backend | M | - | P0 |
+     | T2      | UI login  | frontend | S | T1 | P0 |
+     ```
    - Priority Order (P0/P1/P2 with rationale)
    - Sprint Plan (if applicable, grouped by sprint)
    - Assumptions (assumptions estimates are based on)
 3. Execute `xiaoxiao complete task-planning docs/xiaoxiao/plans/task-planning-output.md`
 
-**Verification**: Document created with all sections
+**Verification**: Document created with all sections including Task Dependency Table
 
 **CONFIRM**: "Task Planning complete. Document saved. Confirm entry to TDD Development?"
 

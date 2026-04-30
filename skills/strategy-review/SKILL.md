@@ -174,11 +174,16 @@ prerequisites:
 
 **Action**:
 1. Synthesize all analysis, form recommendation:
-   - **Go**: Full investment
-   - **Pivot**: Adjust scope/direction
-   - **No-Go**: Terminate or re-evaluate
+   - **Go**: Initial hypotheses validated, proceed to architecture
+   - **Pivot**: Some assumptions need revision - return to product-consult
+   - **No-Go**: Core assumptions invalidated - do not proceed
 2. If Go: State success conditions
-3. If No-Go: State what needs to change
+3. If Pivot: State which assumptions need revision and ask user:
+   - "Return to product-consult to revise [specific assumptions]"
+   - "Or abandon this project"
+4. If No-Go: State what fundamentally changed and ask user:
+   - "This project is not viable at this time"
+   - "Consider: new market opportunity, different strategy, or abandon"
 
 **Verification**: Decision formed
 

@@ -65,11 +65,14 @@ class Handover {
     const state = this.stateManager.read();
     const prereqs = PREREQ_MAP[skillName] || [];
 
-    return prereqs.map(name => ({
-      skill: name,
-      status: state.skills[name].status,
-      completedAt: state.skills[name].completedAt
-    }));
+    return prereqs.map(name => {
+      const skillState = state.skills[name];
+      return {
+        skill: name,
+        status: skillState?.status || 'unknown',
+        completedAt: skillState?.completedAt
+      };
+    });
   }
 
   /**

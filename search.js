@@ -159,36 +159,44 @@ async function searchDuckDuckGoHTML(query, maxResults = 10, timeout = 30000) {
 function parseDuckDuckGoHTML(html, maxResults) {
   const results = [];
 
-  // 匹配结果链接和标题
-  // <a class="result__a" href="URL">Title</a>
-  const linkPattern = /<a class="result__a"[^>]*href="([^"]*)"[^>]*>([^<]*)<\/a>/gi;
-  const snippetPattern = /<p class="result__snippet"[^>]*>([\s\S]*?)<\/p>/gi;
+  if (!html || typeof html !== 'string') {
+    return results;
+  }
 
-  const links = [];
-  let match;
+  try {
+    // 匹配结果链接和标题
+    // <a class="result__a" href="URL">Title</a>
+    const linkPattern = /<a class="result__a"[^>]*href="([^"]*)"[^>]*>([^<]*)<\/a>/gi;
+    const snippetPattern = /<p class="result__snippet"[^>]*>([\s\S]*?)<\/p>/gi;
 
-  while ((match = linkPattern.exec(html)) !== null && links.length < maxResults) {
-    const href = match[1];
-    const title = decodeHTMLEntities(match[2].trim());
-    if (href && !href.startsWith('/') && title) {
-      links.push({ url: href, title });
+    const links = [];
+    let match;
+
+    while ((match = linkPattern.exec(html)) !== null && links.length < maxResults) {
+      const href = match[1];
+      const title = decodeHTMLEntities(match[2].trim());
+      if (href && !href.startsWith('/') && title) {
+        links.push({ url: href, title });
+      }
     }
-  }
 
-  // 匹配摘要
-  const snippets = [];
-  while ((match = snippetPattern.exec(html)) !== null) {
-    snippets.push(decodeHTMLEntities(match[1].trim()));
-  }
+    // 匹配摘要
+    const snippets = [];
+    while ((match = snippetPattern.exec(html)) !== null) {
+      snippets.push(decodeHTMLEntities(match[1].trim()));
+    }
 
-  // 合并
-  for (let i = 0; i < Math.min(links.length, maxResults); i++) {
-    results.push({
-      title: links[i].title,
-      url: links[i].url,
-      snippet: snippets[i] || '',
-      engine: 'duckduckgo'
-    });
+    // 合并
+    for (let i = 0; i < Math.min(links.length, maxResults); i++) {
+      results.push({
+        title: links[i].title,
+        url: links[i].url,
+        snippet: snippets[i] || '',
+        engine: 'duckduckgo'
+      });
+    }
+  } catch (e) {
+    // 解析失败时返回已获取的结果（如果有）
   }
 
   return results;

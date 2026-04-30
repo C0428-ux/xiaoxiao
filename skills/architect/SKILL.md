@@ -124,8 +124,10 @@ related-skills:
    - Language/framework
    - Database (SQL vs NoSQL, specific technology)
    - Infrastructure (cloud, containers, serverless)
-2. Create ADR (Architecture Decision Record) for each major decision
-3. Ask user: "Are there technologies you have existing expertise with that you want to continue using?"
+   - **Frontend framework constraint** (e.g., "must use React" or "framework TBD by ui-design")
+2. **Note**: UI styling approach (Tailwind, CSS modules, etc.) is determined by ui-design phase unless architect identifies a specific constraint
+3. Create ADR (Architecture Decision Record) for each major decision
+4. Ask user: "Are there technologies you have existing expertise with that you want to continue using?"
 
 **Verification**: Tech stack defined, each major decision has ADR
 

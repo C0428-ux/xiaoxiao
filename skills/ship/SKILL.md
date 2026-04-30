@@ -47,7 +47,7 @@ related-skills:
 
 ---
 
-## Step 2: Pre-Release Checklist
+## Step 2: Pre-Release Checklist + Rollback Preparation
 
 **Action**:
 1. Run pre-release checklist:
@@ -55,12 +55,20 @@ related-skills:
    - [ ] Performance benchmarks met
    - [ ] Database migrations reviewed
    - [ ] Environment variables configured
-2. Create release candidate
-3. Ask user: "Ready to deploy?"
+2. **Prepare rollback plan**:
+   - Document rollback triggers:
+     - Error rate significantly increased
+     - Critical functionality broken
+     - Performance below SLA
+     - Security issue detected
+     - Data corruption detected
+   - Document rollback steps
+3. Create release candidate
+4. Ask user: "Ready to deploy?"
 
-**Verification**: Pre-release checklist complete
+**Verification**: Pre-release checklist complete, rollback plan prepared
 
-**CONFIRM**: "Pre-release check: [N] passed, [N] failed. Ready to deploy?"
+**CONFIRM**: "Pre-release check: [N] passed, [N] failed. Rollback plan prepared. Ready to deploy?"
 
 ---
 
@@ -137,25 +145,7 @@ related-skills:
 
 ---
 
-## Step 7: Rollback Preparation
-
-**Action**:
-1. Ensure rollback plan is ready
-2. Document rollback triggers:
-   - Error rate significantly increased
-   - Critical functionality broken
-   - Performance below SLA
-   - Security issue detected
-   - Data corruption detected
-3. Ask user: "Do you need me to prepare a detailed rollback procedure document now?"
-
-**Verification**: Rollback preparation ready
-
-**CONFIRM**: "Rollback preparation ready. Continue?"
-
----
-
-## Step 8: Output Document
+## Step 7: Output Document
 
 **Action**:
 1. Create `docs/xiaoxiao/plans/ship-output.md`

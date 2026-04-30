@@ -159,11 +159,12 @@ related-skills:
    - All P0 features have pages?
    - Navigation supports user flows?
    - Component patterns applied consistently?
-3. Ask user: "Is the overall design approved?"
+3. **If any major changes from initial design, notify user that task-planning may need refresh**
+4. Ask user: "Is the overall design approved?"
 
 **Verification**: Overall design approved
 
-**CONFIRM**: "Is UI Design overall approved? Confirm to proceed to Task Planning."
+**CONFIRM**: "Is UI Design overall approved? Any major changes from initial scope? Confirm to proceed to Task Planning."
 
 ---
 

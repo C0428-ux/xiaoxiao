@@ -110,14 +110,15 @@ prerequisites: []
 
 **Action**:
 1. Ask user: "How do we measure if this product is successful?"
-2. Define 3-5 measurable criteria (not technical metrics, business outcomes):
-   - ❌ "Fast" → ✅ "<3 seconds for main operation"
-   - ❌ "Easy to use" → ✅ "New users complete first task in <5 minutes"
-   - ❌ "Popular" → ✅ "50% weekly active users by month 3"
+2. Define 3-5 measurable hypotheses (not hard requirements):
+   - ❌ "Fast" → ✅ "<3 seconds for main operation as initial target"
+   - ❌ "Easy to use" → ✅ "New users complete first task in <5 minutes (hypothesis)"
+   - ❌ "Popular" → ✅ "50% weekly active users by month 3 (target)"
+3. Add note: "These are initial hypotheses to be validated by strategy-review"
 
-**Verification**: 3-5 measurable criteria defined
+**Verification**: 3-5 measurable hypotheses defined
 
-**CONFIRM**: "Success criteria: [list]. Agree?"
+**CONFIRM**: "Success hypotheses: [list]. These will be validated in strategy-review. Continue?"
 
 ---
 

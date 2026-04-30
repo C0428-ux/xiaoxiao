@@ -338,7 +338,8 @@ class StateManager {
         completedAt: null,
         outputs: {},
         loopCount: 0,
-        blockedReason: null
+        blockedReason: null,
+        currentPhase: null
       };
     }
     state.currentSkill = null;
