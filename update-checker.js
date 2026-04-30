@@ -1,6 +1,19 @@
 #!/usr/bin/env node
 
+/**
+ * XiaoXiao Update Checker
+ *
+ * Version source: GitHub Releases API (single source of truth)
+ * Local version.json: created after successful update (runtime only)
+ *
+ * Flow:
+ * 1. check() - Compare local (git or API) vs remote (GitHub API)
+ * 2. update() - Download zipball, extract, write version.json
+ * 3. version - Show current version info
+ */
+
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
@@ -10,35 +23,66 @@ const { GITHUB_REPO } = require('./constants');
 class UpdateChecker {
   constructor(frameworkDir) {
     this.frameworkDir = frameworkDir;
+    this.versionFile = path.join(frameworkDir, 'version.json');
   }
 
+  /**
+   * Get local version info
+   * Priority:
+   * 1. Git (if available) - most accurate
+   * 2. Local version.json (if exists) - fallback for non-git installs
+   * 3. GitHub API - fallback when no local info
+   */
   getLocalVersion() {
-    // 优先从 git 读取
+    // 1. Try git (most reliable for developers)
     try {
       const sha = execSync('git rev-parse HEAD', {
         cwd: this.frameworkDir,
         encoding: 'utf8',
         stdio: ['pipe', 'pipe', 'pipe']
       }).trim();
-      return { version: sha.substring(0, 7), sha, hasGit: true };
+
+      // Try to get current tag
+      let tagName = null;
+      try {
+        tagName = execSync('git describe --tags --exact-match HEAD 2>nul || echo ""', {
+          cwd: this.frameworkDir,
+          encoding: 'utf8',
+          stdio: ['pipe', 'pipe', 'pipe']
+        }).trim();
+      } catch (e) {}
+
+      return {
+        sha,
+        version: tagName ? tagName.replace(/^v/, '') : sha.substring(0, 7),
+        tagName,
+        source: 'git'
+      };
     } catch (e) {}
 
-    // 无 git，从 version.json 读取
+    // 2. Try local version.json (for zipball installs)
     try {
-      const versionFile = path.join(this.frameworkDir, 'version.json');
-      if (fs.existsSync(versionFile)) {
-        const data = JSON.parse(fs.readFileSync(versionFile, 'utf-8'));
+      if (fs.existsSync(this.versionFile)) {
+        const data = JSON.parse(fs.readFileSync(this.versionFile, 'utf-8'));
         return {
-          version: data.version || 'unknown',
           sha: data.sha || null,
-          hasGit: false
+          version: data.version || 'unknown',
+          source: 'local-file'
         };
       }
-    } catch (e2) {}
+    } catch (e) {}
 
-    return { version: 'unknown', sha: null, hasGit: false };
+    // 3. No local info available
+    return {
+      sha: null,
+      version: 'unknown',
+      source: 'none'
+    };
   }
 
+  /**
+   * Get remote version from GitHub API (single source of truth)
+   */
   async getRemoteVersion() {
     return new Promise((resolve, reject) => {
       const options = {
@@ -86,8 +130,10 @@ class UpdateChecker {
     });
   }
 
+  /**
+   * Get the actual commit SHA for a tag (handles annotated tags)
+   */
   async getRemoteTagSha() {
-    // 获取 tag 对应的实际 commit SHA
     return new Promise((resolve, reject) => {
       this.getRemoteVersion().then(remote => {
         const options = {
@@ -106,12 +152,10 @@ class UpdateChecker {
           res.on('end', () => {
             try {
               if (res.statusCode !== 200) {
-                // 如果获取 tag ref 失败，回退到 target_commitish
                 resolve(remote.sha);
                 return;
               }
               const ref = JSON.parse(data);
-              // 可能是 tag 或 annotated tag
               const sha = ref.object?.sha || remote.sha;
               resolve(sha);
             } catch (e) {
@@ -127,15 +171,24 @@ class UpdateChecker {
     });
   }
 
+  /**
+   * Check if update is available
+   */
   async check() {
     try {
       const local = this.getLocalVersion();
+      const remote = await this.getRemoteVersion();
       const remoteSha = await this.getRemoteTagSha();
 
       return {
         hasUpdate: local.sha && local.sha !== remoteSha,
         local,
-        remote: { sha: remoteSha }
+        remote: {
+          sha: remoteSha,
+          version: remote.version,
+          tag: remote.tag,
+          date: remote.date
+        }
       };
     } catch (err) {
       return {
@@ -145,6 +198,9 @@ class UpdateChecker {
     }
   }
 
+  /**
+   * Download and install latest version
+   */
   async update() {
     try {
       const remote = await this.getRemoteVersion();
@@ -155,15 +211,13 @@ class UpdateChecker {
 
       await this._extractAndReplace(zipPath);
 
+      // Write version.json AFTER successful update (runtime only, not source)
       const versionData = {
         version: remote.version,
         sha: remote.sha,
         updatedAt: new Date().toISOString()
       };
-      fs.writeFileSync(
-        path.join(this.frameworkDir, 'version.json'),
-        JSON.stringify(versionData, null, 2)
-      );
+      fs.writeFileSync(this.versionFile, JSON.stringify(versionData, null, 2));
 
       fs.unlinkSync(zipPath);
       console.log('\n✅ 更新完成！请重启 xiaoxiao');
@@ -183,7 +237,6 @@ class UpdateChecker {
     const file = fs.createWriteStream(destPath);
 
     protocol.get(url, (res) => {
-      // 处理重定向
       if ((res.statusCode === 302 || res.statusCode === 301) && res.headers.location) {
         file.close();
         fs.unlinkSync(destPath);
@@ -193,7 +246,6 @@ class UpdateChecker {
           return;
         }
 
-        // 处理相对 URL
         const redirectUrl = new URL(res.headers.location, url).toString();
         this._downloadWithRedirect(redirectUrl, destPath, maxRedirects - 1, reject, resolve);
         return;
@@ -217,28 +269,26 @@ class UpdateChecker {
 
   _extractAndReplace(zipPath) {
     const extractDir = path.join(this.frameworkDir, 'xiaoxiao-update-temp');
-    const { execSync } = require('child_process');
 
-    // 清理旧目录
+    // Clean old extract directory
     if (fs.existsSync(extractDir)) {
       fs.rmSync(extractDir, { recursive: true, force: true });
     }
 
-    // 解压
+    // Extract
     execSync(`powershell -Command "Expand-Archive -Path '${zipPath}' -DestinationPath '${extractDir}' -Force"`, {
       stdio: 'pipe'
     });
 
-    // 验证解压结果
+    // Verify extraction
     const entries = fs.readdirSync(extractDir);
     if (!entries || entries.length === 0) {
       throw new Error('解压失败：目标目录为空');
     }
 
-    // GitHub zipball 格式：C0428-ux-xiaoxiao-{ref}/
+    // GitHub zipball format: C0428-ux-xiaoxiao-{ref}/
     const extractedDir = path.join(extractDir, entries[0]);
 
-    // 验证解压的目录存在
     if (!fs.existsSync(extractedDir)) {
       throw new Error(`解压失败：目录 ${entries[0]} 不存在`);
     }
@@ -263,18 +313,22 @@ class UpdateChecker {
     }
   }
 
+  /**
+   * Show version info
+   */
   showVersion() {
     const local = this.getLocalVersion();
     console.log('📦 XiaoXiao 版本信息\n');
+    console.log(`Version: ${local.version}`);
     console.log(`SHA: ${local.sha || 'unknown'}`);
-    console.log(`Git: ${local.hasGit ? '是' : '否'}`);
-    console.log(`框架目录: ${this.frameworkDir}`);
+    console.log(`Source: ${local.source}`);
+    console.log(`Framework: ${this.frameworkDir}`);
   }
 }
 
 module.exports = UpdateChecker;
 
-// CLI 入口
+// CLI entry
 if (require.main === module) {
   const FRAMEWORK_DIR = __dirname;
   const checker = new UpdateChecker(FRAMEWORK_DIR);
@@ -293,10 +347,9 @@ if (require.main === module) {
         return;
       }
       console.log('STATUS: UPDATE_AVAILABLE');
-      console.log(`CURRENT: ${result.local.version}`);
-      console.log(`LATEST: ${result.remote.version}`);
+      console.log(`CURRENT: ${result.local.version} (${result.local.sha?.substring(0, 7) || 'unknown'})`);
+      console.log(`LATEST: ${result.remote.version} (${result.remote.sha?.substring(0, 7) || 'unknown'})`);
       console.log(`DATE: ${result.remote.date}`);
-      console.log(`TAG: ${result.remote.tag}`);
     });
   } else if (command === 'update') {
     checker.update().catch(err => {
@@ -315,6 +368,6 @@ XiaoXiao Update Checker
   check    检查更新（输出 STATUS: UP_TO_DATE 或 STATUS: UPDATE_AVAILABLE）
   update   下载并安装最新版本
   version  显示当前版本
-    `);
+`);
   }
 }

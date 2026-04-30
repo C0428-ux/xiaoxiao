@@ -109,14 +109,20 @@ related-skills:
 2. Read `skills/tdd-development/agents/task-worker.md` for worker prompt template
 3. **Dispatch task-worker agents in parallel** (max 5 concurrent):
    ```javascript
+   // Read the task-worker prompt template
+   const taskWorkerPrompt = await Read('skills/tdd-development/agents/task-worker.md');
+
+   // Dispatch workers
    const workers = await Promise.all(
      readyTasks.slice(0, 5).map(task => {
        const taskType = task.type === 'frontend' ? 'frontend' : 'backend';
 
        return Agent({
-         subagent_type: 'task-worker',
          description: `Task Worker: ${task.name}`,
-         prompt: `
+         prompt: `${taskWorkerPrompt}
+
+## Task Assignment
+
 Task ID: ${task.id}
 Task Name: ${task.name}
 Task Type: ${taskType}
@@ -124,15 +130,8 @@ Files to create: ${task.files.join(', ')}
 Acceptance Criteria: ${task.acceptance}
 UI Design Path: docs/xiaoxiao/plans/ui-design/
 Message Bus: docs/xiaoxiao/plans/tdd/.message-bus/
-Worker ID: worker-${task.id}-${Date.now()}
-
-Follow TDD RED-GREEN-REFACTOR strictly:
-1. Write failing test first
-2. Run test to verify RED
-3. Write minimal implementation to pass test
-4. Run test to verify GREEN
-5. Refactor to improve code
-6. Report completion or failure via Message Bus`,
+Worker ID: worker-${task.id}-${Date.now()}`,
+         agent_type: 'general-purpose',
          run_in_background: true
        });
      })

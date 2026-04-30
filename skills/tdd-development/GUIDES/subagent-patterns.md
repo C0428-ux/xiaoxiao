@@ -173,10 +173,24 @@ Write(`${busPath}/locks.json`, '{}');
 
 ```javascript
 // Distribute first group of tasks in parallel
+const taskWorkerPrompt = await Read('skills/tdd-development/agents/task-worker.md');
+
 const workers = await Promise.all(
   parallelGroup.map(task => Agent({
-    subagent_type: 'task-worker',
-    prompt: taskPrompt,
+    description: `Task Worker: ${task.name}`,
+    prompt: `${taskWorkerPrompt}
+
+## Task Assignment
+
+Task ID: ${task.id}
+Task Name: ${task.name}
+Task Type: ${task.type}
+Files to create: ${task.files.join(', ')}
+Acceptance Criteria: ${task.acceptance}
+UI Design Path: docs/xiaoxiao/plans/ui-design/
+Message Bus: docs/xiaoxiao/plans/tdd/.message-bus/
+Worker ID: worker-${task.id}-${Date.now()}`,
+    agent_type: 'general-purpose',
     run_in_background: true
   }))
 );
