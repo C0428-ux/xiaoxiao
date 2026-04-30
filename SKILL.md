@@ -19,26 +19,31 @@ version: 0.7
 
 ---
 
-## Step 0: Check for Updates
+## Step 0: Update Check (Mandatory)
+
+**⚠️ THIS STEP MUST BE EXECUTED EVERY TIME before proceeding to Step 1**
 
 **Action**:
 1. Execute `node xiaoxiao.js update-check`
 
-**Verification**: Based on output, decide next step
+**Output Interpretation**:
 
-| Output contains | Meaning | Action |
-|-----------------|---------|--------|
-| `STATUS: UP_TO_DATE` | No new version | Proceed to Step 1 |
-| `STATUS: UPDATE_AVAILABLE` | New version available | Ask user |
-| `STATUS: SKIP_FOREVER` | Skipped permanently | Proceed to Step 1 |
+| Output | Meaning | Action |
+|--------|---------|--------|
+| `STATUS: UP_TO_DATE` | Already latest | **Proceed to Step 1** |
+| `STATUS: UPDATE_AVAILABLE` | New version available | Ask user (see below) |
+| `STATUS: SKIP_FOREVER` | User chose skip forever | **Proceed to Step 1** (skip update check entirely) |
 
-**Ask user** (when update available):
-> New version detected! Download update?
-> - Yes: Run `node xiaoxiao.js update`
-> - No: Continue to Step 1
-> - Skip forever: Run `node xiaoxiao.js skip-update`
+**If UPDATE_AVAILABLE**, ask user:
+> 🆕 New version detected: v{latest}
+> Download and install now?
 
-**CONFIRM**: "Update check complete. Continue?"
+**User choices**:
+- **Yes** → Run `node xiaoxiao.js update` → After complete, **Proceed to Step 1**
+- **No** → **Proceed to Step 1** (continue with current version)
+- **Never** → Run `node xiaoxiao.js skip-update` → **Proceed to Step 1** (permanent, can be undone with `unskip-update`)
+
+**CONFIRM**: "Update check complete. Proceeding to Step 1."
 
 ---
 
