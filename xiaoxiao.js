@@ -71,7 +71,7 @@ const COMMANDS = {
     console.log(`CURRENT: ${result.local.version}`);
     console.log(`LATEST: ${result.remote.version}`);
     console.log(`DATE: ${result.remote.date}`);
-    console.log(`COMMIT: ${result.remote.message}`);
+    console.log(`TAG: ${result.remote.tag}`);
   },
 
   'skip-update': () => {

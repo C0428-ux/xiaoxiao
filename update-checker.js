@@ -45,11 +45,12 @@ class UpdateChecker {
       // Try to get current tag
       let tagName = null;
       try {
-        tagName = execSync('git describe --tags --exact-match HEAD 2>nul || echo ""', {
+        const output = execSync('git describe --tags --exact-match HEAD 2>nul', {
           cwd: this.frameworkDir,
           encoding: 'utf8',
           stdio: ['pipe', 'pipe', 'pipe']
         }).trim();
+        if (output) tagName = output;
       } catch (e) {}
 
       return {
