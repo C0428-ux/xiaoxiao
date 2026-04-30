@@ -8,6 +8,7 @@ class StateManager {
     this.frameworkRoot = frameworkRoot || projectRoot;
     this.statePath = path.join(projectRoot, 'xiaoxiao-state.json');
     this.backupDir = path.join(projectRoot, '.backups');
+    this.frameworkSettingsPath = path.join(this.frameworkRoot, '.xiaoxiao-settings.json');
   }
 
   /**
@@ -144,30 +145,61 @@ class StateManager {
   }
 
   /**
-   * 获取跳过更新设置
+   * 获取跳过更新设置（优先项目级别，其次框架级别）
    */
   getSkipUpdate() {
+    // 先检查项目级别
     const state = this.read();
-    if (!state) return false;
-    return state.settings?.skipUpdate || false;
+    if (state?.settings?.skipUpdate !== undefined) {
+      return state.settings.skipUpdate;
+    }
+    // 回退到框架级别设置
+    return this._getFrameworkSetting('skipUpdate') || false;
   }
 
   /**
-   * 设置跳过更新
+   * 设置跳过更新（优先项目级别，其次框架级别）
    */
   setSkipUpdate(value) {
     const state = this.read();
-    if (!state) {
-      throw new Error('State file not found.');
+    if (state) {
+      if (!state.settings) state.settings = {};
+      state.settings.skipUpdate = value;
+      state.updatedAt = new Date().toISOString();
+      this._write(state);
+    } else {
+      // 没有项目状态文件时，写入框架级别设置
+      this._setFrameworkSetting('skipUpdate', value);
     }
+  }
 
-    if (!state.settings) {
-      state.settings = {};
+  /**
+   * 获取框架级别设置
+   */
+  _getFrameworkSetting(key) {
+    try {
+      if (fs.existsSync(this.frameworkSettingsPath)) {
+        const settings = JSON.parse(fs.readFileSync(this.frameworkSettingsPath, 'utf-8'));
+        return settings[key];
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  /**
+   * 设置框架级别设置
+   */
+  _setFrameworkSetting(key, value) {
+    try {
+      let settings = {};
+      if (fs.existsSync(this.frameworkSettingsPath)) {
+        settings = JSON.parse(fs.readFileSync(this.frameworkSettingsPath, 'utf-8'));
+      }
+      settings[key] = value;
+      fs.writeFileSync(this.frameworkSettingsPath, JSON.stringify(settings, null, 2), 'utf-8');
+    } catch (e) {
+      // 忽略写入错误
     }
-    state.settings.skipUpdate = value;
-    state.updatedAt = new Date().toISOString();
-    this._write(state);
-    return state;
   }
 
   /**

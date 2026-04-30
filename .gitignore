@@ -8,6 +8,9 @@ CLAUDE.md
 # Git repository (this directory is the framework itself)
 # .git/
 
+# Framework-level settings (skipUpdate, etc.)
+.xiaoxiao-settings.json
+
 # Runtime version file (generated locally after update, not part of source)
 version.json
 
