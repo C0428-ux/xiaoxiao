@@ -182,7 +182,9 @@ class StateManager {
         const settings = JSON.parse(fs.readFileSync(this.frameworkSettingsPath, 'utf-8'));
         return settings[key];
       }
-    } catch (e) {}
+    } catch (e) {
+      console.warn(`[xiaoxiao] 读取框架设置失败 (${this.frameworkSettingsPath}): ${e.message}`);
+    }
     return null;
   }
 
@@ -198,7 +200,7 @@ class StateManager {
       settings[key] = value;
       fs.writeFileSync(this.frameworkSettingsPath, JSON.stringify(settings, null, 2), 'utf-8');
     } catch (e) {
-      // 忽略写入错误
+      console.warn(`[xiaoxiao] 写入框架设置失败 (${this.frameworkSettingsPath}): ${e.message}`);
     }
   }
 

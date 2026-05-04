@@ -42,10 +42,10 @@ class UpdateChecker {
         stdio: ['pipe', 'pipe', 'pipe']
       }).trim();
 
-      // Try to get current tag
+      // Try to get current tag (stdio:pipe already silences stderr — no shell redirect needed)
       let tagName = null;
       try {
-        const output = execSync('git describe --tags --exact-match HEAD 2>nul', {
+        const output = execSync('git describe --tags --exact-match HEAD', {
           cwd: this.frameworkDir,
           encoding: 'utf8',
           stdio: ['pipe', 'pipe', 'pipe']
@@ -276,10 +276,9 @@ class UpdateChecker {
       fs.rmSync(extractDir, { recursive: true, force: true });
     }
 
-    // Extract
-    execSync(`powershell -Command "Expand-Archive -Path '${zipPath}' -DestinationPath '${extractDir}' -Force"`, {
-      stdio: 'pipe'
-    });
+    // Extract — pick a tool that exists on the host platform
+    fs.mkdirSync(extractDir, { recursive: true });
+    this._extractZip(zipPath, extractDir);
 
     // Verify extraction
     const entries = fs.readdirSync(extractDir);
@@ -297,6 +296,38 @@ class UpdateChecker {
     this._copyRecursive(extractedDir, this.frameworkDir);
 
     fs.rmSync(extractDir, { recursive: true, force: true });
+  }
+
+  _extractZip(zipPath, destDir) {
+    // execFileSync avoids shell quoting issues with paths containing spaces/quotes
+    const { execFileSync } = require('child_process');
+
+    if (process.platform === 'win32') {
+      execFileSync('powershell', [
+        '-NoProfile',
+        '-Command',
+        `Expand-Archive -Path '${zipPath.replace(/'/g, "''")}' -DestinationPath '${destDir.replace(/'/g, "''")}' -Force`
+      ], { stdio: 'pipe' });
+      return;
+    }
+
+    // macOS / Linux: prefer `unzip` (almost always preinstalled)
+    try {
+      execFileSync('unzip', ['-q', '-o', zipPath, '-d', destDir], { stdio: 'pipe' });
+      return;
+    } catch (err) {
+      // Fall through to bsdtar / tar fallback
+    }
+
+    // Fallback: bsdtar (macOS default tar) and GNU tar both accept zip via libarchive on macOS
+    try {
+      execFileSync('tar', ['-xf', zipPath, '-C', destDir], { stdio: 'pipe' });
+      return;
+    } catch (err) {
+      throw new Error(
+        '解压失败：未找到可用的解压工具。请安装 `unzip` (Linux: apt/yum install unzip; macOS 默认已带)。'
+      );
+    }
   }
 
   _copyRecursive(src, dest) {
